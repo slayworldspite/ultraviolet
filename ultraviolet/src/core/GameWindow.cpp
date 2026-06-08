@@ -41,6 +41,7 @@ namespace ultraviolet
 			double deltaTime{ static_cast<double>(currentFrameTime - lastFrameTime) / 1'000'000'000.0 };
 
 			OnUpdate(deltaTime);
+			OnRender();
 		}
 
 		Logger::Log("closing...", Logger::Level::Info);

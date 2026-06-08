@@ -10,6 +10,10 @@ namespace ultraviolet
 	public:
 		Game();
 
+	protected:
+		void OnUpdate(double deltaTime) override;
+		void OnRender() override;
+
 	private:
 		Renderer m_Renderer;
 	};
