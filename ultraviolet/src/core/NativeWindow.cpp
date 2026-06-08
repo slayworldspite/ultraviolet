@@ -9,7 +9,11 @@ namespace ultraviolet
 	{
 		Logger::Log("creating window...", Logger::Level::Info);
 
-		::SDL_Init(SDL_INIT_VIDEO);
+		if (!::SDL_Init(SDL_INIT_VIDEO))
+		{
+			Logger::Log("failed to initialize sdl!", Logger::Level::Critical);
+			exit(-1);
+		}
 
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 6);
@@ -22,6 +26,12 @@ namespace ultraviolet
 			SDL_WINDOW_OPENGL |
 			SDL_WINDOW_RESIZABLE
 		);
+
+		if (!m_Window)
+		{
+			Logger::Log("failed to create window!", Logger::Level::Critical);
+			exit(-1);
+		}
 
 		Logger::Log("window created!", Logger::Level::Info);
 	}
