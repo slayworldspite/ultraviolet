@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="ultraviolet/ultraviolet.vcxproj" Id="a66145c8-a737-4c03-bd88-5e5abe38e00d" />
+</Solution>
