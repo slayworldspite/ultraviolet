@@ -18,13 +18,14 @@ namespace ultraviolet
 
 	}
 
+	void Game::OnStart()
+	{
+
+	}
+
 	void Game::OnUpdate(double deltaTime)
 	{
-		static double time{};
 
-		time += deltaTime;
-
-		m_Renderer.SetClearColor({ sinf(time), sinf(time + 90), sinf(time + 180), 1.0f });
 	}
 
 	void Game::OnRender()

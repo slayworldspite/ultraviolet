@@ -11,6 +11,7 @@ namespace ultraviolet
 		Game();
 
 	protected:
+		void OnStart() override;
 		void OnUpdate(double deltaTime) override;
 		void OnRender() override;
 
