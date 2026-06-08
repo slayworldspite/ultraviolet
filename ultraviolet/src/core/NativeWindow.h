@@ -15,6 +15,8 @@ namespace ultraviolet
 		NativeWindow(const NativeWindowSettings& settings);
 		~NativeWindow();
 
+		::SDL_Window* GetNativeHandle() const;
+
 	private:
 		::SDL_Window* m_Window;
 	};

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/GameWindow.h"
+#include "renderer/Renderer.h"
 
 namespace ultraviolet
 {
@@ -8,5 +9,8 @@ namespace ultraviolet
 	{
 	public:
 		Game();
+
+	private:
+		Renderer m_Renderer;
 	};
 }

@@ -3,7 +3,7 @@
 namespace ultraviolet
 {
 	Game::Game() :
-		GameWindow(
+		GameWindow{
 			NativeWindowSettings{
 				.Title{ "ultraviolet" },
 				.Width{ 1280 },
@@ -12,7 +12,8 @@ namespace ultraviolet
 			GameWindowSettings{
 				.UpdateFrequency{ 60.0f }
 			}
-		)
+	},
+		m_Renderer{ *this }
 	{
 
 	}

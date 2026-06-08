@@ -11,6 +11,10 @@ namespace ultraviolet
 
 		::SDL_Init(SDL_INIT_VIDEO);
 
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 6);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+
 		m_Window = ::SDL_CreateWindow(
 			settings.Title.c_str(),
 			settings.Width,
@@ -31,5 +35,10 @@ namespace ultraviolet
 		Logger::Log("window destroyed!", Logger::Level::Info);
 
 		::SDL_Quit(); // shh :3
+	}
+
+	::SDL_Window* NativeWindow::GetNativeHandle() const
+	{
+		return m_Window;
 	}
 }
