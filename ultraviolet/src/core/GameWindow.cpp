@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include <SDL3/SDL.h>
 
 #include "GameWindow.h"
@@ -55,7 +53,7 @@ namespace ultraviolet
 
 	void GameWindow::OnUpdate(double deltaTime)
 	{
-	
+		
 	}
 
 	void GameWindow::OnRender()
