@@ -144,6 +144,7 @@
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\renderer\Renderer.cpp" />
+    <ClCompile Include="src\renderer\VertexBuffer.cpp" />
     <ClCompile Include="src\utils\Logger.cpp" />
     <ClCompile Include="vendor\glad\glad.c" />
   </ItemGroup>
@@ -154,6 +155,7 @@
     <ClInclude Include="src\core\NativeWindowSettings.h" />
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\renderer\Renderer.h" />
+    <ClInclude Include="src\renderer\VertexBuffer.h" />
     <ClInclude Include="src\utils\Logger.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
