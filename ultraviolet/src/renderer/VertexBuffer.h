@@ -4,13 +4,16 @@
 
 #include "GLObject.h"
 
-class VertexBuffer : public GLObject
+namespace ultraviolet
 {
-public:
-	VertexBuffer(const std::vector<float>& data);
-	virtual ~VertexBuffer() = default;
+	class VertexBuffer : public GLObject
+	{
+	public:
+		VertexBuffer(const std::vector<float>& data);
+		virtual ~VertexBuffer() = default;
 
-	virtual void Bind() const override;
-	virtual void Unbind() const override;
-	virtual void Delete() override;
-};
+		virtual void Bind() const override;
+		virtual void Unbind() const override;
+		virtual void Delete() override;
+	};
+}

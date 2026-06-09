@@ -2,42 +2,45 @@
 
 #include "VertexArray.h"
 
-VertexArray::VertexArray(const VertexBuffer& vertexBuffer, const std::vector<size_t>& sizes) :
-	GLObject{}
+namespace ultraviolet
 {
-	::glGenVertexArrays(1, &m_ID);
-
-	vertexBuffer.Bind();
-
-	size_t sum{};
-
-	for (int size : sizes)
-		sum += size;
-
-	size_t stride{ sum * sizeof(float) };
-
-	for (size_t i{}; i < sizes.size(); i++)
+	VertexArray::VertexArray(const VertexBuffer& vertexBuffer, const std::vector<size_t>& sizes) :
+		GLObject{}
 	{
-		int lastOffset{};
+		::glGenVertexArrays(1, &m_ID);
 
-		::glEnableVertexAttribArray(i);
-		::glVertexAttribPointer(i, sizes[i], GL_FLOAT, false, stride, &lastOffset);
+		vertexBuffer.Bind();
 
-		lastOffset += sizes[i] * sizeof(float);
+		size_t sum{};
+
+		for (int size : sizes)
+			sum += size;
+
+		size_t stride{ sum * sizeof(float) };
+
+		for (size_t i{}; i < sizes.size(); i++)
+		{
+			int lastOffset{};
+
+			::glEnableVertexAttribArray(i);
+			::glVertexAttribPointer(i, sizes[i], GL_FLOAT, false, stride, &lastOffset);
+
+			lastOffset += sizes[i] * sizeof(float);
+		}
 	}
-}
 
-void VertexArray::Bind() const
-{
-	::glBindVertexArray(m_ID);
-}
+	void VertexArray::Bind() const
+	{
+		::glBindVertexArray(m_ID);
+	}
 
-void VertexArray::Unbind() const
-{
-	::glBindVertexArray(0);
-}
+	void VertexArray::Unbind() const
+	{
+		::glBindVertexArray(0);
+	}
 
-void VertexArray::Delete()
-{
-	::glDeleteVertexArrays(1, &m_ID);
+	void VertexArray::Delete()
+	{
+		::glDeleteVertexArrays(1, &m_ID);
+	}
 }

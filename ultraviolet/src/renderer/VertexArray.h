@@ -2,13 +2,16 @@
 
 #include "VertexBuffer.h"
 
-class VertexArray : public GLObject
+namespace ultraviolet
 {
-public:
-	VertexArray(const VertexBuffer& vertexBuffer, const std::vector<size_t>& sizes);
-	virtual ~VertexArray() = default;
+	class VertexArray : public GLObject
+	{
+	public:
+		VertexArray(const VertexBuffer& vertexBuffer, const std::vector<size_t>& sizes);
+		virtual ~VertexArray() = default;
 
-	virtual void Bind() const override;
-	virtual void Unbind() const override;
-	virtual void Delete() override;
-};
+		virtual void Bind() const override;
+		virtual void Unbind() const override;
+		virtual void Delete() override;
+	};
+}

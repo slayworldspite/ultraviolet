@@ -2,27 +2,30 @@
 
 #include "VertexBuffer.h"
 
-VertexBuffer::VertexBuffer(const std::vector<float>& data) :
-	GLObject{}
+namespace ultraviolet
 {
-	::glGenBuffers(1, &m_ID);
-	
-	Bind();
+	VertexBuffer::VertexBuffer(const std::vector<float>& data) :
+		GLObject{}
+	{
+		::glGenBuffers(1, &m_ID);
 
-	::glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float), data.data(), GL_STATIC_DRAW);
-}
+		Bind();
 
-void VertexBuffer::Bind() const
-{
-	::glBindBuffer(GL_ARRAY_BUFFER, m_ID);
-}
+		::glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float), data.data(), GL_STATIC_DRAW);
+	}
 
-void VertexBuffer::Unbind() const
-{
-	::glBindBuffer(GL_ARRAY_BUFFER, 0);
-}
+	void VertexBuffer::Bind() const
+	{
+		::glBindBuffer(GL_ARRAY_BUFFER, m_ID);
+	}
 
-void VertexBuffer::Delete()
-{
-	::glDeleteBuffers(1, &m_ID);
+	void VertexBuffer::Unbind() const
+	{
+		::glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
+
+	void VertexBuffer::Delete()
+	{
+		::glDeleteBuffers(1, &m_ID);
+	}
 }
