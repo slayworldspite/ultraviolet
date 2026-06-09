@@ -13,7 +13,8 @@ namespace ultraviolet
 				.UpdateFrequency{ 60.0f }
 			}
 	},
-		m_Renderer{ *this }
+		m_Renderer{ *this },
+		m_Shader{ "assets/shaders/Test.vert", "assets/shaders/Test.frag" }
 	{
 
 	}
@@ -31,6 +32,8 @@ namespace ultraviolet
 	void Game::OnRender()
 	{
 		m_Renderer.BeginFrame();
+
+
 
 		m_Renderer.EndFrame();
 	}

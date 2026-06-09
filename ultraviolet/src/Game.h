@@ -2,6 +2,7 @@
 
 #include "core/GameWindow.h"
 #include "renderer/Renderer.h"
+#include "renderer/Shader.h"
 
 namespace ultraviolet
 {
@@ -17,5 +18,6 @@ namespace ultraviolet
 
 	private:
 		Renderer m_Renderer;
+		Shader m_Shader;
 	};
 }

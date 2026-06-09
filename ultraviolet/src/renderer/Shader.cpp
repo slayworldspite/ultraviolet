@@ -49,15 +49,15 @@ namespace ultraviolet
 
 		int success{};
 
-		::glGetProgramiv(m_ID, GL_COMPILE_STATUS, &success);
+		::glGetProgramiv(m_ID, GL_LINK_STATUS, &success);
 
 		if (!success)
 		{
-			char* log{};
-			::glGetProgramInfoLog(m_ID, 512, nullptr, log);
+			std::string log{};
+			log.resize(512);
+			::glGetProgramInfoLog(m_ID, static_cast<GLsizei>(log.capacity()), nullptr, log.data());
 			Logger::Log("failed to link program!", Logger::Level::Error);
-			if (log)
-				Logger::Log(log, Logger::Level::Error);
+			Logger::Log(log, Logger::Level::Error);
 		}
 
 		::glDeleteShader(vertexShader);
@@ -67,12 +67,12 @@ namespace ultraviolet
 	std::string Shader::ReadFile(const std::filesystem::path& path)
 	{
 		std::ifstream file{ path };
-		std::string content;
-
-		file >> content;
+		std::stringstream stream;
+		
+		stream << file.rdbuf();
 		file.close();
 
-		return content;
+		return stream.str();
 	}
 
 	void Shader::LogShaderError(uint32_t shader)
@@ -83,11 +83,11 @@ namespace ultraviolet
 
 		if (!success)
 		{
-			char* log{};
-			::glGetShaderInfoLog(shader, 512, nullptr, log);
+			std::string log{};
+			log.resize(512);
+			::glGetShaderInfoLog(shader, static_cast<GLsizei>(log.capacity()), nullptr, log.data());
 			Logger::Log("failed to compile shader!", Logger::Level::Error);
-			if (log)
-				Logger::Log(log, Logger::Level::Error);
+			Logger::Log(log, Logger::Level::Error);
 		}
 	}
 }
