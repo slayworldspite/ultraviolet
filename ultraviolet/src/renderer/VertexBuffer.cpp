@@ -3,11 +3,12 @@
 #include "VertexBuffer.h"
 
 VertexBuffer::VertexBuffer(const std::vector<float>& data) :
-	m_ID{}
+	GLObject{}
 {
 	::glGenBuffers(1, &m_ID);
 	
 	Bind();
+
 	::glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float), data.data(), GL_STATIC_DRAW);
 }
 
@@ -21,12 +22,7 @@ void VertexBuffer::Unbind() const
 	::glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-uint32_t VertexBuffer::GetID() const
+void VertexBuffer::Delete()
 {
-	return m_ID;
-}
-
-VertexBuffer::operator uint32_t() const
-{
-	return m_ID;
+	::glDeleteBuffers(1, &m_ID);
 }
