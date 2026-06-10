@@ -145,7 +145,6 @@
     <ClCompile Include="src\input\Input.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\renderer\camera\ProjectionCamera.cpp" />
-    <ClCompile Include="src\renderer\mesh\ColorMaterial.cpp" />
     <ClCompile Include="src\renderer\objects\GLObject.cpp" />
     <ClCompile Include="src\renderer\mesh\Mesh.cpp" />
     <ClCompile Include="src\renderer\Renderer.cpp" />
@@ -172,9 +171,7 @@
     <ClInclude Include="src\input\MouseButtonFlags.h" />
     <ClInclude Include="src\input\Scancode.h" />
     <ClInclude Include="src\renderer\camera\ProjectionCamera.h" />
-    <ClInclude Include="src\renderer\mesh\ColorMaterial.h" />
     <ClInclude Include="src\renderer\objects\GLObject.h" />
-    <ClInclude Include="src\renderer\mesh\IMaterial.h" />
     <ClInclude Include="src\renderer\mesh\Mesh.h" />
     <ClInclude Include="src\renderer\Renderer.h" />
     <ClInclude Include="src\renderer\Shader.h" />
