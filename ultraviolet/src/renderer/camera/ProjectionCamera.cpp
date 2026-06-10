@@ -25,7 +25,6 @@ namespace ultraviolet
 		m_Front = glm::normalize(direction);
 	}
 
-	// takes screen size as std::pair because NativeWindow's GetWindowSize() returns a std::pair
 	void ProjectionCamera::Apply(const Shader& shader, std::pair<int, int> size) const
 	{
 		glm::mat4 projection{ glm::perspective(
