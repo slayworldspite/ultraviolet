@@ -15,8 +15,9 @@ namespace ultraviolet
 
 		void BeginFrame() const;
 		void EndFrame() const;
-		void SetClearColor(const glm::vec4& color);
+		void SetClearColor(const glm::vec4& color) const;
 		void Draw(const Mesh& mesh, const Shader& shader) const;
+		void SetViewport(int width, int height) const;
 
 	private:
 		::SDL_Window* m_Window;

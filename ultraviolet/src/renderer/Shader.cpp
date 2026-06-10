@@ -99,6 +99,6 @@ namespace ultraviolet
 	void Shader::Set(std::string_view name, const glm::vec4& value) const
 	{
 		Use();
-		::glUniform4f(GetLocation(name), value.x, value.y, value.z, value.w);
+		::glUniform4fv(GetLocation(name), 1, &value[0]);
 	}
 }

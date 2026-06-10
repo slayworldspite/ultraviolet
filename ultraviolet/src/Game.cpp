@@ -15,10 +15,11 @@ namespace ultraviolet
 	},
 		m_Renderer{ *this },
 		m_Shader{ "assets/shaders/Test.vert", "assets/shaders/Test.frag" },
-		m_Mesh{ std::vector<Vertex>{ Vertex{.Position{0.5f, -0.5f, 0.0f}}, Vertex{.Position{-0.5f, -0.5f, 0.0f}}, Vertex{.Position{0.0f, 0.5f, 0.0f}} } }
+		m_Mesh{ std::vector<Vertex>{ Vertex{ .Position{ 0.5f, -0.5f, 0.0f } }, Vertex{ .Position{ -0.5f, -0.5f, 0.0f } }, Vertex{ .Position{ 0.0f, 0.5f, 0.0f } } } }
 	{
 
 	}
+
 
 	void Game::OnStart()
 	{

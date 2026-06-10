@@ -34,6 +34,11 @@ namespace ultraviolet
 		Logger::Log("renderer initialized!", Logger::Level::Info);
 
 		::glEnable(GL_DEPTH_TEST);
+
+		::glEnable(GL_BLEND);
+		::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		SDL_GL_SetSwapInterval(1);
 	}
 
 	void Renderer::BeginFrame() const
@@ -49,7 +54,7 @@ namespace ultraviolet
 		::SDL_GL_SwapWindow(m_Window);
 	}
 
-	void Renderer::SetClearColor(const glm::vec4& color)
+	void Renderer::SetClearColor(const glm::vec4& color) const
 	{
 		::glClearColor(color.r, color.g, color.b, color.a);
 	}
@@ -59,5 +64,10 @@ namespace ultraviolet
 		shader.Use();
 		mesh.Bind();
 		::glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(mesh.GetVertexCount()));
+	}
+
+	void Renderer::SetViewport(int width, int height) const
+	{
+		::glViewport(0, 0, width, height);
 	}
 }
