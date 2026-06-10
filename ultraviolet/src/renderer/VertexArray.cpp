@@ -4,29 +4,16 @@
 
 namespace ultraviolet
 {
-	VertexArray::VertexArray(const VertexBuffer& vertexBuffer, const std::vector<size_t>& sizes) :
+	VertexArray::VertexArray(const VertexBuffer& vertexBuffer) :
 		GLObject{}
 	{
 		::glGenVertexArrays(1, &m_ID);
 
+		Bind();
 		vertexBuffer.Bind();
 
-		size_t sum{};
-
-		for (int size : sizes)
-			sum += size;
-
-		size_t stride{ sum * sizeof(float) };
-
-		for (size_t i{}; i < sizes.size(); i++)
-		{
-			int lastOffset{};
-
-			::glEnableVertexAttribArray(i);
-			::glVertexAttribPointer(i, sizes[i], GL_FLOAT, false, stride, &lastOffset);
-
-			lastOffset += sizes[i] * sizeof(float);
-		}
+		::glEnableVertexAttribArray(0);
+		::glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Position));
 	}
 
 	void VertexArray::Bind() const

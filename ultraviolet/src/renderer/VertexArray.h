@@ -7,7 +7,7 @@ namespace ultraviolet
 	class VertexArray : public GLObject
 	{
 	public:
-		VertexArray(const VertexBuffer& vertexBuffer, const std::vector<size_t>& sizes);
+		VertexArray(const VertexBuffer& vertexBuffer);
 		virtual ~VertexArray() = default;
 
 		virtual void Bind() const override;

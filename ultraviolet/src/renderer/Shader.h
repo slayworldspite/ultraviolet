@@ -1,6 +1,9 @@
 #pragma once
 
 #include <filesystem>
+#include <string_view>
+
+#include <glm/glm.hpp>
 
 namespace ultraviolet
 {
@@ -12,12 +15,16 @@ namespace ultraviolet
 		void Use() const;
 		void Load();
 
+		void Set(std::string_view name, const glm::vec4& value) const;
+
 	private:
 		uint32_t m_ID;
 		std::filesystem::path m_VertexPath;
 		std::filesystem::path m_FragmentPath;
 
 	private:
+		int GetLocation(std::string_view name) const;
+		
 		static std::string ReadFile(const std::filesystem::path& path);
 		static void LogShaderError(uint32_t shader);
 	};

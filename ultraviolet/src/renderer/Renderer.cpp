@@ -19,22 +19,26 @@ namespace ultraviolet
 			exit(-1);
 		}
 
-		if (!::gladLoadGLLoader((GLADloadproc)::SDL_GL_GetProcAddress))
-		{
-			Logger::Log("failed to initialize opengl!", Logger::Level::Critical);
-			exit(-1);
-		}
-
 		if (!::SDL_GL_MakeCurrent(m_Window, static_cast<::SDL_GLContext>(m_GLContext)))
 		{
 			Logger::Log("failed to make the context current!", Logger::Level::Critical);
 			exit(-1);
 		}
 
-		Logger::Log("renderer initialized", Logger::Level::Info);
+		if (!::gladLoadGLLoader((GLADloadproc)::SDL_GL_GetProcAddress))
+		{
+			Logger::Log("failed to initialize opengl!", Logger::Level::Critical);
+			exit(-1);
+		}
+
+		Logger::Log("renderer initialized!", Logger::Level::Info);
+
+		::glViewport(0, 0, 1280, 720);
+
+		::glEnable(GL_DEPTH_TEST);
 	}
 
-	void Renderer::BeginFrame()
+	void Renderer::BeginFrame() const
 	{
 		::glClear(
 			GL_COLOR_BUFFER_BIT | 
@@ -42,7 +46,7 @@ namespace ultraviolet
 		);
 	}
 
-	void Renderer::EndFrame()
+	void Renderer::EndFrame() const
 	{
 		::SDL_GL_SwapWindow(m_Window);
 	}
@@ -50,5 +54,12 @@ namespace ultraviolet
 	void Renderer::SetClearColor(const glm::vec4& color)
 	{
 		::glClearColor(color.r, color.g, color.b, color.a);
+	}
+
+	void Renderer::Draw(const Mesh& mesh, const Shader& shader) const
+	{
+		shader.Use();
+		mesh.Bind();
+		::glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(mesh.GetVertexCount()));
 	}
 }

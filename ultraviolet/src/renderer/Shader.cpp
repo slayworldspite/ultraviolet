@@ -90,4 +90,15 @@ namespace ultraviolet
 			Logger::Log(log, Logger::Level::Error);
 		}
 	}
+
+	int Shader::GetLocation(std::string_view name) const
+	{
+		return ::glGetAttribLocation(m_ID, name.data());
+	}
+
+	void Shader::Set(std::string_view name, const glm::vec4& value) const
+	{
+		Use();
+		::glUniform4fv(GetLocation(name), 1, &value[0]);
+	}
 }

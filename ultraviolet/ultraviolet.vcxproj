@@ -143,7 +143,9 @@
     <ClCompile Include="src\core\NativeWindow.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\renderer\ColorMaterial.cpp" />
     <ClCompile Include="src\renderer\GLObject.cpp" />
+    <ClCompile Include="src\renderer\Mesh.cpp" />
     <ClCompile Include="src\renderer\Renderer.cpp" />
     <ClCompile Include="src\renderer\Shader.cpp" />
     <ClCompile Include="src\renderer\VertexArray.cpp" />
@@ -157,9 +159,13 @@
     <ClInclude Include="src\core\NativeWindow.h" />
     <ClInclude Include="src\core\NativeWindowSettings.h" />
     <ClInclude Include="src\Game.h" />
+    <ClInclude Include="src\renderer\ColorMaterial.h" />
     <ClInclude Include="src\renderer\GLObject.h" />
+    <ClInclude Include="src\renderer\IMaterial.h" />
+    <ClInclude Include="src\renderer\Mesh.h" />
     <ClInclude Include="src\renderer\Renderer.h" />
     <ClInclude Include="src\renderer\Shader.h" />
+    <ClInclude Include="src\renderer\Vertex.h" />
     <ClInclude Include="src\renderer\VertexArray.h" />
     <ClInclude Include="src\renderer\VertexBuffer.h" />
     <ClInclude Include="src\utils\Logger.h" />

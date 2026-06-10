@@ -4,14 +4,14 @@
 
 namespace ultraviolet
 {
-	VertexBuffer::VertexBuffer(const std::vector<float>& data) :
+	VertexBuffer::VertexBuffer(const std::vector<Vertex>& vertices) :
 		GLObject{}
 	{
 		::glGenBuffers(1, &m_ID);
 
 		Bind();
 
-		::glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float), data.data(), GL_STATIC_DRAW);
+		::glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
 	}
 
 	void VertexBuffer::Bind() const
