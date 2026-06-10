@@ -34,7 +34,8 @@ namespace ultraviolet
 	{
 		m_Renderer.BeginFrame();
 
-		m_Shader.Set("u_Color", { 0.85f, 0.95f, 0.15f, 1.0f });
+		m_Shader.Use();
+		m_Shader.Set("u_Color", { 0.85f, 0.15f, 0.95f, 1.0f });
 		m_Renderer.Draw(m_Mesh, m_Shader);
 
 		m_Renderer.EndFrame();
