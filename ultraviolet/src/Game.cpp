@@ -1,5 +1,7 @@
 #include <format>
 
+#include <imgui/imgui.h>
+
 #include "Game.h"
 #include "input/Input.h"
 #include "utils/Logger.h"
@@ -45,6 +47,8 @@ namespace ultraviolet
 		m_Camera.Apply(m_Shader, GetWindowSize());
 		m_Renderer.Draw(m_Mesh, m_Shader);
 
+		ImGui::Text("ultraviolet");
+
 		m_Renderer.EndFrame();
 	}
 
@@ -55,11 +59,18 @@ namespace ultraviolet
 			case Keycode::ESCAPE:
 				SetShouldClose(true);
 				break;
+
+			case Keycode::BACKSPACE:
+				SetRelativeMouseMode(!GetRelativeMouseMode());
+				break;
 		}
 	}
 
 	void Game::OnMouseMove(float x, float y)
 	{
+		if (!GetRelativeMouseMode())
+			return;
+
 		float sensitivity{ 0.25f };
 
 		m_Camera.Yaw += x * sensitivity;
@@ -81,6 +92,9 @@ namespace ultraviolet
 
 	void Game::ProcessInput(double deltaTime)
 	{
+		if (ImGui::GetIO().WantCaptureKeyboard)
+			return;
+
 		float movementSpeed{ 100.0f * static_cast<float>(deltaTime) };
 
 		glm::vec3 movementVector{};

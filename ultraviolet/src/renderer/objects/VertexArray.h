@@ -8,7 +8,7 @@ namespace ultraviolet
 	{
 	public:
 		VertexArray(const VertexBuffer& vertexBuffer);
-		virtual ~VertexArray() = default;
+		virtual ~VertexArray() override;
 
 		virtual void Bind() const override;
 		virtual void Unbind() const override;

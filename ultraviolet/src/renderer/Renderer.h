@@ -12,6 +12,7 @@ namespace ultraviolet
 	{
 	public:
 		Renderer(const NativeWindow& window);
+		~Renderer();
 
 		void BeginFrame() const;
 		void EndFrame() const;

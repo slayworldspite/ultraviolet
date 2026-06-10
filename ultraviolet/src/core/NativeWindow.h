@@ -20,6 +20,7 @@ namespace ultraviolet
 		::SDL_Window* GetNativeHandle() const;
 		std::pair<int, int> GetWindowSize() const;
 		void SetRelativeMouseMode(bool value) const;
+		bool GetRelativeMouseMode() const;
 
 	private:
 		::SDL_Window* m_Window;

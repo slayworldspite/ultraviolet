@@ -1,4 +1,6 @@
 #include <SDL3/SDL.h>
+#include <imgui/imgui.h>
+#include <imgui/imgui_impl_sdl3.h>
 
 #include "GameWindow.h"
 #include "../utils/Logger.h"
@@ -26,6 +28,8 @@ namespace ultraviolet
 			::SDL_Event event;
 			while (::SDL_PollEvent(&event))
 			{
+				ImGui_ImplSDL3_ProcessEvent(&event);
+
 				switch (event.type)
 				{
 					case ::SDL_EVENT_QUIT:
@@ -35,15 +39,18 @@ namespace ultraviolet
 						break;
 
 					case ::SDL_EVENT_MOUSE_MOTION:
-						OnMouseMove(event.motion.xrel, event.motion.yrel);
+						if (!ImGui::GetIO().WantCaptureMouse)
+							OnMouseMove(event.motion.xrel, event.motion.yrel);
 						break;
 
 					case ::SDL_EVENT_MOUSE_BUTTON_DOWN:
-						OnMouseClick();
+						if (!ImGui::GetIO().WantCaptureMouse)
+							OnMouseClick();
 						break;
 
 					case ::SDL_EVENT_KEY_DOWN:
-						OnKeyPress(static_cast<Keycode>(event.key.key));
+						if (!ImGui::GetIO().WantCaptureKeyboard)
+							OnKeyPress(static_cast<Keycode>(event.key.key));
 						break;
 				}
 			}

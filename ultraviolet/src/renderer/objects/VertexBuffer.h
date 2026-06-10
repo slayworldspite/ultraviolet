@@ -11,7 +11,7 @@ namespace ultraviolet
 	{
 	public:
 		VertexBuffer(const std::vector<Vertex>& vertices);
-		virtual ~VertexBuffer() = default;
+		virtual ~VertexBuffer() override;
 
 		virtual void Bind() const override;
 		virtual void Unbind() const override;

@@ -1,5 +1,8 @@
 #include <SDL3/SDL.h>
 #include <glad/glad.h>
+#include <imgui/imgui.h>
+#include <imgui/imgui_impl_sdl3.h>
+#include <imgui/imgui_impl_opengl3.h>
 
 #include "Renderer.h"
 #include "../utils/Logger.h"
@@ -39,6 +42,29 @@ namespace ultraviolet
 		::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		SDL_GL_SetSwapInterval(1);
+
+		// imgui initialization
+
+		IMGUI_CHECKVERSION();
+		ImGui::CreateContext();
+
+		ImGuiIO& io{ ImGui::GetIO() };
+		io.ConfigFlags |=
+			ImGuiConfigFlags_DockingEnable |
+			ImGuiConfigFlags_ViewportsEnable |
+			ImGuiConfigFlags_NavEnableKeyboard;
+
+		ImGui_ImplSDL3_InitForOpenGL(m_Window, m_GLContext);
+		ImGui_ImplOpenGL3_Init();
+
+		
+	}
+
+	Renderer::~Renderer()
+	{
+		ImGui_ImplOpenGL3_Shutdown();
+		ImGui_ImplSDL3_Shutdown();
+		ImGui::DestroyContext();
 	}
 
 	void Renderer::BeginFrame() const
@@ -47,11 +73,23 @@ namespace ultraviolet
 			GL_COLOR_BUFFER_BIT | 
 			GL_DEPTH_BUFFER_BIT
 		);
+
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplSDL3_NewFrame();
+		ImGui::NewFrame();
 	}
 
 	void Renderer::EndFrame() const
 	{
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
 		::SDL_GL_SwapWindow(m_Window);
+
+		ImGui::UpdatePlatformWindows();
+		ImGui::RenderPlatformWindowsDefault();
+
+		SDL_GL_MakeCurrent(m_Window, static_cast<SDL_GLContext>(m_GLContext));
 	}
 
 	void Renderer::SetClearColor(const glm::vec4& color) const

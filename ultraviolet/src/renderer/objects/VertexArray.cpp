@@ -16,6 +16,11 @@ namespace ultraviolet
 		::glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Position));
 	}
 
+	VertexArray::~VertexArray()
+	{
+		Delete();
+	}
+
 	void VertexArray::Bind() const
 	{
 		::glBindVertexArray(m_ID);
