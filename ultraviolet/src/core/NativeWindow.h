@@ -1,5 +1,7 @@
 #pragma once
 
+#include <utility>
+
 #include "NativeWindowSettings.h"
 
 namespace
@@ -16,6 +18,7 @@ namespace ultraviolet
 		~NativeWindow();
 
 		::SDL_Window* GetNativeHandle() const;
+		std::pair<int, int> GetWindowSize() const;
 
 	private:
 		::SDL_Window* m_Window;

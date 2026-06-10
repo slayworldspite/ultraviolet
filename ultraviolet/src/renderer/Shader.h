@@ -16,6 +16,7 @@ namespace ultraviolet
 		void Load();
 
 		void Set(std::string_view name, const glm::vec4& value) const;
+		void Set(std::string_view name, const glm::mat4& value) const;
 
 	private:
 		uint32_t m_ID;

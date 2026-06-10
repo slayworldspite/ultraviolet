@@ -3,7 +3,7 @@
 #include <glm/glm.hpp>
 
 #include "../core/NativeWindow.h"
-#include "Mesh.h"
+#include "mesh/Mesh.h"
 #include "Shader.h"
 
 namespace ultraviolet

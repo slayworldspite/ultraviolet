@@ -1,6 +1,7 @@
 #include <fstream>
 
 #include <glad/glad.h>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "Shader.h"
 #include "../utils/Logger.h"
@@ -100,5 +101,11 @@ namespace ultraviolet
 	{
 		Use();
 		::glUniform4fv(GetLocation(name), 1, &value[0]);
+	}
+
+	void Shader::Set(std::string_view name, const glm::mat4& value) const
+	{
+		Use();
+		::glUniformMatrix4fv(GetLocation(name), 1, GL_FALSE, glm::value_ptr(value));
 	}
 }

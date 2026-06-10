@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "GLObject.h"
-#include "Vertex.h"
+#include "../mesh/Vertex.h"
 
 namespace ultraviolet
 {

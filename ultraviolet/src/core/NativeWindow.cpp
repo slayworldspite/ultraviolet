@@ -53,4 +53,14 @@ namespace ultraviolet
 	{
 		return m_Window;
 	}
+
+	std::pair<int, int> NativeWindow::GetWindowSize() const
+	{
+		int width{};
+		int height{};
+
+		::SDL_GetWindowSizeInPixels(m_Window, &width, &height);
+
+		return { width, height };
+	}
 }

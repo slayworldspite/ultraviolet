@@ -143,6 +143,7 @@
     <ClCompile Include="src\core\NativeWindow.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\renderer\camera\ProjectionCamera.cpp" />
     <ClCompile Include="src\renderer\mesh\ColorMaterial.cpp" />
     <ClCompile Include="src\renderer\objects\GLObject.cpp" />
     <ClCompile Include="src\renderer\mesh\Mesh.cpp" />
@@ -159,13 +160,14 @@
     <ClInclude Include="src\core\NativeWindow.h" />
     <ClInclude Include="src\core\NativeWindowSettings.h" />
     <ClInclude Include="src\Game.h" />
+    <ClInclude Include="src\renderer\camera\ProjectionCamera.h" />
     <ClInclude Include="src\renderer\mesh\ColorMaterial.h" />
     <ClInclude Include="src\renderer\objects\GLObject.h" />
     <ClInclude Include="src\renderer\mesh\IMaterial.h" />
     <ClInclude Include="src\renderer\mesh\Mesh.h" />
     <ClInclude Include="src\renderer\Renderer.h" />
     <ClInclude Include="src\renderer\Shader.h" />
-    <ClInclude Include="src\renderer\Vertex.h" />
+    <ClInclude Include="src\renderer\mesh\Vertex.h" />
     <ClInclude Include="src\renderer\objects\VertexArray.h" />
     <ClInclude Include="src\renderer\objects\VertexBuffer.h" />
     <ClInclude Include="src\utils\Logger.h" />

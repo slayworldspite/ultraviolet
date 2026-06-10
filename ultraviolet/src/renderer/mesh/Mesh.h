@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "objects/VertexArray.h"
+#include "../objects/VertexArray.h"
 #include "Vertex.h"
 
 namespace ultraviolet

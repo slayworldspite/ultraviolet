@@ -1,0 +1,47 @@
+#include <glm/gtc/matrix_transform.hpp>
+
+#include "ProjectionCamera.h"
+
+namespace ultraviolet
+{
+	ProjectionCamera::ProjectionCamera() :
+		Position{ 0 },
+		Yaw{ -90 },
+		Pitch{ 0 },
+		FOV{ 90 },
+		m_Front{ 0 }
+	{
+		Update();
+	}
+
+	void ProjectionCamera::Update()
+	{
+		glm::vec3 direction;
+
+		direction.x = cos(glm::radians(Yaw)) * cos(glm::radians(Pitch));
+		direction.y = sin(glm::radians(Pitch));
+		direction.z = sin(glm::radians(Yaw)) * cos(glm::radians(Pitch));
+
+		m_Front = glm::normalize(direction);
+	}
+
+	void ProjectionCamera::Apply(const Shader& shader, std::pair<int, int> size)
+	{
+		glm::mat4 projection{ glm::perspective(
+			glm::radians(FOV),
+			(float)size.first / (float)size.second,
+			0.1f,
+			100.0f
+		) };
+
+		glm::mat4 view{ glm::lookAt(
+			Position,
+			Position + m_Front,
+			c_WorldUp
+		) };
+
+		shader.Use();
+		shader.Set("u_Projection", projection);
+		shader.Set("u_View", view);
+	}
+}

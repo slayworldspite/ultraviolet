@@ -3,7 +3,8 @@
 #include "core/GameWindow.h"
 #include "renderer/Renderer.h"
 #include "renderer/Shader.h"
-#include "renderer/Mesh.h"
+#include "renderer/mesh/Mesh.h"
+#include "renderer/camera/ProjectionCamera.h"
 
 namespace ultraviolet
 {
@@ -21,5 +22,6 @@ namespace ultraviolet
 		Renderer m_Renderer;
 		Shader m_Shader;
 		Mesh m_Mesh;
+		ProjectionCamera m_Camera;
 	};
 }
