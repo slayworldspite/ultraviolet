@@ -54,6 +54,7 @@ namespace ultraviolet
 		{
 			case Keycode::ESCAPE:
 				SetShouldClose(true);
+				break;
 		}
 	}
 
@@ -82,7 +83,7 @@ namespace ultraviolet
 	{
 		float movementSpeed{ 100.0f * static_cast<float>(deltaTime) };
 
-		glm::vec3 movementVector{ 0 };
+		glm::vec3 movementVector{};
 
 		if (Input::IsKeyHeld(Scancode::W))
 			movementVector.z += movementSpeed;

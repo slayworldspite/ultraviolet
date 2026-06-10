@@ -5,18 +5,18 @@
 namespace ultraviolet
 {
 	ProjectionCamera::ProjectionCamera() :
-		Position{ 0 },
+		Position{},
 		Yaw{ -90 },
-		Pitch{ 0 },
+		Pitch{},
 		FOV{ 90 },
-		m_Front{ 0 }
+		m_Front{}
 	{
 		Update();
 	}
 
 	void ProjectionCamera::Update()
 	{
-		glm::vec3 direction;
+		glm::vec3 direction{};
 
 		direction.x = cos(glm::radians(Yaw)) * cos(glm::radians(Pitch));
 		direction.y = sin(glm::radians(Pitch));
