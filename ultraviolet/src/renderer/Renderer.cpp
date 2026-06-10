@@ -33,8 +33,6 @@ namespace ultraviolet
 
 		Logger::Log("renderer initialized!", Logger::Level::Info);
 
-		::glViewport(0, 0, 1280, 720);
-
 		::glEnable(GL_DEPTH_TEST);
 	}
 

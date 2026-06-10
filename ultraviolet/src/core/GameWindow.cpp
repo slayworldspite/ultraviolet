@@ -14,6 +14,8 @@ namespace ultraviolet
 
 	void GameWindow::Run()
 	{
+		OnStart();
+
 		Logger::Log("game started!", Logger::Level::Info);
 		
 		uint64_t currentFrameTime{};
