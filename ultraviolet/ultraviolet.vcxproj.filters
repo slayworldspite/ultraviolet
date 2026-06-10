@@ -36,22 +36,22 @@
     <ClCompile Include="vendor\glad\glad.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\renderer\VertexBuffer.cpp">
+    <ClCompile Include="src\renderer\objects\VertexBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\renderer\GLObject.cpp">
+    <ClCompile Include="src\renderer\objects\GLObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\renderer\VertexArray.cpp">
+    <ClCompile Include="src\renderer\objects\VertexArray.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\renderer\Shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\renderer\ColorMaterial.cpp">
+    <ClCompile Include="src\renderer\mesh\ColorMaterial.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\renderer\Mesh.cpp">
+    <ClCompile Include="src\renderer\mesh\Mesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -77,28 +77,28 @@
     <ClInclude Include="src\renderer\Renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\renderer\VertexBuffer.h">
+    <ClInclude Include="src\renderer\objects\VertexBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\renderer\VertexArray.h">
+    <ClInclude Include="src\renderer\objects\VertexArray.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\renderer\GLObject.h">
+    <ClInclude Include="src\renderer\objects\GLObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\renderer\Shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\renderer\Mesh.h">
+    <ClInclude Include="src\renderer\mesh\Mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\renderer\Vertex.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\renderer\IMaterial.h">
+    <ClInclude Include="src\renderer\mesh\IMaterial.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\renderer\ColorMaterial.h">
+    <ClInclude Include="src\renderer\mesh\ColorMaterial.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
