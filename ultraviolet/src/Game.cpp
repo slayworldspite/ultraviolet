@@ -90,6 +90,11 @@ namespace ultraviolet
 			m_Camera.Pitch = 89.0f;
 	}
 
+	void Game::OnResize(int width, int height)
+	{
+		m_Renderer.SetViewport(width, height);
+	}
+
 	void Game::ProcessInput(double deltaTime)
 	{
 		if (ImGui::GetIO().WantCaptureKeyboard)

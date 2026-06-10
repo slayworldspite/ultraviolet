@@ -19,6 +19,7 @@ namespace ultraviolet
 		void OnRender() override;
 		void OnKeyPress(Keycode key) override;
 		void OnMouseMove(float x, float y) override;
+		void OnResize(int width, int height) override;
 
 	private:
 		Renderer m_Renderer;

@@ -52,6 +52,10 @@ namespace ultraviolet
 						if (!ImGui::GetIO().WantCaptureKeyboard)
 							OnKeyPress(static_cast<Keycode>(event.key.key));
 						break;
+
+					case ::SDL_EVENT_WINDOW_RESIZED:
+						OnResize(event.window.data1, event.window.data2);
+						break;
 				}
 			}
 
@@ -97,6 +101,11 @@ namespace ultraviolet
 	}
 
 	void GameWindow::OnMouseMove(float x, float y)
+	{
+
+	}
+
+	void GameWindow::OnResize(int width, int height)
 	{
 
 	}

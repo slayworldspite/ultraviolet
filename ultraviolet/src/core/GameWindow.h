@@ -21,6 +21,7 @@ namespace ultraviolet
 		virtual void OnKeyPress(Keycode key);
 		virtual void OnMouseClick();
 		virtual void OnMouseMove(float x, float y);
+		virtual void OnResize(int width, int height);
 		virtual void OnClose();
 
 	private:
