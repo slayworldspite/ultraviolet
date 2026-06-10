@@ -29,11 +29,21 @@ namespace ultraviolet
 				switch (event.type)
 				{
 					case ::SDL_EVENT_QUIT:
-						m_ShouldClose = true;
-						break;
-
 					case ::SDL_EVENT_WINDOW_CLOSE_REQUESTED:
 						m_ShouldClose = true;
+						OnClose();
+						break;
+
+					case ::SDL_EVENT_MOUSE_MOTION:
+						OnMouseMove(event.motion.xrel, event.motion.yrel);
+						break;
+
+					case ::SDL_EVENT_MOUSE_BUTTON_DOWN:
+						OnMouseClick();
+						break;
+
+					case ::SDL_EVENT_KEY_DOWN:
+						OnKeyPress(static_cast<Keycode>(event.key.key));
 						break;
 				}
 			}
@@ -49,6 +59,11 @@ namespace ultraviolet
 		Logger::Log("closing...", Logger::Level::Info);
 	}
 
+	void GameWindow::SetShouldClose(bool value)
+	{
+		m_ShouldClose = value;
+	}
+
 	void GameWindow::OnStart()
 	{
 
@@ -60,6 +75,26 @@ namespace ultraviolet
 	}
 
 	void GameWindow::OnRender()
+	{
+
+	}
+
+	void GameWindow::OnKeyPress(Keycode key)
+	{
+
+	}
+
+	void GameWindow::OnMouseClick()
+	{
+
+	}
+
+	void GameWindow::OnMouseMove(float x, float y)
+	{
+
+	}
+
+	void GameWindow::OnClose()
 	{
 
 	}

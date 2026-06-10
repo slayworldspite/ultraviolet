@@ -63,4 +63,9 @@ namespace ultraviolet
 
 		return { width, height };
 	}
+
+	void NativeWindow::SetRelativeMouseMode(bool value) const
+	{
+		::SDL_SetWindowRelativeMouseMode(m_Window, value);
+	}
 }

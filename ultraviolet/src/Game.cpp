@@ -1,4 +1,8 @@
+#include <format>
+
 #include "Game.h"
+#include "input/Input.h"
+#include "utils/Logger.h"
 
 namespace ultraviolet
 {
@@ -17,7 +21,7 @@ namespace ultraviolet
 		m_Shader{ "assets/shaders/shader.vert", "assets/shaders/shader.frag" },
 		m_Mesh{ std::vector<Vertex>{ Vertex{ .Position{ 0.5f, -0.5f, 0.0f } }, Vertex{ .Position{ -0.5f, -0.5f, 0.0f } }, Vertex{ .Position{ 0.0f, 0.5f, 0.0f } } } }
 	{
-
+		SetRelativeMouseMode(true);
 	}
 
 	void Game::OnStart()
@@ -29,6 +33,7 @@ namespace ultraviolet
 	void Game::OnUpdate(double deltaTime)
 	{
 		m_Camera.Update();
+		ProcessInput(deltaTime);
 	}
 
 	void Game::OnRender()
@@ -41,5 +46,62 @@ namespace ultraviolet
 		m_Renderer.Draw(m_Mesh, m_Shader);
 
 		m_Renderer.EndFrame();
+	}
+
+	void Game::OnKeyPress(Keycode key)
+	{
+		switch (key)
+		{
+			case Keycode::ESCAPE:
+				SetShouldClose(true);
+		}
+	}
+
+	void Game::OnMouseMove(float x, float y)
+	{
+		float sensitivity{ 0.25f };
+
+		m_Camera.Yaw += x * sensitivity;
+		
+		if (m_Camera.Yaw >= 360.0f)
+			m_Camera.Yaw -= 360.0f;
+
+		if (m_Camera.Yaw < 0)
+			m_Camera.Yaw += 360.0f;
+
+		m_Camera.Pitch -= y * sensitivity;
+
+		if (m_Camera.Pitch < -89.0f)
+			m_Camera.Pitch = -89.0f;
+
+		if (m_Camera.Pitch > 89.0f)
+			m_Camera.Pitch = 89.0f;
+	}
+
+	void Game::ProcessInput(double deltaTime)
+	{
+		float movementSpeed{ 100.0f * static_cast<float>(deltaTime) };
+
+		glm::vec3 movementVector{ 0 };
+
+		if (Input::IsKeyHeld(Scancode::W))
+			movementVector.z += movementSpeed;
+
+		if (Input::IsKeyHeld(Scancode::S))
+			movementVector.z -= movementSpeed;
+
+		if (Input::IsKeyHeld(Scancode::A))
+			movementVector.x -= movementSpeed;
+
+		if (Input::IsKeyHeld(Scancode::D))
+			movementVector.x += movementSpeed;
+
+		if (Input::IsKeyHeld(Scancode::SPACE))
+			movementVector.y += movementSpeed;
+
+		if (Input::IsKeyHeld(Scancode::LCTRL))
+			movementVector.y -= movementSpeed;
+
+		m_Camera.Move(movementVector * static_cast<float>(deltaTime));
 	}
 }

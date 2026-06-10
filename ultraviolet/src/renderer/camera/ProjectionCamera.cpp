@@ -25,7 +25,7 @@ namespace ultraviolet
 		m_Front = glm::normalize(direction);
 	}
 
-	void ProjectionCamera::Apply(const Shader& shader, std::pair<int, int> size)
+	void ProjectionCamera::Apply(const Shader& shader, std::pair<int, int> size) const
 	{
 		glm::mat4 projection{ glm::perspective(
 			glm::radians(FOV),
@@ -43,5 +43,14 @@ namespace ultraviolet
 		shader.Use();
 		shader.Set("u_Projection", projection);
 		shader.Set("u_View", view);
+	}
+
+	void ProjectionCamera::Move(const glm::vec3& vector)
+	{
+		glm::vec3 right = glm::normalize(glm::cross(m_Front, c_WorldUp));
+
+		Position += right * vector.x;
+		Position.y += vector.y;
+		Position += m_Front * vector.z;
 	}
 }
