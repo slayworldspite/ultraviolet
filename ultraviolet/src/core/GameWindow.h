@@ -9,7 +9,7 @@ namespace ultraviolet
 	class GameWindow : public NativeWindow
 	{
 	public:
-		GameWindow(const NativeWindowSettings& nativeWindowSettings, const GameWindowSettings& gameWindowSettings);
+		GameWindow(const NativeWindowSettings& nativeWindowSettings);
 
 		void Run();
 		void SetShouldClose(bool value);
@@ -25,7 +25,6 @@ namespace ultraviolet
 		virtual void OnClose();
 
 	private:
-		float m_UpdateFrequency;
 		bool m_ShouldClose{ false };
 	};
 }

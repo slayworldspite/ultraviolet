@@ -162,7 +162,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\GameWindow.h" />
-    <ClInclude Include="src\core\GameWindowSettings.h" />
     <ClInclude Include="src\core\NativeWindow.h" />
     <ClInclude Include="src\core\NativeWindowSettings.h" />
     <ClInclude Include="src\Game.h" />

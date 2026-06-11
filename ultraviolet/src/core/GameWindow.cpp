@@ -7,9 +7,8 @@
 
 namespace ultraviolet
 {
-	GameWindow::GameWindow(const NativeWindowSettings& nativeWindowSettings, const GameWindowSettings& gameWindowSettings) :
-		NativeWindow{ nativeWindowSettings },
-		m_UpdateFrequency{ gameWindowSettings.UpdateFrequency }
+	GameWindow::GameWindow(const NativeWindowSettings& nativeWindowSettings) :
+		NativeWindow{ nativeWindowSettings }
 	{
 
 	}

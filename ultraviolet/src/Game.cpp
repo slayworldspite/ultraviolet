@@ -14,9 +14,6 @@ namespace ultraviolet
 				.Title{ "ultraviolet" },
 				.Width{ 1280 },
 				.Height{ 720 }
-			},
-			GameWindowSettings{
-				.UpdateFrequency{ 60.0f }
 			}
 	},
 		m_Renderer{ *this },
