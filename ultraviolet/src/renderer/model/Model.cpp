@@ -5,7 +5,10 @@
 namespace ultraviolet
 {
 	Model::Model(Mesh mesh) :
-		Meshes{}
+		Meshes{},
+		Position{},
+		Scale{},
+		Rotation{}
 	{
 		Meshes.push_back(std::move(mesh));
 	}

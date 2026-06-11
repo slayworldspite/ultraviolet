@@ -21,7 +21,9 @@ namespace ultraviolet
 	},
 		m_Renderer{ *this },
 		m_Shader{ "assets/shaders/shader.vert", "assets/shaders/shader.frag" },
-		m_Model{ ModelLoader::Load("assets/models/teapot/teapot.obj") }
+		m_DeltaTime{},
+		m_Teapot{ ModelLoader::Load("assets/models/teapot/teapot.obj") },
+		m_Dragon{ ModelLoader::Load("assets/models/dragon/dragon.obj") }
 	{
 		SetRelativeMouseMode(true);
 	}
@@ -31,11 +33,17 @@ namespace ultraviolet
 		m_Renderer.SetClearColor({ 0.15f, 0.15f, 0.2f, 1.0f });
 		m_Camera.Position = { 0.0f, 0.0f, 3.0f };
 
-		m_Model.Scale = { 0.05f, 0.05f, 0.05f };
+		m_Teapot.Scale = { 0.05f, 0.05f, 0.05f };
+		m_Teapot.Position.x -= 5;
+
+		m_Dragon.Scale = { 5.0f, 5.0f, 5.0f };
+		m_Dragon.Position.x += 5;
 	}
 
 	void Game::OnUpdate(double deltaTime)
 	{
+		m_DeltaTime = deltaTime;
+
 		m_Camera.Update();
 		ProcessInput(deltaTime);
 	}
@@ -46,7 +54,10 @@ namespace ultraviolet
 
 		m_Camera.Apply(m_Shader, GetWindowSize());
 		
-		m_Renderer.Draw(m_Model, m_Shader);
+		m_Renderer.Draw(m_Teapot, m_Shader);
+		m_Renderer.Draw(m_Dragon, m_Shader);
+
+		::ImGui::Text("%f", 1.0 / m_DeltaTime);
 
 		m_Renderer.EndFrame();
 	}
@@ -99,7 +110,7 @@ namespace ultraviolet
 		if (ImGui::GetIO().WantCaptureKeyboard)
 			return;
 
-		float movementSpeed{ 100.0f * static_cast<float>(deltaTime) };
+		float movementSpeed{ 100.0f };
 
 		glm::vec3 movementVector{};
 
