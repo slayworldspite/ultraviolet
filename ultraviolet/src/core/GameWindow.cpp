@@ -27,7 +27,7 @@ namespace ultraviolet
 			::SDL_Event event;
 			while (::SDL_PollEvent(&event))
 			{
-				ImGui_ImplSDL3_ProcessEvent(&event);
+				::ImGui_ImplSDL3_ProcessEvent(&event);
 
 				switch (event.type)
 				{
@@ -38,17 +38,17 @@ namespace ultraviolet
 						break;
 
 					case ::SDL_EVENT_MOUSE_MOTION:
-						if (!ImGui::GetIO().WantCaptureMouse)
+						if (!::ImGui::GetIO().WantCaptureMouse)
 							OnMouseMove(event.motion.xrel, event.motion.yrel);
 						break;
 
 					case ::SDL_EVENT_MOUSE_BUTTON_DOWN:
-						if (!ImGui::GetIO().WantCaptureMouse)
+						if (!::ImGui::GetIO().WantCaptureMouse)
 							OnMouseClick();
 						break;
 
 					case ::SDL_EVENT_KEY_DOWN:
-						if (!ImGui::GetIO().WantCaptureKeyboard)
+						if (!::ImGui::GetIO().WantCaptureKeyboard)
 							OnKeyPress(static_cast<Keycode>(event.key.key));
 						break;
 

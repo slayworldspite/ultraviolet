@@ -107,10 +107,10 @@ namespace ultraviolet
 
 	void Game::ProcessInput(double deltaTime)
 	{
-		if (ImGui::GetIO().WantCaptureKeyboard)
+		if (::ImGui::GetIO().WantCaptureKeyboard)
 			return;
 
-		float movementSpeed{ 100.0f };
+		float movementSpeed{ 5.0f };
 
 		glm::vec3 movementVector{};
 

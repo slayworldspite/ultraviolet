@@ -41,30 +41,29 @@ namespace ultraviolet
 		::glEnable(GL_BLEND);
 		::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		SDL_GL_SetSwapInterval(1);
+		::SDL_GL_SetSwapInterval(1);
 
 		// imgui initialization
+		::IMGUI_CHECKVERSION();
+		::ImGui::CreateContext();
 
-		IMGUI_CHECKVERSION();
-		ImGui::CreateContext();
-
-		ImGuiIO& io{ ImGui::GetIO() };
+		::ImGuiIO& io{ ::ImGui::GetIO() };
 		io.ConfigFlags |=
-			ImGuiConfigFlags_DockingEnable |
-			ImGuiConfigFlags_ViewportsEnable |
-			ImGuiConfigFlags_NavEnableKeyboard;
+			::ImGuiConfigFlags_DockingEnable |
+			::ImGuiConfigFlags_ViewportsEnable |
+			::ImGuiConfigFlags_NavEnableKeyboard;
 
-		ImGui_ImplSDL3_InitForOpenGL(m_Window, m_GLContext);
-		ImGui_ImplOpenGL3_Init();
+		::ImGui_ImplSDL3_InitForOpenGL(m_Window, m_GLContext);
+		::ImGui_ImplOpenGL3_Init();
 
 		
 	}
 
 	Renderer::~Renderer()
 	{
-		ImGui_ImplOpenGL3_Shutdown();
-		ImGui_ImplSDL3_Shutdown();
-		ImGui::DestroyContext();
+		::ImGui_ImplOpenGL3_Shutdown();
+		::ImGui_ImplSDL3_Shutdown();
+		::ImGui::DestroyContext();
 	}
 
 	void Renderer::BeginFrame() const
@@ -74,22 +73,22 @@ namespace ultraviolet
 			GL_DEPTH_BUFFER_BIT
 		);
 
-		ImGui_ImplOpenGL3_NewFrame();
-		ImGui_ImplSDL3_NewFrame();
-		ImGui::NewFrame();
+		::ImGui_ImplOpenGL3_NewFrame();
+		::ImGui_ImplSDL3_NewFrame();
+		::ImGui::NewFrame();
 	}
 
 	void Renderer::EndFrame() const
 	{
-		ImGui::Render();
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+		::ImGui::Render();
+		::ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 		::SDL_GL_SwapWindow(m_Window);
 
-		ImGui::UpdatePlatformWindows();
-		ImGui::RenderPlatformWindowsDefault();
+		::ImGui::UpdatePlatformWindows();
+		::ImGui::RenderPlatformWindowsDefault();
 
-		SDL_GL_MakeCurrent(m_Window, static_cast<SDL_GLContext>(m_GLContext));
+		::SDL_GL_MakeCurrent(m_Window, static_cast<SDL_GLContext>(m_GLContext));
 	}
 
 	void Renderer::SetClearColor(const glm::vec4& color) const
