@@ -48,10 +48,6 @@ namespace ultraviolet
 		
 		m_Renderer.Draw(m_Model, m_Shader);
 
-		m_Shader.Set("u_Model", glm::mat4{ 1.0f });
-		std::vector<Vertex> vertices{ Vertex{.Position{-0.5f, -0.5f, 0.0f}, .Normals{0.0f, 0.0f, 0.0f}, .TextureCoordinates{0.0f, 0.0f}}, Vertex{.Position{ 0.5f, -0.5f, 0.0f}, .Normals{0.0f, 0.0f, 0.0f}, .TextureCoordinates{0.0f, 0.0f}}, Vertex{.Position{ 0.0f, 0.5f, 0.0f}, .Normals{0.0f, 0.0f, 0.0f}, .TextureCoordinates{0.0f, 0.0f}} }; Mesh mesh{ vertices, std::make_shared<ColorMaterial>(glm::vec4{1.0f, 1.0f, 1.0f, 1.0f}) }; 
-		m_Renderer.Draw(mesh, m_Shader);
-
 		m_Renderer.EndFrame();
 	}
 
