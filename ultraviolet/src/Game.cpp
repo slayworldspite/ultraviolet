@@ -31,7 +31,7 @@ namespace ultraviolet
 		m_Renderer.SetClearColor({ 0.15f, 0.15f, 0.2f, 1.0f });
 		m_Camera.Position = { 0.0f, 0.0f, 3.0f };
 
-		m_Model.Scale = { 0.1f, 0.1f, 0.1f };
+		m_Model.Scale = { 0.05f, 0.05f, 0.05f };
 	}
 
 	void Game::OnUpdate(double deltaTime)

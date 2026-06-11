@@ -8,6 +8,8 @@ namespace ultraviolet
 {
 	Mesh ModelLoader::Load(const std::filesystem::path& path)
 	{
+		Logger::Log("loading " + path.string(), Logger::Level::Info);
+
 		tinyobj::ObjReaderConfig readerConfig{};
 		readerConfig.mtl_search_path = "";
 
@@ -66,6 +68,9 @@ namespace ultraviolet
 		}
 
 		Mesh mesh{ vertices, std::make_shared<ColorMaterial>(glm::vec4{1.0f, 1.0f, 1.0f, 1.0f}) };
+
+		Logger::Log("finished loading " + path.filename().string() + "!", Logger::Level::Info);
+
 		return mesh;
 	}
 }
