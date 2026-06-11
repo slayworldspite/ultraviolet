@@ -14,9 +14,28 @@ namespace ultraviolet
 		::glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
 	}
 
+	VertexBuffer::VertexBuffer(VertexBuffer&& other) noexcept
+	{
+		m_ID = other.m_ID;
+		other.m_ID = 0;
+	}
+
 	VertexBuffer::~VertexBuffer()
 	{
 		Delete();
+	}
+
+	VertexBuffer& VertexBuffer::operator=(VertexBuffer&& other) noexcept
+	{
+		if (this != &other)
+		{
+			glDeleteBuffers(1, &m_ID);
+
+			m_ID = other.m_ID;
+			other.m_ID = 0;
+		}
+
+		return *this;
 	}
 
 	void VertexBuffer::Bind() const
@@ -33,4 +52,5 @@ namespace ultraviolet
 	{
 		::glDeleteBuffers(1, &m_ID);
 	}
+
 }

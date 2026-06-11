@@ -2,7 +2,8 @@
 
 namespace ultraviolet
 {
-	Mesh::Mesh(const std::vector<Vertex>& vertices) :
+	Mesh::Mesh(const std::vector<Vertex>& vertices, std::shared_ptr<IMaterial> material) :
+		Material{ std::move(material) },
 		m_VertexBuffer{ vertices },
 		m_VertexArray{ m_VertexBuffer },
 		m_VertexCount{ vertices.size() }

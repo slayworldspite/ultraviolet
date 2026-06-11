@@ -101,7 +101,22 @@ namespace ultraviolet
 	{
 		shader.Use();
 		mesh.Bind();
+		
+		if (mesh.Material)
+			mesh.Material->Apply(shader);
+
 		::glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(mesh.GetVertexCount()));
+	}
+
+	void Renderer::Draw(const Model& model, const Shader& shader) const
+	{
+		shader.Use();
+		shader.Set("u_Model", model.GetModelMatrix());
+
+		for (const Mesh& mesh : model.Meshes)
+		{
+			Draw(mesh, shader);
+		}
 	}
 
 	void Renderer::SetViewport(int width, int height) const

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -145,8 +145,13 @@
     <ClCompile Include="src\input\Input.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\renderer\camera\ProjectionCamera.cpp" />
+    <ClCompile Include="src\renderer\mesh\ColorMaterial.cpp" />
+    <ClCompile Include="src\renderer\mesh\TextureMaterial.cpp" />
+    <ClCompile Include="src\renderer\model\Model.cpp" />
+    <ClCompile Include="src\renderer\model\ModelLoader.cpp" />
     <ClCompile Include="src\renderer\objects\GLObject.cpp" />
     <ClCompile Include="src\renderer\mesh\Mesh.cpp" />
+    <ClCompile Include="src\renderer\objects\Texture.cpp" />
     <ClCompile Include="src\renderer\Renderer.cpp" />
     <ClCompile Include="src\renderer\Shader.cpp" />
     <ClCompile Include="src\renderer\objects\VertexArray.cpp" />
@@ -170,6 +175,12 @@
     <ClInclude Include="src\input\MouseButtonFlags.h" />
     <ClInclude Include="src\input\Scancode.h" />
     <ClInclude Include="src\renderer\camera\ProjectionCamera.h" />
+    <ClInclude Include="src\renderer\mesh\ColorMaterial.h" />
+    <ClInclude Include="src\renderer\mesh\IMaterial.h" />
+    <ClInclude Include="src\renderer\objects\Texture.h" />
+    <ClInclude Include="src\renderer\mesh\TextureMaterial.h" />
+    <ClInclude Include="src\renderer\model\Model.h" />
+    <ClInclude Include="src\renderer\model\ModelLoader.h" />
     <ClInclude Include="src\renderer\objects\GLObject.h" />
     <ClInclude Include="src\renderer\mesh\Mesh.h" />
     <ClInclude Include="src\renderer\Renderer.h" />
@@ -187,6 +198,7 @@
     <ClInclude Include="vendor\imgui\imstb_rectpack.h" />
     <ClInclude Include="vendor\imgui\imstb_textedit.h" />
     <ClInclude Include="vendor\imgui\imstb_truetype.h" />
+    <ClInclude Include="vendor\tinyobjloader\tiny_obj_loader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

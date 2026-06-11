@@ -15,8 +15,6 @@ namespace ultraviolet
 		virtual void Delete() = 0;
 		uint32_t GetID() const;
 
-		operator uint32_t() const;
-
 	protected:
 		uint32_t m_ID;
 	};

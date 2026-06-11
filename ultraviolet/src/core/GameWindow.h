@@ -1,7 +1,6 @@
 #pragma once
 
 #include "NativeWindow.h"
-#include "GameWindowSettings.h"
 #include "../input/Keycode.h"
 
 namespace ultraviolet

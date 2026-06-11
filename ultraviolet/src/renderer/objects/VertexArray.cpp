@@ -14,11 +14,36 @@ namespace ultraviolet
 
 		::glEnableVertexAttribArray(0);
 		::glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Position));
+
+		::glEnableVertexAttribArray(1);
+		::glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Normals));
+
+		::glEnableVertexAttribArray(2);
+		::glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TextureCoordinates));
+	}
+
+	VertexArray::VertexArray(VertexArray&& other) noexcept
+	{
+		m_ID = other.m_ID;
+		other.m_ID = 0;
 	}
 
 	VertexArray::~VertexArray()
 	{
 		Delete();
+	}
+
+	VertexArray& VertexArray::operator=(VertexArray&& other) noexcept
+	{
+		if (this != &other)
+		{
+			glDeleteBuffers(1, &m_ID);
+
+			m_ID = other.m_ID;
+			other.m_ID = 0;
+		}
+
+		return *this;
 	}
 
 	void VertexArray::Bind() const

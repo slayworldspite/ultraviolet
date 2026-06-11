@@ -14,9 +14,4 @@ namespace ultraviolet
 	{
 		return m_ID;
 	}
-
-	GLObject::operator uint32_t() const
-	{
-		return m_ID;
-	}
 }

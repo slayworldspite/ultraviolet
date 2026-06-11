@@ -1,10 +1,13 @@
 #include <format>
 
 #include <imgui/imgui.h>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "Game.h"
 #include "input/Input.h"
 #include "utils/Logger.h"
+#include "renderer/mesh/ColorMaterial.h"
+#include "renderer/model/ModelLoader.h"
 
 namespace ultraviolet
 {
@@ -18,15 +21,17 @@ namespace ultraviolet
 	},
 		m_Renderer{ *this },
 		m_Shader{ "assets/shaders/shader.vert", "assets/shaders/shader.frag" },
-		m_Mesh{ std::vector<Vertex>{ Vertex{ .Position{ 0.5f, -0.5f, 0.0f } }, Vertex{ .Position{ -0.5f, -0.5f, 0.0f } }, Vertex{ .Position{ 0.0f, 0.5f, 0.0f } } } }
+		m_Model{ ModelLoader::Load("assets/models/teapot/teapot.obj") }
 	{
 		SetRelativeMouseMode(true);
 	}
 
 	void Game::OnStart()
 	{
-		m_Renderer.SetClearColor({ 0.05f, 0.45f, 1.0f, 1.0f });
+		m_Renderer.SetClearColor({ 0.15f, 0.15f, 0.2f, 1.0f });
 		m_Camera.Position = { 0.0f, 0.0f, 3.0f };
+
+		m_Model.Scale = { 0.1f, 0.1f, 0.1f };
 	}
 
 	void Game::OnUpdate(double deltaTime)
@@ -39,12 +44,13 @@ namespace ultraviolet
 	{
 		m_Renderer.BeginFrame();
 
-		m_Shader.Use();
-		m_Shader.Set("u_Color", { 0.05f, 0.15f, 0.25f, 1.0f });
 		m_Camera.Apply(m_Shader, GetWindowSize());
-		m_Renderer.Draw(m_Mesh, m_Shader);
+		
+		m_Renderer.Draw(m_Model, m_Shader);
 
-		ImGui::Text("ultraviolet");
+		m_Shader.Set("u_Model", glm::mat4{ 1.0f });
+		std::vector<Vertex> vertices{ Vertex{.Position{-0.5f, -0.5f, 0.0f}, .Normals{0.0f, 0.0f, 0.0f}, .TextureCoordinates{0.0f, 0.0f}}, Vertex{.Position{ 0.5f, -0.5f, 0.0f}, .Normals{0.0f, 0.0f, 0.0f}, .TextureCoordinates{0.0f, 0.0f}}, Vertex{.Position{ 0.0f, 0.5f, 0.0f}, .Normals{0.0f, 0.0f, 0.0f}, .TextureCoordinates{0.0f, 0.0f}} }; Mesh mesh{ vertices, std::make_shared<ColorMaterial>(glm::vec4{1.0f, 1.0f, 1.0f, 1.0f}) }; 
+		m_Renderer.Draw(mesh, m_Shader);
 
 		m_Renderer.EndFrame();
 	}
