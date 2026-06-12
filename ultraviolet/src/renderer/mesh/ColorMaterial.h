@@ -13,5 +13,6 @@ namespace ultraviolet
 		ColorMaterial(const glm::vec4& color);
 
 		virtual void Apply(const Shader& shader) const override;
+		virtual void Free() override;
 	};
 }

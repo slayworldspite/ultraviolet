@@ -8,5 +8,6 @@ namespace ultraviolet
 	{
 	public:
 		virtual void Apply(const Shader& shader) const = 0;
+		virtual void Free() = 0;
 	};
 }

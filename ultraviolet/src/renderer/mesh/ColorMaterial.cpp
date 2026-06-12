@@ -12,5 +12,11 @@ namespace ultraviolet
 	{
 		shader.Use();
 		shader.Set("u_Color", Color);
+		shader.Set("u_HasTexture", false);
+	}
+
+	void ColorMaterial::Free()
+	{
+
 	}
 }

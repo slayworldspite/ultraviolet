@@ -108,4 +108,16 @@ namespace ultraviolet
 		Use();
 		::glUniformMatrix4fv(GetLocation(name), 1, GL_FALSE, glm::value_ptr(value));
 	}
+
+	void Shader::Set(std::string_view name, int value) const
+	{
+		Use();
+		::glUniform1i(GetLocation(name), value);
+	}
+
+	void Shader::Set(std::string_view name, bool value) const
+	{
+		Use();
+		::glUniform1i(GetLocation(name), static_cast<int>(value));
+	}
 }

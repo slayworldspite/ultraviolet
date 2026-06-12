@@ -23,7 +23,7 @@ namespace ultraviolet
 		m_Shader{ "assets/shaders/shader.vert", "assets/shaders/shader.frag" },
 		m_DeltaTime{},
 		m_Teapot{ ModelLoader::Load("assets/models/teapot/teapot.obj") },
-		m_Dragon{ ModelLoader::Load("assets/models/dragon/dragon.obj") }
+		m_Dragon{ ModelLoader::Load("assets/models/bunny/bunny.obj") }
 	{
 		SetRelativeMouseMode(true);
 	}
@@ -38,6 +38,20 @@ namespace ultraviolet
 
 		m_Dragon.Scale = { 5.0f, 5.0f, 5.0f };
 		m_Dragon.Position.x += 5;
+
+		std::shared_ptr<Texture> texture{ std::make_shared<Texture>("assets/models/teapot/default.png") };
+
+		for (size_t i{}; i < m_Dragon.Meshes.size(); i++)
+		{
+			m_Dragon.Meshes[i].Material = std::make_shared<TextureMaterial>(texture);
+		}
+
+		for (size_t i{}; i < m_Teapot.Meshes.size(); i++)
+		{
+			m_Teapot.Meshes[i].Material = std::make_shared<TextureMaterial>(texture);
+		}
+
+		m_Shader.Set("u_Texture", 0);
 	}
 
 	void Game::OnUpdate(double deltaTime)

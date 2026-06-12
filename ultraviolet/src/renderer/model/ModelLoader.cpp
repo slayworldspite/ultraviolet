@@ -34,6 +34,7 @@ namespace ultraviolet
 		for (auto& shape : shapes)
 		{
 			size_t indexOffset{};
+			size_t faceIndex{};
 
 			for (auto& face : shape.mesh.num_face_vertices)
 			{
@@ -64,6 +65,10 @@ namespace ultraviolet
 				}
 
 				indexOffset += face;
+
+				
+
+				faceIndex++;
 			}			
 		}
 

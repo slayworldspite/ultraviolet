@@ -8,12 +8,13 @@ namespace ultraviolet
 	class TextureMaterial : public IMaterial
 	{
 	public:
-		std::vector<Texture> Textures;
+		std::vector<std::shared_ptr<Texture>> Textures;
 
 	public:
-		TextureMaterial(const Texture& texture);
-		TextureMaterial(const std::vector<Texture>& textures);
+		TextureMaterial(std::shared_ptr<Texture> texture);
+		TextureMaterial(const std::vector<std::shared_ptr<Texture>>& textures);
 
 		virtual void Apply(const Shader& shader) const override;
+		virtual void Free() override;
 	};
 }
