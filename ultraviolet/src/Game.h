@@ -28,6 +28,8 @@ namespace ultraviolet
 
 		double m_DeltaTime;
 
+		std::vector<Model> m_Models;
+
 	private:
 		void ProcessInput(double deltaTime);
 	};

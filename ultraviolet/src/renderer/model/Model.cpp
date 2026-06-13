@@ -7,7 +7,7 @@ namespace ultraviolet
 	Model::Model(std::vector<Mesh>& meshes) :
 		Meshes{ std::move(meshes) },
 		Position{},
-		Scale{},
+		Scale{ 1.0 },
 		Rotation{}
 	{
 

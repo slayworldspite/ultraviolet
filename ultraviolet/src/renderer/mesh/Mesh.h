@@ -25,12 +25,12 @@ namespace ultraviolet
 		Mesh& operator=(Mesh&&) noexcept = default;
 
 		void Bind() const;
-		size_t GetVertexCount() const;
+		size_t GetIndexCount() const;
 
 	private:
 		VertexBuffer m_VertexBuffer;
 		ElementBuffer m_ElementBuffer;
 		VertexArray m_VertexArray;
-		size_t m_VertexCount;
+		size_t m_IndexCount;
 	};
 }

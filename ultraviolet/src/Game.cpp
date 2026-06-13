@@ -31,13 +31,9 @@ namespace ultraviolet
 		m_Renderer.SetClearColor({ 0.15f, 0.15f, 0.2f, 1.0f });
 		m_Camera.Position = { 0.0f, 0.0f, 3.0f };
 
-		m_Teapot.Scale = { 1.0f, 1.0f, 1.0f };
-		m_Teapot.Position.x -= 5;
-
-		m_Dragon.Scale = { 5.0f, 5.0f, 5.0f };
-		m_Dragon.Position.x += 5;
-
 		m_Shader.Set("u_Texture", 0);
+
+		m_Models.emplace_back(ModelLoader::Load("assets/models/test/test.obj"));
 	}
 
 	void Game::OnUpdate(double deltaTime)
@@ -54,8 +50,10 @@ namespace ultraviolet
 
 		m_Camera.Apply(m_Shader, GetWindowSize());
 		
-		m_Renderer.Draw(m_Teapot, m_Shader);
-		m_Renderer.Draw(m_Dragon, m_Shader);
+		for (const Model& model : m_Models)
+		{
+			m_Renderer.Draw(model, m_Shader);
+		}
 
 		::ImGui::Text("%f", 1.0 / m_DeltaTime);
 
@@ -75,11 +73,11 @@ namespace ultraviolet
 				break;
 
 			case Keycode::O:
-				m_Renderer.SetWireframeMode(true);
+				m_Renderer.ToggleWireframeMode();
 				break;
 
-			case Keycode::P:
-				m_Renderer.SetWireframeMode(false);
+			case Keycode::R:
+				m_Models[0] = ModelLoader::Load("assets/models/test/test.obj");
 				break;
 		}
 	}

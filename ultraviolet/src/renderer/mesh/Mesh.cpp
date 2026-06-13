@@ -7,7 +7,7 @@ namespace ultraviolet
 		m_VertexBuffer{ vertices },
 		m_ElementBuffer{ indices },
 		m_VertexArray{ m_VertexBuffer, m_ElementBuffer },
-		m_VertexCount{ vertices.size() }
+		m_IndexCount{ indices.size() }
 	{
 
 	}
@@ -17,8 +17,8 @@ namespace ultraviolet
 		m_VertexArray.Bind();
 	}
 
-	size_t Mesh::GetVertexCount() const
+	size_t Mesh::GetIndexCount() const
 	{
-		return m_VertexCount;
+		return m_IndexCount;
 	}
 }
