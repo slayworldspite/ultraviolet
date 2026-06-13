@@ -8,6 +8,6 @@ namespace ultraviolet
 {
 	namespace ModelLoader
 	{
-		Mesh Load(const std::filesystem::path& path);
+		Model Load(const std::filesystem::path& path);
 	}
 }

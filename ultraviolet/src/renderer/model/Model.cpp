@@ -4,13 +4,13 @@
 
 namespace ultraviolet
 {
-	Model::Model(Mesh mesh) :
-		Meshes{},
+	Model::Model(std::vector<Mesh>& meshes) :
+		Meshes{ std::move(meshes) },
 		Position{},
 		Scale{},
 		Rotation{}
 	{
-		Meshes.push_back(std::move(mesh));
+
 	}
 
 	glm::mat4 Model::GetModelMatrix() const

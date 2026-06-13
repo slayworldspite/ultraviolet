@@ -104,7 +104,7 @@ namespace ultraviolet
 		if (mesh.Material)
 			mesh.Material->Apply(shader);
 
-		::glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(mesh.GetVertexCount()));
+		::glDrawElements(GL_TRIANGLES, mesh.GetVertexCount(), GL_UNSIGNED_INT, nullptr);
 	}
 
 	void Renderer::Draw(const Model& model, const Shader& shader) const
@@ -121,5 +121,10 @@ namespace ultraviolet
 	void Renderer::SetViewport(int width, int height) const
 	{
 		::glViewport(0, 0, width, height);
+	}
+
+	void Renderer::SetWireframeMode(bool value) const
+	{
+		::glPolygonMode(GL_FRONT_AND_BACK, GL_LINE + (!value));
 	}
 }

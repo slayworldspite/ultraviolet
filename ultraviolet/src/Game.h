@@ -28,9 +28,6 @@ namespace ultraviolet
 
 		double m_DeltaTime;
 
-		Model m_Teapot;
-		Model m_Dragon;
-
 	private:
 		void ProcessInput(double deltaTime);
 	};

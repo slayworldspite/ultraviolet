@@ -3,6 +3,7 @@
 #include <memory>
 
 #include "../objects/VertexArray.h"
+#include "../objects/ElementBuffer.h"
 #include "Vertex.h"
 #include "IMaterial.h"
 #include "TextureMaterial.h"
@@ -16,7 +17,7 @@ namespace ultraviolet
 		std::shared_ptr<IMaterial> Material;
 
 	public:
-		Mesh(const std::vector<Vertex>& vertices, std::shared_ptr<IMaterial> material);
+		Mesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, std::shared_ptr<IMaterial> material);
 		Mesh(const Mesh&) = delete;
 		Mesh& operator=(const Mesh&) = delete;
 
@@ -28,6 +29,7 @@ namespace ultraviolet
 
 	private:
 		VertexBuffer m_VertexBuffer;
+		ElementBuffer m_ElementBuffer;
 		VertexArray m_VertexArray;
 		size_t m_VertexCount;
 	};

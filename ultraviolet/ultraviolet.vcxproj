@@ -118,7 +118,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL3.lib;assimp-vc143-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -135,7 +135,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL3.lib;assimp-vc143-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -149,6 +149,7 @@
     <ClCompile Include="src\renderer\mesh\TextureMaterial.cpp" />
     <ClCompile Include="src\renderer\model\Model.cpp" />
     <ClCompile Include="src\renderer\model\ModelLoader.cpp" />
+    <ClCompile Include="src\renderer\objects\ElementBuffer.cpp" />
     <ClCompile Include="src\renderer\objects\GLObject.cpp" />
     <ClCompile Include="src\renderer\mesh\Mesh.cpp" />
     <ClCompile Include="src\renderer\objects\Texture.cpp" />
@@ -177,6 +178,7 @@
     <ClInclude Include="src\renderer\camera\ProjectionCamera.h" />
     <ClInclude Include="src\renderer\mesh\ColorMaterial.h" />
     <ClInclude Include="src\renderer\mesh\IMaterial.h" />
+    <ClInclude Include="src\renderer\objects\ElementBuffer.h" />
     <ClInclude Include="src\renderer\objects\Texture.h" />
     <ClInclude Include="src\renderer\mesh\TextureMaterial.h" />
     <ClInclude Include="src\renderer\model\Model.h" />
@@ -199,7 +201,6 @@
     <ClInclude Include="vendor\imgui\imstb_textedit.h" />
     <ClInclude Include="vendor\imgui\imstb_truetype.h" />
     <ClInclude Include="vendor\stb\stb_image.h" />
-    <ClInclude Include="vendor\tinyobjloader\tiny_obj_loader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

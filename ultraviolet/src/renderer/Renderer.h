@@ -20,6 +20,7 @@ namespace ultraviolet
 		void Draw(const Mesh& mesh, const Shader& shader) const;
 		void Draw(const Model& model, const Shader& shader) const;
 		void SetViewport(int width, int height) const;
+		void SetWireframeMode(bool value) const;
 
 	private:
 		::SDL_Window* m_Window;

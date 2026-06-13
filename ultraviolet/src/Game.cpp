@@ -21,9 +21,7 @@ namespace ultraviolet
 	},
 		m_Renderer{ *this },
 		m_Shader{ "assets/shaders/shader.vert", "assets/shaders/shader.frag" },
-		m_DeltaTime{},
-		m_Teapot{ ModelLoader::Load("assets/models/teapot/teapot.obj") },
-		m_Dragon{ ModelLoader::Load("assets/models/bunny/bunny.obj") }
+		m_DeltaTime{}
 	{
 		SetRelativeMouseMode(true);
 	}
@@ -33,23 +31,11 @@ namespace ultraviolet
 		m_Renderer.SetClearColor({ 0.15f, 0.15f, 0.2f, 1.0f });
 		m_Camera.Position = { 0.0f, 0.0f, 3.0f };
 
-		m_Teapot.Scale = { 0.05f, 0.05f, 0.05f };
+		m_Teapot.Scale = { 1.0f, 1.0f, 1.0f };
 		m_Teapot.Position.x -= 5;
 
 		m_Dragon.Scale = { 5.0f, 5.0f, 5.0f };
 		m_Dragon.Position.x += 5;
-
-		std::shared_ptr<Texture> texture{ std::make_shared<Texture>("assets/models/teapot/default.png") };
-
-		for (size_t i{}; i < m_Dragon.Meshes.size(); i++)
-		{
-			m_Dragon.Meshes[i].Material = std::make_shared<TextureMaterial>(texture);
-		}
-
-		for (size_t i{}; i < m_Teapot.Meshes.size(); i++)
-		{
-			m_Teapot.Meshes[i].Material = std::make_shared<TextureMaterial>(texture);
-		}
 
 		m_Shader.Set("u_Texture", 0);
 	}
@@ -86,6 +72,14 @@ namespace ultraviolet
 
 			case Keycode::BACKSPACE:
 				SetRelativeMouseMode(!GetRelativeMouseMode());
+				break;
+
+			case Keycode::O:
+				m_Renderer.SetWireframeMode(true);
+				break;
+
+			case Keycode::P:
+				m_Renderer.SetWireframeMode(false);
 				break;
 		}
 	}

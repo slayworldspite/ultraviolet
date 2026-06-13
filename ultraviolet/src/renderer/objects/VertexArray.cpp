@@ -4,13 +4,14 @@
 
 namespace ultraviolet
 {
-	VertexArray::VertexArray(const VertexBuffer& vertexBuffer) :
+	VertexArray::VertexArray(const VertexBuffer& vertexBuffer, const ElementBuffer& elementBuffer) :
 		GLObject{}
 	{
 		::glGenVertexArrays(1, &m_ID);
 
 		Bind();
 		vertexBuffer.Bind();
+		elementBuffer.Bind();
 
 		::glEnableVertexAttribArray(0);
 		::glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Position));

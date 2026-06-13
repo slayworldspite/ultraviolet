@@ -16,7 +16,7 @@ namespace ultraviolet
 
 
 	public:
-		Model(Mesh mesh);
+		Model(std::vector<Mesh>& meshes);
 
 		glm::mat4 GetModelMatrix() const;
 	};

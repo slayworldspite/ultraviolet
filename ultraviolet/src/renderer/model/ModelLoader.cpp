@@ -1,81 +1,92 @@
-#define TINYOBJLOADER_IMPLEMENTATION
-#include <tinyobjloader/tiny_obj_loader.h>
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
 #include "ModelLoader.h"
 #include "../../utils/Logger.h"
 
 namespace ultraviolet
 {
-	Mesh ModelLoader::Load(const std::filesystem::path& path)
+	Model ModelLoader::Load(const std::filesystem::path& path)
 	{
-		Logger::Log("loading " + path.string(), Logger::Level::Info);
+		::Assimp::Importer importer{};
 
-		tinyobj::ObjReaderConfig readerConfig{};
-		readerConfig.mtl_search_path = "";
+		const ::aiScene* scene{ importer.ReadFile(
+			path.string(),
+			aiProcess_CalcTangentSpace | 
+			aiProcess_Triangulate | 
+			aiProcess_GenSmoothNormals |
+			aiProcess_OptimizeMeshes |
+			aiProcess_OptimizeGraph
+		) };
 
-		tinyobj::ObjReader reader{};
-
-		if (!reader.ParseFromFile(path.string(), readerConfig))
+		if (scene == nullptr)
 		{
-			Logger::Log("tinyobjloader: " + reader.Error(), Logger::Level::Error);
+			Logger::Log("failed to load " + path.string(), Logger::Level::Critical);
+			Logger::Log("assimp: " + std::string{ importer.GetErrorString() }, Logger::Level::Error);
+
+			// todo: don't exit
+			exit(-1);
 		}
 
-		if (!reader.Warning().empty())
+		std::vector<Mesh> meshes;
+		meshes.reserve(scene->mNumMeshes);
+
+		for (size_t meshIndex{}; meshIndex < scene->mNumMeshes; meshIndex++)
 		{
-			Logger::Log("tinyobjloader: " + reader.Warning(), Logger::Level::Warning);
-		}
+			auto mesh{ scene->mMeshes[meshIndex] };
 
-		auto& attrib = reader.GetAttrib();
-		auto& shapes = reader.GetShapes();
-		auto& materials = reader.GetMaterials();
+			std::vector<Vertex> vertices;
+			vertices.reserve(mesh->mNumVertices);
 
-		std::vector<Vertex> vertices{};	
-
-		for (auto& shape : shapes)
-		{
-			size_t indexOffset{};
-			size_t faceIndex{};
-
-			for (auto& face : shape.mesh.num_face_vertices)
+			for (size_t vertexIndex{}; vertexIndex < mesh->mNumVertices; vertexIndex++)
 			{
-				for (size_t vertexIndex{}; vertexIndex < face; vertexIndex++)
+				auto& meshVertex{ mesh->mVertices[vertexIndex] };
+				
+				Vertex vertex;
+				vertex.Position.x = meshVertex.x;
+				vertex.Position.y = meshVertex.y;
+				vertex.Position.z = meshVertex.z;
+
+				auto& meshNormals{ mesh->mNormals[vertexIndex] };
+
+				vertex.Normals.x = meshNormals.x;
+				vertex.Normals.y = meshNormals.y;
+				vertex.Normals.z = meshNormals.z;
+
+				if (mesh->mTextureCoords[0])
 				{
-					tinyobj::index_t index{ shape.mesh.indices[indexOffset + vertexIndex] };
-
-					Vertex vertex{};
-
-					vertex.Position.x = attrib.vertices[3 * index.vertex_index + 0];
-					vertex.Position.y = attrib.vertices[3 * index.vertex_index + 1];
-					vertex.Position.z = attrib.vertices[3 * index.vertex_index + 2];
-
-					if (index.normal_index >= 0)
-					{
-						vertex.Normals.x = attrib.normals[3 * index.normal_index + 0];
-						vertex.Normals.y = attrib.normals[3 * index.normal_index + 1];
-						vertex.Normals.z = attrib.normals[3 * index.normal_index + 2];
-					}
-
-					if (index.texcoord_index >= 0)
-					{
-						vertex.TextureCoordinates.x = attrib.texcoords[2 * index.texcoord_index + 0];
-						vertex.TextureCoordinates.y = attrib.texcoords[2 * index.texcoord_index + 1];
-					}
-
-					vertices.push_back(vertex);
+					vertex.TextureCoordinates.x = mesh->mTextureCoords[0][vertexIndex].x;
+					vertex.TextureCoordinates.y = mesh->mTextureCoords[0][vertexIndex].y;
+				}
+				else
+				{
+					vertex.TextureCoordinates.x = 0.0f;
+					vertex.TextureCoordinates.y = 0.0f;
 				}
 
-				indexOffset += face;
+				vertices.push_back(vertex);
+			}
 
-				
+			std::vector<uint32_t> indices;
+			indices.reserve(mesh->mNumFaces * 3);
 
-				faceIndex++;
-			}			
+			for (size_t faceIndex{}; faceIndex < mesh->mNumFaces; faceIndex++)
+			{
+				auto& face{ mesh->mFaces[faceIndex] };
+
+				if (face.mNumIndices != 3)
+					Logger::Log("more than 3 indices per face!", Logger::Level::Warning);
+
+				for (size_t indexIndex{}; indexIndex < face.mNumIndices; indexIndex++)
+				{
+					indices.push_back(face.mIndices[indexIndex]);
+				}
+			}
+
+			meshes.emplace_back(vertices, indices, std::make_shared<ColorMaterial>(glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f }));
 		}
 
-		Mesh mesh{ vertices, std::make_shared<ColorMaterial>(glm::vec4{1.0f, 1.0f, 1.0f, 1.0f}) };
-
-		Logger::Log("finished loading " + path.filename().string() + "!", Logger::Level::Info);
-
-		return mesh;
+		return Model{ meshes };
 	}
 }
