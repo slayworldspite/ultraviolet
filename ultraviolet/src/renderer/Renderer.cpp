@@ -104,7 +104,7 @@ namespace ultraviolet
 		if (mesh.Material)
 			mesh.Material->Apply(shader);
 
-		::glDrawElements(GL_TRIANGLES, mesh.GetIndexCount(), GL_UNSIGNED_INT, nullptr);
+		::glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(mesh.GetIndexCount()), GL_UNSIGNED_INT, nullptr);
 	}
 
 	void Renderer::Draw(const Model& model, const Shader& shader) const
@@ -129,6 +129,7 @@ namespace ultraviolet
 
 		value = !value;
 
+		// hacky, but shouldn't fail if GL_LINE = 0x1b01 and GL_FILL = 0x1b02
 		::glPolygonMode(GL_FRONT_AND_BACK, GL_LINE + (!value));
 	}
 }

@@ -12,9 +12,9 @@ namespace ultraviolet
 		Texture(const std::filesystem::path& path);
 		virtual ~Texture() override;
 
-		void Bind(int index) const;
+		void Bind(size_t index) const;
 		virtual void Bind() const override;
-		void Unbind(int index) const;
+		void Unbind(size_t index) const;
 		virtual void Unbind() const override;
 		virtual void Delete() override;
 	};

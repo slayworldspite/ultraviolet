@@ -48,9 +48,9 @@ namespace ultraviolet
 		Delete();
 	}
 
-	void Texture::Bind(int index) const
+	void Texture::Bind(size_t index) const
 	{
-		::glActiveTexture(GL_TEXTURE0 + index);
+		::glActiveTexture(static_cast<GLenum>(GL_TEXTURE0 + index));
 		::glBindTexture(GL_TEXTURE_2D, m_ID);
 	}
 
@@ -60,9 +60,9 @@ namespace ultraviolet
 		::glBindTexture(GL_TEXTURE_2D, m_ID);
 	}
 
-	void Texture::Unbind(int index) const
+	void Texture::Unbind(size_t index) const
 	{
-		::glActiveTexture(GL_TEXTURE0 + index);
+		::glActiveTexture(static_cast<GLenum>(GL_TEXTURE0 + index));
 		::glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
