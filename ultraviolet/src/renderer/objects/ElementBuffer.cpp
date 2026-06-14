@@ -11,7 +11,7 @@ namespace ultraviolet
 		Bind();
 
 		::glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(uint32_t), indices.data(), GL_STATIC_DRAW);
-	}
+	}	
 
 	ElementBuffer::ElementBuffer(ElementBuffer&& other) noexcept
 	{

@@ -150,20 +150,5 @@ namespace ultraviolet
 	void Game::LoadAssets()
 	{
 		m_Models.clear();
-
-		//Model dragon{ ModelLoader::Load("assets/models/dragon/dragon.obj") };
-		//Model teapot{ ModelLoader::Load("assets/models/teapot/teapot.obj") };
-		Model backpack{ ModelLoader::Load("assets/models/backpack/backpack.fbx") };
-		Model test{ ModelLoader::Load("assets/models/test/test.obj") };
-
-		//dragon.Position.x -= 5;
-		//teapot.Position.x += 5;
-		//teapot.Scale /= 50;
-		backpack.Position.z += 10;
-
-		//m_Models.push_back(std::move(dragon));
-		//m_Models.push_back(std::move(teapot));
-		m_Models.push_back(std::move(backpack));
-		m_Models.push_back(std::move(test));
 	}
 }
