@@ -16,10 +16,11 @@ namespace ultraviolet
 		const ::aiScene* scene{ importer.ReadFile(
 			path.string(),
 			aiProcess_Triangulate |
+			aiProcess_FlipUVs |
+			aiProcess_JoinIdenticalVertices |
+			aiProcess_GenSmoothNormals |
 			aiProcess_OptimizeMeshes |
-			aiProcess_OptimizeGraph |
-			aiProcess_GenNormals |
-			aiProcess_FlipUVs
+			aiProcess_OptimizeGraph
 		) };
 
 		if (scene == nullptr)
@@ -50,16 +51,16 @@ namespace ultraviolet
 				vertex.Position.y = meshVertex.y;
 				vertex.Position.z = meshVertex.z;
 
-				auto& meshNormals{ mesh->mNormals[vertexIndex] };
-
 				if (mesh->HasNormals())
 				{
+					auto& meshNormals{ mesh->mNormals[vertexIndex] };
+
 					vertex.Normals.x = meshNormals.x;
 					vertex.Normals.y = meshNormals.y;
 					vertex.Normals.z = meshNormals.z;
 				}
 				
-				if (mesh->mTextureCoords[0])
+				if (mesh->HasTextureCoords(0) && mesh->mTextureCoords[0])
 				{
 					vertex.TextureCoordinates.x = mesh->mTextureCoords[0][vertexIndex].x;
 					vertex.TextureCoordinates.y = mesh->mTextureCoords[0][vertexIndex].y;

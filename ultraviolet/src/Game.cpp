@@ -33,7 +33,7 @@ namespace ultraviolet
 
 		m_Shader.Set("u_Texture", 0);
 
-		m_Models.emplace_back(ModelLoader::Load("assets/models/test/test.obj"));
+		LoadAssets();
 	}
 
 	void Game::OnUpdate(double deltaTime)
@@ -56,6 +56,7 @@ namespace ultraviolet
 		}
 
 		::ImGui::Text("%f", 1.0 / m_DeltaTime);
+		::ImGui::DragFloat3("camera pos", glm::value_ptr(m_Camera.Position));
 
 		m_Renderer.EndFrame();
 	}
@@ -77,7 +78,7 @@ namespace ultraviolet
 				break;
 
 			case Keycode::R:
-				m_Models[0] = ModelLoader::Load("assets/models/test/test.obj");
+				LoadAssets();
 				break;
 		}
 	}
@@ -121,23 +122,48 @@ namespace ultraviolet
 		glm::vec3 movementVector{};
 
 		if (Input::IsKeyHeld(Scancode::W))
-			movementVector.z += movementSpeed;
+			movementVector.z += 1.0f;
 
 		if (Input::IsKeyHeld(Scancode::S))
-			movementVector.z -= movementSpeed;
+			movementVector.z -= 1.0f;
 
 		if (Input::IsKeyHeld(Scancode::A))
-			movementVector.x -= movementSpeed;
+			movementVector.x -= 1.0f;
 
 		if (Input::IsKeyHeld(Scancode::D))
-			movementVector.x += movementSpeed;
+			movementVector.x += 1.0f;
 
 		if (Input::IsKeyHeld(Scancode::SPACE))
-			movementVector.y += movementSpeed;
+			movementVector.y += 1.0f;
 
 		if (Input::IsKeyHeld(Scancode::LCTRL))
-			movementVector.y -= movementSpeed;
+			movementVector.y -= 1.0f;
+
+		if (glm::length(movementVector) > 0.0f)
+			movementVector = glm::normalize(movementVector);
+
+		movementVector *= movementSpeed;
 
 		m_Camera.Move(movementVector * static_cast<float>(deltaTime));
+	}
+
+	void Game::LoadAssets()
+	{
+		m_Models.clear();
+
+		//Model dragon{ ModelLoader::Load("assets/models/dragon/dragon.obj") };
+		//Model teapot{ ModelLoader::Load("assets/models/teapot/teapot.obj") };
+		Model backpack{ ModelLoader::Load("assets/models/backpack/backpack.fbx") };
+		Model test{ ModelLoader::Load("assets/models/test/test.obj") };
+
+		//dragon.Position.x -= 5;
+		//teapot.Position.x += 5;
+		//teapot.Scale /= 50;
+		backpack.Position.z += 10;
+
+		//m_Models.push_back(std::move(dragon));
+		//m_Models.push_back(std::move(teapot));
+		m_Models.push_back(std::move(backpack));
+		m_Models.push_back(std::move(test));
 	}
 }

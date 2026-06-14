@@ -32,5 +32,6 @@ namespace ultraviolet
 
 	private:
 		void ProcessInput(double deltaTime);
+		void LoadAssets();
 	};
 }
