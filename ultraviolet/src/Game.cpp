@@ -30,9 +30,11 @@ namespace ultraviolet
 	void Game::OnStart()
 	{
 		m_Renderer.SetClearColor({ 0.15f, 0.15f, 0.2f, 1.0f });
-		m_Camera.Position = { 0.0f, 0.0f, 3.0f };
 
 		m_Shader.Set("u_Texture", 0);
+
+		m_AmbientLight.Color = { 0.05f, 0.65f, 1.0f };
+		m_AmbientLight.Intensity = 1.0f;
 
 		LoadAssets();
 	}
@@ -42,6 +44,7 @@ namespace ultraviolet
 		m_DeltaTime = deltaTime;
 
 		m_Camera.Update();
+
 		ProcessInput(deltaTime);
 	}
 
@@ -50,14 +53,14 @@ namespace ultraviolet
 		m_Renderer.BeginFrame();
 
 		m_Camera.Apply(m_Shader, GetWindowSize());
+		m_AmbientLight.Apply(m_Shader);
 		
 		for (const Model& model : m_Models)
 		{
 			m_Renderer.Draw(model, m_Shader);
 		}
 
-		::ImGui::Text("%f", 1.0 / m_DeltaTime);
-		::ImGui::DragFloat3("camera pos", glm::value_ptr(m_Camera.Position));
+		DebugMenu();
 
 		m_Renderer.EndFrame();
 	}
@@ -80,7 +83,7 @@ namespace ultraviolet
 
 			case Keycode::R:
 				LoadAssets();
-				break;
+				break;	
 		}
 	}
 
@@ -152,5 +155,16 @@ namespace ultraviolet
 	{
 		m_Models.clear();
 
+		m_Models.emplace_back(ModelLoader::Load("bunny", "assets/models/bunny/bunny.obj"));
+	}
+
+	void Game::DebugMenu()
+	{
+		m_Camera.AddToImGui();
+
+		m_AmbientLight.AddToImGui();
+
+		for (Model& model : m_Models)
+			model.AddToImGui();
 	}
 }

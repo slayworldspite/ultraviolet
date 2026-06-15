@@ -1,10 +1,13 @@
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <imgui/imgui.h>
 
 #include "Model.h"
 
 namespace ultraviolet
 {
-	Model::Model(std::vector<Mesh>& meshes) :
+	Model::Model(const std::string& id, std::vector<Mesh>& meshes) :
+		ID{ id },
 		Meshes{ std::move(meshes) },
 		Position{},
 		Scale{ 1.0 },
@@ -24,5 +27,16 @@ namespace ultraviolet
 		transform = glm::scale(transform, Scale);
 
 		return transform;
+	}
+
+	void Model::AddToImGui()
+	{
+		if (::ImGui::CollapsingHeader(ID.c_str()))
+		{
+			::ImGui::Text("Mesh count: %d", Meshes.size());
+			::ImGui::DragFloat3(("Position ##" + ID).c_str(), glm::value_ptr(Position), 0.01f);
+			::ImGui::DragFloat3(("Rotation ##" + ID).c_str(), glm::value_ptr(Rotation), 1.0f);
+			::ImGui::DragFloat3(("Scale ##" + ID).c_str(), glm::value_ptr(Scale), 0.1f);
+		}
 	}
 }

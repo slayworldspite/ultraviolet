@@ -1,4 +1,6 @@
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <imgui/imgui.h>
 
 #include "ProjectionCamera.h"
 
@@ -52,5 +54,27 @@ namespace ultraviolet
 		Position += right * vector.x;
 		Position.y += vector.y;
 		Position += m_Front * vector.z;
+	}
+
+	void ProjectionCamera::AddToImGui()
+	{
+		if (::ImGui::CollapsingHeader("Camera"))
+		{
+			::ImGui::DragFloat3("Position", glm::value_ptr(Position));
+			::ImGui::DragFloat("Yaw", &Yaw);
+			::ImGui::DragFloat("Pitch", &Pitch);
+			::ImGui::DragFloat("FOV", &FOV);
+		}
+	}
+
+	void ProjectionCamera::AddToImGui(const std::string& id)
+	{
+		if (::ImGui::CollapsingHeader(("Camera " + id).c_str()))
+		{
+			::ImGui::DragFloat3(("Position ##" + id).c_str(), glm::value_ptr(Position));
+			::ImGui::DragFloat(("Yaw ##" + id).c_str(), &Yaw);
+			::ImGui::DragFloat(("Pitch ##" + id).c_str(), &Pitch);
+			::ImGui::DragFloat(("FOV ##" + id).c_str(), &FOV);
+		}
 	}
 }

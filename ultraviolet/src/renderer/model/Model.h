@@ -1,7 +1,5 @@
 #pragma once
 
-#include <filesystem>
-
 #include "../mesh/Mesh.h"
 
 namespace ultraviolet
@@ -9,6 +7,7 @@ namespace ultraviolet
 	class Model
 	{
 	public:
+		std::string ID;
 		std::vector<Mesh> Meshes;
 		glm::vec3 Position;
 		glm::vec3 Scale;
@@ -16,8 +15,9 @@ namespace ultraviolet
 
 
 	public:
-		Model(std::vector<Mesh>& meshes);
+		Model(const std::string& id, std::vector<Mesh>& meshes);
 
 		glm::mat4 GetModelMatrix() const;
+		void AddToImGui();
 	};
 }

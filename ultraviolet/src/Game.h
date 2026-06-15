@@ -5,6 +5,7 @@
 #include "renderer/Shader.h"
 #include "renderer/model/Model.h"
 #include "renderer/camera/ProjectionCamera.h"
+#include "renderer/lights/AmbientLight.h"
 
 namespace ultraviolet
 {
@@ -24,14 +25,18 @@ namespace ultraviolet
 	private:
 		Renderer m_Renderer;
 		Shader m_Shader;
+
 		ProjectionCamera m_Camera;
 
 		double m_DeltaTime;
+
+		AmbientLight m_AmbientLight;
 
 		std::vector<Model> m_Models;
 
 	private:
 		void ProcessInput(double deltaTime);
 		void LoadAssets();
+		void DebugMenu();
 	};
 }

@@ -97,6 +97,12 @@ namespace ultraviolet
 		return ::glGetUniformLocation(m_ID, name.data());
 	}
 
+	void Shader::Set(std::string_view name, const glm::vec3& value) const
+	{
+		Use();
+		::glUniform3fv(GetLocation(name), 1, &value[0]);
+	}
+
 	void Shader::Set(std::string_view name, const glm::vec4& value) const
 	{
 		Use();
@@ -119,5 +125,11 @@ namespace ultraviolet
 	{
 		Use();
 		::glUniform1i(GetLocation(name), static_cast<int>(value));
+	}
+
+	void Shader::Set(std::string_view name, float value) const
+	{
+		Use();
+		::glUniform1f(GetLocation(name), value);
 	}
 }

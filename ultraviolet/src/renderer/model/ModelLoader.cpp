@@ -7,7 +7,7 @@
 
 namespace ultraviolet
 {
-	Model ModelLoader::Load(const std::filesystem::path& path)
+	Model ModelLoader::Load(const std::string& id, const std::filesystem::path& path)
 	{
 		Logger::Log("loading " + path.string(), Logger::Level::Info);
 
@@ -95,6 +95,6 @@ namespace ultraviolet
 
 		Logger::Log("finished loading " + path.string() + "!", Logger::Level::Info);
 
-		return Model{ meshes };
+		return Model{ id, meshes };
 	}
 }
