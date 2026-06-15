@@ -41,6 +41,8 @@ namespace ultraviolet
 		}
 
 		::stbi_image_free(data);
+
+		Unbind();
 	}
 
 	Texture::~Texture()

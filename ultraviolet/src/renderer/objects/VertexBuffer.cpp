@@ -12,6 +12,8 @@ namespace ultraviolet
 		Bind();
 
 		::glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
+
+		Unbind();
 	}
 
 	VertexBuffer::VertexBuffer(VertexBuffer&& other) noexcept

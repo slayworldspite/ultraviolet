@@ -150,5 +150,6 @@ namespace ultraviolet
 	void Game::LoadAssets()
 	{
 		m_Models.clear();
+
 	}
 }
