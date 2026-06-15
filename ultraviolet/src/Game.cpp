@@ -33,14 +33,21 @@ namespace ultraviolet
 
 		m_Shader.Set("u_Texture", 0);
 
+		m_Camera.Position = { 0.0f, 1.0f, 3.0f };
+
 		m_AmbientLight.Color = { 0.05f, 0.65f, 1.0f };
-		m_AmbientLight.Intensity = 1.0f;
+		m_AmbientLight.Intensity = 0.05f;
+
+		m_PointLight.Index = 0;
+		m_PointLight.Color = { 1.0f, 1.0f, 1.0f };
+		m_PointLight.Intensity = 1.0f;
 
 		LoadAssets();
 	}
 
 	void Game::OnUpdate(double deltaTime)
 	{
+
 		m_DeltaTime = deltaTime;
 
 		m_Camera.Update();
@@ -53,7 +60,9 @@ namespace ultraviolet
 		m_Renderer.BeginFrame();
 
 		m_Camera.Apply(m_Shader, GetWindowSize());
+
 		m_AmbientLight.Apply(m_Shader);
+		m_PointLight.Apply(m_Shader);
 		
 		for (const Model& model : m_Models)
 		{
@@ -163,6 +172,7 @@ namespace ultraviolet
 		m_Camera.AddToImGui();
 
 		m_AmbientLight.AddToImGui();
+		m_PointLight.AddToImGui();
 
 		for (Model& model : m_Models)
 			model.AddToImGui();
