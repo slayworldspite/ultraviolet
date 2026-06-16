@@ -23,6 +23,8 @@ namespace ultraviolet
 
 	void Shader::Load()
 	{
+		Logger::Log("loading shader: " + m_VertexPath.string(), Logger::Level::Info);
+
 		std::string vertexSourceString{ ReadFile(m_VertexPath) };
 		const char* vertexSource{ vertexSourceString.data() };
 
@@ -32,6 +34,10 @@ namespace ultraviolet
 
 		LogShaderError(vertexShader);
 
+		Logger::Log("finished loading shader!", Logger::Level::Info);
+
+		Logger::Log("loading shader: " + m_VertexPath.string(), Logger::Level::Info);
+
 		std::string fragmentSourceString{ ReadFile(m_FragmentPath) };
 		const char* fragmentSource{ fragmentSourceString.data() };
 
@@ -40,6 +46,10 @@ namespace ultraviolet
 		::glCompileShader(fragmentShader);
 
 		LogShaderError(fragmentShader);
+
+		Logger::Log("finished loading shader!", Logger::Level::Info);
+
+		Logger::Log("linking shaders...", Logger::Level::Info);
 
 		m_ID = ::glCreateProgram();
 
@@ -63,6 +73,8 @@ namespace ultraviolet
 
 		::glDeleteShader(vertexShader);
 		::glDeleteShader(fragmentShader);
+
+		Logger::Log("finished linking shaders!", Logger::Level::Info);
 	}
 
 	std::string Shader::ReadFile(const std::filesystem::path& path)

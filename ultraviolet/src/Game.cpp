@@ -179,6 +179,9 @@ namespace ultraviolet
 	{
 		::ImGui::Text("FPS: %f", 1.0 / m_DeltaTime);
 
+		if (::ImGui::Button("Reload Shaders"))
+			m_Shader.Load();
+
 		m_Camera.AddToImGui();
 
 		m_AmbientLight.AddToImGui();
