@@ -132,4 +132,9 @@ namespace ultraviolet
 		// hacky, but shouldn't fail if GL_LINE = 0x1b01 and GL_FILL = 0x1b02
 		::glPolygonMode(GL_FRONT_AND_BACK, GL_LINE + (!value));
 	}
+
+	void Renderer::SetVSync(bool value) const
+	{
+		::SDL_GL_SetSwapInterval(value);
+	}
 }

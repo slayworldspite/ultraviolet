@@ -38,9 +38,10 @@ namespace ultraviolet
 		m_AmbientLight.Color = { 0.05f, 0.65f, 1.0f };
 		m_AmbientLight.Intensity = 0.05f;
 
-		m_PointLight.Index = 0;
 		m_PointLight.Color = { 1.0f, 1.0f, 1.0f };
 		m_PointLight.Intensity = 1.0f;
+		m_PointLight.Position.x += 3;
+		m_PointLight.Position.y += 1;
 
 		LoadAssets();
 	}
@@ -92,7 +93,13 @@ namespace ultraviolet
 
 			case Keycode::R:
 				LoadAssets();
-				break;	
+				break;
+
+			case Keycode::PLUS:
+				static bool vsync{ true };
+				vsync = !vsync;
+				m_Renderer.SetVSync(vsync);
+				break;
 		}
 	}
 
@@ -165,10 +172,13 @@ namespace ultraviolet
 		m_Models.clear();
 
 		m_Models.emplace_back(ModelLoader::Load("bunny", "assets/models/bunny/bunny.obj"));
+		m_Models.emplace_back(ModelLoader::Load("weeping_angel", "assets/models/weeping_angel/weeping_angel.fbx"));
 	}
 
 	void Game::DebugMenu()
 	{
+		::ImGui::Text("FPS: %f", 1.0 / m_DeltaTime);
+
 		m_Camera.AddToImGui();
 
 		m_AmbientLight.AddToImGui();
