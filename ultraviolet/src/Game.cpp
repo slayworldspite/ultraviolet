@@ -186,8 +186,6 @@ namespace ultraviolet
 	void Game::LoadAssets()
 	{
 		m_Models.clear();
-
-		m_Models.emplace_back(ModelLoader::Load("brickwall", "assets/models/brickwall/brickwall.gltf"));
 	}
 
 	void Game::DebugMenu()

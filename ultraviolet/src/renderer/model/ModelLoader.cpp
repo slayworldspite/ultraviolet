@@ -14,7 +14,7 @@ namespace ultraviolet
 		for (size_t i{}; i < material->GetTextureCount(type); i++)
 		{
 			aiString texturePath{};
-			material->GetTexture(type, i, &texturePath);
+			material->GetTexture(type, static_cast<unsigned int>(i), &texturePath);
 
 			TextureType textureType{};
 
@@ -40,7 +40,7 @@ namespace ultraviolet
 		return textures;
 	}
 
-	Model ModelLoader::Load(const std::string& id, const std::filesystem::path& path)
+	std::optional<Model> ModelLoader::Load(const std::string& id, const std::filesystem::path& path)
 	{
 		Logger::Log("loading " + path.string(), Logger::Level::Info);
 
@@ -62,8 +62,7 @@ namespace ultraviolet
 			Logger::Log("failed to load " + path.string() + "!", Logger::Level::Critical);
 			Logger::Log("assimp: " + std::string{ importer.GetErrorString() }, Logger::Level::Error);
 
-			// todo: don't exit
-			exit(-1);
+			return {};
 		}
 
 		std::vector<Mesh> meshes;

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <filesystem>
+#include <utility>
 
 #include "Model.h"
 
@@ -8,6 +9,6 @@ namespace ultraviolet
 {
 	namespace ModelLoader
 	{
-		Model Load(const std::string& id, const std::filesystem::path& path);
+		std::optional<Model> Load(const std::string& id, const std::filesystem::path& path);
 	}
 }
