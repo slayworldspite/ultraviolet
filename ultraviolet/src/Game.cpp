@@ -60,7 +60,6 @@ namespace ultraviolet
 
 	void Game::OnUpdate(double deltaTime)
 	{
-
 		m_DeltaTime = deltaTime;
 
 		m_Camera.Update();

@@ -1,3 +1,5 @@
+#include <imgui/imgui.h>
+
 #include "Mesh.h"
 
 namespace ultraviolet
@@ -20,5 +22,14 @@ namespace ultraviolet
 	size_t Mesh::GetIndexCount() const
 	{
 		return m_IndexCount;
+	}
+
+	void Mesh::AddToImGui(const std::string& id, size_t index)
+	{
+		if (::ImGui::CollapsingHeader(("Mesh #" + std::to_string(index) + "##" + id).c_str()))
+		{
+			::ImGui::Text("Index Count: %d", m_IndexCount);
+			Material->AddToImGui(id, index);
+		}
 	}
 }

@@ -26,6 +26,7 @@ namespace ultraviolet
 
 		void Bind() const;
 		size_t GetIndexCount() const;
+		void AddToImGui(const std::string& id, size_t index);
 
 	private:
 		VertexBuffer m_VertexBuffer;

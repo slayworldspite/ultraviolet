@@ -37,6 +37,14 @@ namespace ultraviolet
 			::ImGui::DragFloat3(("Position ##" + ID).c_str(), glm::value_ptr(Position), 0.01f);
 			::ImGui::DragFloat3(("Rotation ##" + ID).c_str(), glm::value_ptr(Rotation), 1.0f);
 			::ImGui::DragFloat3(("Scale ##" + ID).c_str(), glm::value_ptr(Scale), 0.1f);
+
+			if (::ImGui::CollapsingHeader(("Meshes ##" + ID).c_str()))
+			{
+				for (size_t i{}; i < Meshes.size(); i++)
+				{
+					Meshes[i].AddToImGui(ID, i);
+				}
+			}
 		}
 	}
 }

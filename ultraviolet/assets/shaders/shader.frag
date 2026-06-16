@@ -60,7 +60,7 @@ void main()
 		vec3 reflectionDirection = reflect(-lightDirection, normal);
 
 		float diffuse =	max(dot(normal, lightDirection), 0.0);
-		vec3 specular = pow(max(dot(viewDirection, reflectionDirection), 0.0), 32) * u_PointLights[i].Color * 0.25;	
+		vec3 specular = pow(max(dot(viewDirection, reflectionDirection), 0.0), u_ColorMaterial.Specular) * u_PointLights[i].Color * 0.25;	
 
 		float dist = length(u_PointLights[i].Position - o_FragmentPosition);
 		float attenuation = 1.0 / (1.0 + u_PointLights[i].LinearAttenuation * dist + u_PointLights[i].QuadraticAttenuation * (dist * dist));

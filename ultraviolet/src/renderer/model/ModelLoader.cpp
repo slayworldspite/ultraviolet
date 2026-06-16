@@ -90,7 +90,7 @@ namespace ultraviolet
 				}
 			}
 
-			meshes.emplace_back(vertices, indices, std::make_shared<ColorMaterial>(glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f }));
+			meshes.emplace_back(vertices, indices, std::make_shared<ColorMaterial>(glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f }, 32));
 		}
 
 		Logger::Log("finished loading " + path.string() + "!", Logger::Level::Info);
