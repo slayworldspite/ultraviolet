@@ -1,3 +1,5 @@
+#include <format>
+
 #include <SDL3/SDL.h>
 #include <glad/glad.h>
 #include <imgui/imgui.h>
@@ -36,6 +38,9 @@ namespace ultraviolet
 
 		Logger::Log("renderer initialized!", Logger::Level::Info);
 
+		Logger::Log(std::format("opengl v{}", reinterpret_cast<const char*>(::glGetString(GL_VERSION))), Logger::Level::Info);
+		Logger::Log(std::format("glsl v{}", reinterpret_cast<const char*>(::glGetString(GL_SHADING_LANGUAGE_VERSION))), Logger::Level::Info);
+
 		::glEnable(GL_DEPTH_TEST);
 
 		::glEnable(GL_BLEND);
@@ -55,8 +60,6 @@ namespace ultraviolet
 
 		::ImGui_ImplSDL3_InitForOpenGL(m_Window, m_GLContext);
 		::ImGui_ImplOpenGL3_Init();
-
-		
 	}
 
 	Renderer::~Renderer()

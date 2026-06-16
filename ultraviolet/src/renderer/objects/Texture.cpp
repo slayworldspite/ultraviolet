@@ -9,7 +9,8 @@
 
 namespace ultraviolet
 {
-	Texture::Texture(const std::filesystem::path& path)
+	Texture::Texture(const std::filesystem::path& path, TextureType type) :
+		Type{ type }
 	{
 		Logger::Log("loading " + path.string(), Logger::Level::Info);
 
@@ -17,6 +18,7 @@ namespace ultraviolet
 		int height{};
 		int channelCount{};
 
+		::stbi_set_flip_vertically_on_load(1);
 		uint8_t* data{ ::stbi_load(path.string().c_str(), &width, &height, &channelCount, 0) };
 		
 		::glGenTextures(1, &m_ID);
@@ -30,7 +32,24 @@ namespace ultraviolet
 
 		if (data)
 		{
-			::glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+			GLenum imageFormat{};
+
+			switch (channelCount)
+			{
+				case 1:
+					imageFormat = GL_RED;
+					break;
+
+				case 3:
+					imageFormat = GL_RGB;
+					break;
+
+				case 4:
+					imageFormat = GL_RGBA;
+					break;
+			}
+
+			::glTexImage2D(GL_TEXTURE_2D, 0, imageFormat, width, height, 0, imageFormat, GL_UNSIGNED_BYTE, data);
 			::glGenerateMipmap(GL_TEXTURE_2D);
 
 			Logger::Log("finished loading texture!", Logger::Level::Info);
@@ -52,7 +71,7 @@ namespace ultraviolet
 
 	void Texture::Bind(size_t index) const
 	{
-		::glActiveTexture(static_cast<GLenum>(GL_TEXTURE0 + index));
+		::glActiveTexture(static_cast<GLenum>(GL_TEXTURE0 + static_cast<int>(Type)));
 		::glBindTexture(GL_TEXTURE_2D, m_ID);
 	}
 

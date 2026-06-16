@@ -32,4 +32,9 @@ namespace ultraviolet
 			Textures.erase(Textures.begin() + i);
 		}
 	}
+
+	void TextureMaterial::AddToImGui(const std::string& id, size_t index)
+	{
+		
+	}
 }

@@ -7,6 +7,39 @@
 
 namespace ultraviolet
 {
+	std::vector<std::shared_ptr<Texture>> LoadTextures(const std::filesystem::path& path, aiMaterial*& material, aiTextureType type)
+	{
+		std::vector<std::shared_ptr<Texture>> textures{};
+
+		for (size_t i{}; i < material->GetTextureCount(type); i++)
+		{
+			aiString texturePath{};
+			material->GetTexture(type, i, &texturePath);
+
+			TextureType textureType{};
+
+			switch (type)
+			{
+			case aiTextureType_DIFFUSE:
+				textureType = TextureType::Diffuse;
+				break;
+
+			case aiTextureType_SPECULAR:
+				textureType = TextureType::Specular;
+				break;
+
+			case aiTextureType_NORMALS:
+				textureType = TextureType::Normals;
+				break;
+			}
+
+			std::shared_ptr<Texture> texture{ std::make_shared<Texture>(path.parent_path().string() + "/" + texturePath.C_Str(), textureType) };
+			textures.push_back(texture);
+		}
+
+		return textures;
+	}
+
 	Model ModelLoader::Load(const std::string& id, const std::filesystem::path& path)
 	{
 		Logger::Log("loading " + path.string(), Logger::Level::Info);
@@ -19,6 +52,7 @@ namespace ultraviolet
 			aiProcess_FlipUVs |
 			aiProcess_JoinIdenticalVertices |
 			aiProcess_GenSmoothNormals |
+			aiProcess_CalcTangentSpace |
 			aiProcess_OptimizeMeshes |
 			aiProcess_OptimizeGraph
 		) };
@@ -51,14 +85,17 @@ namespace ultraviolet
 				vertex.Position.y = meshVertex.y;
 				vertex.Position.z = meshVertex.z;
 
-				if (mesh->HasNormals())
-				{
-					auto& meshNormals{ mesh->mNormals[vertexIndex] };
+				auto& meshNormal{ mesh->mNormals[vertexIndex] };
 
-					vertex.Normals.x = meshNormals.x;
-					vertex.Normals.y = meshNormals.y;
-					vertex.Normals.z = meshNormals.z;
-				}
+				vertex.Normal.x = meshNormal.x;
+				vertex.Normal.y = meshNormal.y;
+				vertex.Normal.z = meshNormal.z;
+
+				auto& meshTangent{ mesh->mTangents[vertexIndex] };
+
+				vertex.Tangent.x = meshTangent.x;
+				vertex.Tangent.y = meshTangent.y;
+				vertex.Tangent.z = meshTangent.z;
 				
 				if (mesh->HasTextureCoords(0) && mesh->mTextureCoords[0])
 				{
@@ -90,11 +127,37 @@ namespace ultraviolet
 				}
 			}
 
-			meshes.emplace_back(vertices, indices, std::make_shared<ColorMaterial>(glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f }, 32));
+			std::shared_ptr<IMaterial> material;
+
+			if (mesh->mMaterialIndex >= 0)
+			{
+				auto& meshMaterial{ scene->mMaterials[mesh->mMaterialIndex] };
+
+				std::vector<std::shared_ptr<Texture>> textures{};
+
+				auto diffuseTextures{ LoadTextures(path, meshMaterial, aiTextureType_DIFFUSE) };
+				textures.insert(textures.end(), diffuseTextures.begin(), diffuseTextures.end());
+
+				auto specularTextures{ LoadTextures(path, meshMaterial, aiTextureType_SPECULAR) };
+				textures.insert(textures.end(), specularTextures.begin(), specularTextures.end());
+
+				auto normalsTextures{ LoadTextures(path, meshMaterial, aiTextureType_NORMALS) };
+				textures.insert(textures.end(), normalsTextures.begin(), normalsTextures.end());
+
+				material = std::make_shared<TextureMaterial>(textures);
+			}
+			else
+			{
+				material = std::make_shared<ColorMaterial>(glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f }, 32);
+			}
+
+			meshes.emplace_back(vertices, indices, material);
 		}
 
 		Logger::Log("finished loading " + path.string() + "!", Logger::Level::Info);
 
 		return Model{ id, meshes };
 	}
+
+	
 }

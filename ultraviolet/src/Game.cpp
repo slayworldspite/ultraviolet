@@ -31,8 +31,6 @@ namespace ultraviolet
 	{
 		m_Renderer.SetClearColor({ 0.15f, 0.15f, 0.2f, 1.0f });
 
-		m_Shader.Set("u_Texture", 0);
-
 		m_Camera.Position = { 0.0f, 1.0f, 3.0f };
 
 		m_AmbientLight.Color = { 0.05f, 0.65f, 1.0f };
@@ -70,6 +68,11 @@ namespace ultraviolet
 	void Game::OnRender()
 	{
 		m_Renderer.BeginFrame();
+
+		// reloading shaders unsets these
+		m_Shader.Set("u_TextureMaterial.Diffuse", 0);
+		m_Shader.Set("u_TextureMaterial.Specular", 1);
+		m_Shader.Set("u_TextureMaterial.Normal", 2);
 
 		m_Camera.Apply(m_Shader, GetWindowSize());
 
@@ -184,8 +187,7 @@ namespace ultraviolet
 	{
 		m_Models.clear();
 
-		m_Models.emplace_back(ModelLoader::Load("bunny", "assets/models/bunny/bunny.obj"));
-		m_Models.emplace_back(ModelLoader::Load("weeping_angel", "assets/models/weeping_angel/weeping_angel.fbx"));
+		m_Models.emplace_back(ModelLoader::Load("brickwall", "assets/models/brickwall/brickwall.gltf"));
 	}
 
 	void Game::DebugMenu()

@@ -16,5 +16,6 @@ namespace ultraviolet
 
 		virtual void Apply(const Shader& shader) const override;
 		virtual void Free() override;
+		virtual void AddToImGui(const std::string& id, size_t index) override;
 	};
 }

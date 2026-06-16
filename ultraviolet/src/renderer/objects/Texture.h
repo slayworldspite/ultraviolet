@@ -3,13 +3,16 @@
 #include <filesystem>
 
 #include "GLObject.h"
+#include "TextureType.h"
 
 namespace ultraviolet
 {
 	class Texture : public GLObject
 	{
 	public:
-		Texture(const std::filesystem::path& path);
+		TextureType Type;
+
+		Texture(const std::filesystem::path& path, TextureType type);
 		virtual ~Texture() override;
 
 		void Bind(size_t index) const;

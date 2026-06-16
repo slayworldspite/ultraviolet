@@ -36,7 +36,7 @@ namespace ultraviolet
 
 		Logger::Log("finished loading shader!", Logger::Level::Info);
 
-		Logger::Log("loading shader: " + m_VertexPath.string(), Logger::Level::Info);
+		Logger::Log("loading shader: " + m_FragmentPath.string(), Logger::Level::Info);
 
 		std::string fragmentSourceString{ ReadFile(m_FragmentPath) };
 		const char* fragmentSource{ fragmentSourceString.data() };

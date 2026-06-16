@@ -190,6 +190,7 @@
     <ClInclude Include="src\renderer\model\ModelLoader.h" />
     <ClInclude Include="src\renderer\objects\GLObject.h" />
     <ClInclude Include="src\renderer\mesh\Mesh.h" />
+    <ClInclude Include="src\renderer\objects\TextureType.h" />
     <ClInclude Include="src\renderer\Renderer.h" />
     <ClInclude Include="src\renderer\Shader.h" />
     <ClInclude Include="src\renderer\mesh\Vertex.h" />
