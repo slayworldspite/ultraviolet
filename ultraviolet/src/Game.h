@@ -32,7 +32,7 @@ namespace ultraviolet
 		double m_DeltaTime;
 
 		AmbientLight m_AmbientLight;
-		PointLight m_PointLight;
+		std::vector<PointLight> m_PointLights;
 
 		std::vector<Model> m_Models;
 

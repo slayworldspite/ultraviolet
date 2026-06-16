@@ -12,8 +12,8 @@ namespace ultraviolet
 		shader.Set(name + ".Position", Position);
 		shader.Set(name + ".Color", Color);
 		shader.Set(name + ".Intensity", Intensity);
-		shader.Set(name + ".Linear", LinearAttenuation);
-		shader.Set(name + ".Quadratic", QuadraticAttenuation);
+		shader.Set(name + ".LinearAttenuation", LinearAttenuation);
+		shader.Set(name + ".QuadraticAttenuation", QuadraticAttenuation);
 		shader.Set(name + ".Enabled", Enabled);
 	}
 

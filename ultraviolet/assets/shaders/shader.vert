@@ -16,7 +16,7 @@ void main()
 {
 	gl_Position = u_Projection * u_View * u_Model * vec4(a_Position, 1.0);
 	
-	o_Normals = a_Normals;
+	o_Normals = mat3(u_Model) * a_Normals;
 	o_TextureCoordinates = a_TextureCoordinates;
 	o_FragmentPosition = vec3(u_Model * vec4(a_Position, 1.0));
 }

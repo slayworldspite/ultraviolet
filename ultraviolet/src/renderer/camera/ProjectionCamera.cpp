@@ -45,6 +45,7 @@ namespace ultraviolet
 		shader.Use();
 		shader.Set("u_Projection", projection);
 		shader.Set("u_View", view);
+		shader.Set("u_CameraPosition", Position);
 	}
 
 	void ProjectionCamera::Move(const glm::vec3& vector)

@@ -38,10 +38,22 @@ namespace ultraviolet
 		m_AmbientLight.Color = { 0.05f, 0.65f, 1.0f };
 		m_AmbientLight.Intensity = 0.05f;
 
-		m_PointLight.Color = { 1.0f, 1.0f, 1.0f };
-		m_PointLight.Intensity = 1.0f;
-		m_PointLight.Position.x += 3;
-		m_PointLight.Position.y += 1;
+		PointLight light1{};
+
+		light1.Color = { 1.0f, 1.0f, 1.0f };
+		light1.Position.x += 3;
+		light1.Position.y += 1;
+
+		m_PointLights.push_back(light1);
+
+		PointLight light2{};
+
+		light2.Index++;
+		light2.Color = { 1.0f, 0.0f, 1.0f };
+		light2.Position.x -= 3;
+		light2.Position.y -= 1;
+
+		m_PointLights.push_back(light2);
 
 		LoadAssets();
 	}
@@ -63,7 +75,9 @@ namespace ultraviolet
 		m_Camera.Apply(m_Shader, GetWindowSize());
 
 		m_AmbientLight.Apply(m_Shader);
-		m_PointLight.Apply(m_Shader);
+		
+		for (const PointLight& light : m_PointLights)
+			light.Apply(m_Shader);
 		
 		for (const Model& model : m_Models)
 		{
@@ -185,7 +199,9 @@ namespace ultraviolet
 		m_Camera.AddToImGui();
 
 		m_AmbientLight.AddToImGui();
-		m_PointLight.AddToImGui();
+			
+		for (PointLight& light : m_PointLights)
+			light.AddToImGui();
 
 		for (Model& model : m_Models)
 			model.AddToImGui();
