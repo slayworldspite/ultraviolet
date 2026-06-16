@@ -9,6 +9,8 @@ namespace ultraviolet
 		glm::vec3 Position{};
 		glm::vec3 Color{ 1.0f };
 		float Intensity{ 1.0f };
+		float LinearAttenuation{ 0.09f };
+		float QuadraticAttenuation{ 0.032f };
 		bool Enabled{ true };
 		size_t Index{};
 

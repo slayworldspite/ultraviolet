@@ -11,6 +11,8 @@ struct PointLight
 	vec3 Position;
 	vec3 Color;
 	float Intensity;
+	float LinearAttenuation;
+	float QuadraticAttenuation;
 	bool Enabled;
 };
 
@@ -49,7 +51,7 @@ void main()
 		float diffuse =	max(dot(normal, lightDirection), 0.0);
 
 		float distance = length(u_PointLights[i].Position - o_FragmentPosition);
-		float attenuation = 1.0 / (1.0 + 0.09 * distance + 0.032 * (distance * distance));
+		float attenuation = 1.0 / (1.0 + u_PointLights[i].LinearAttenuation * distance + u_PointLights[i].QuadraticAttenuation * (distance * distance));
 
 		Output.rgb += baseColor.rgb * u_PointLights[i].Color * diffuse * attenuation * u_PointLights[i].Intensity;
 	}
