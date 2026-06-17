@@ -6,6 +6,7 @@
 
 namespace ultraviolet
 {
+	// WARNING: most likely a bad implementation
 	class Framebuffer : public GLObject
 	{
 	public:

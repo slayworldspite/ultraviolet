@@ -120,7 +120,15 @@ namespace ultraviolet
 		if (mesh.Material)
 			mesh.Material->Apply(shader);
 
-		auto shadowBufferSize{ m_ShadowBuffer->GetSize() };
+		// shadows are currently unstable. an architecture redesign might be needed to fix it
+		// 
+		// some objects cast shadows on some surfaces, but not on others.
+		// removing optimizations from ModelLoader would change what surfaces get shadows casted onto themselves
+		// 
+		// i didn't understand pretty much anything while implementing this, so i
+		// might have to study how this works before implementing it again
+
+		/*auto shadowBufferSize{ m_ShadowBuffer->GetSize() };
 		::glViewport(0, 0, shadowBufferSize.first, shadowBufferSize.second);
 
 		m_ShadowBuffer->Bind();
@@ -147,7 +155,7 @@ namespace ultraviolet
 
 		shader.Set("u_ShadowMap", 15);
 		::glActiveTexture(GL_TEXTURE15);
-		::glBindTexture(GL_TEXTURE_2D, m_ShadowBuffer->GetTexture());
+		::glBindTexture(GL_TEXTURE_2D, m_ShadowBuffer->GetTexture());*/
 
 		::glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(mesh.GetIndexCount()), GL_UNSIGNED_INT, nullptr);
 	}

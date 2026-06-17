@@ -156,8 +156,10 @@ void main()
 		lo += (kD * albedo / PI + specular) * radiance * nDotL;
 	}
 
-	float shadow = CalculateShadow();
-	lo *= 1.25 - shadow;
+	// disable shadow
+
+	//float shadow = CalculateShadow();
+	//lo *= 1.25 - shadow;
 
 	for (int i = 0; i < 8; i++)
 	{
