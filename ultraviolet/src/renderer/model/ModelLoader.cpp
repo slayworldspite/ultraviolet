@@ -20,17 +20,25 @@ namespace ultraviolet
 
 			switch (type)
 			{
-			case aiTextureType_DIFFUSE:
-				textureType = TextureType::Diffuse;
-				break;
+				case aiTextureType_BASE_COLOR:
+					textureType = TextureType::Albedo;
+					break;
 
-			case aiTextureType_SPECULAR:
-				textureType = TextureType::Specular;
-				break;
+				case aiTextureType_METALNESS:
+					textureType = TextureType::Metallic;
+					break;
 
-			case aiTextureType_NORMALS:
-				textureType = TextureType::Normals;
-				break;
+				case aiTextureType_DIFFUSE_ROUGHNESS:
+					textureType = TextureType::Roughness;
+					break;
+
+				case aiTextureType_NORMAL_CAMERA:
+					textureType = TextureType::Normal;
+					break;
+
+				case aiTextureType_AMBIENT_OCCLUSION:
+					textureType = TextureType::AmbientOcclusion;
+					break;
 			}
 
 			std::shared_ptr<Texture> texture{ std::make_shared<Texture>(path.parent_path().string() + "/" + texturePath.C_Str(), textureType) };
@@ -59,7 +67,7 @@ namespace ultraviolet
 
 		if (scene == nullptr)
 		{
-			Logger::Log("failed to load " + path.string() + "!", Logger::Level::Critical);
+			Logger::Log("failed to load " + path.string() + "!", Logger::Level::Error);
 			Logger::Log("assimp: " + std::string{ importer.GetErrorString() }, Logger::Level::Error);
 
 			return {};
