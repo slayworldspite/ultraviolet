@@ -51,8 +51,6 @@ namespace ultraviolet
 
 			::glTexImage2D(GL_TEXTURE_2D, 0, imageFormat, width, height, 0, imageFormat, GL_UNSIGNED_BYTE, data);
 			::glGenerateMipmap(GL_TEXTURE_2D);
-
-			Logger::Log("finished loading texture!", Logger::Level::Info);
 		}
 		else
 		{

@@ -146,12 +146,14 @@
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\renderer\camera\ProjectionCamera.cpp" />
     <ClCompile Include="src\renderer\lights\AmbientLight.cpp" />
+    <ClCompile Include="src\renderer\lights\DirectionalLight.cpp" />
     <ClCompile Include="src\renderer\lights\PointLight.cpp" />
     <ClCompile Include="src\renderer\mesh\ColorMaterial.cpp" />
     <ClCompile Include="src\renderer\mesh\TextureMaterial.cpp" />
     <ClCompile Include="src\renderer\model\Model.cpp" />
     <ClCompile Include="src\renderer\model\ModelLoader.cpp" />
     <ClCompile Include="src\renderer\objects\ElementBuffer.cpp" />
+    <ClCompile Include="src\renderer\objects\Framebuffer.cpp" />
     <ClCompile Include="src\renderer\objects\GLObject.cpp" />
     <ClCompile Include="src\renderer\mesh\Mesh.cpp" />
     <ClCompile Include="src\renderer\objects\Texture.cpp" />
@@ -179,7 +181,9 @@
     <ClInclude Include="src\input\MouseButtonFlags.h" />
     <ClInclude Include="src\input\Scancode.h" />
     <ClInclude Include="src\renderer\camera\ProjectionCamera.h" />
+    <ClInclude Include="src\renderer\objects\Framebuffer.h" />
     <ClInclude Include="src\renderer\lights\AmbientLight.h" />
+    <ClInclude Include="src\renderer\lights\DirectionalLight.h" />
     <ClInclude Include="src\renderer\lights\PointLight.h" />
     <ClInclude Include="src\renderer\mesh\ColorMaterial.h" />
     <ClInclude Include="src\renderer\mesh\IMaterial.h" />

@@ -6,6 +6,7 @@
 #include "renderer/model/Model.h"
 #include "renderer/camera/ProjectionCamera.h"
 #include "renderer/lights/AmbientLight.h"
+#include "renderer/lights/DirectionalLight.h"
 #include "renderer/lights/PointLight.h"
 
 namespace ultraviolet
@@ -32,6 +33,7 @@ namespace ultraviolet
 		double m_DeltaTime;
 
 		AmbientLight m_AmbientLight;
+		DirectionalLight m_DirectionalLight;
 		std::vector<PointLight> m_PointLights;
 		size_t m_LastPointLightIndex{ 0 };
 

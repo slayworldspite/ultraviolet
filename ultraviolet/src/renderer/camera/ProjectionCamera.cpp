@@ -10,7 +10,7 @@ namespace ultraviolet
 		Position{},
 		Yaw{ -90 },
 		Pitch{},
-		FOV{ 90 },
+		FOV{ 75 },
 		m_Front{}
 	{
 		Update();
@@ -43,6 +43,7 @@ namespace ultraviolet
 		) };
 
 		shader.Use();
+
 		shader.Set("u_Projection", projection);
 		shader.Set("u_View", view);
 		shader.Set("u_CameraPosition", Position);

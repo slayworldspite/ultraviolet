@@ -7,16 +7,20 @@ namespace ultraviolet
 {
 	void AmbientLight::Apply(const Shader& shader) const
 	{
+		shader.Use();
+
 		shader.Set("u_AmbientLight.Color", Color);
 		shader.Set("u_AmbientLight.Intensity", Intensity);
+		shader.Set("u_AmbientLight.Enabled", Enabled);
 	}
 
 	void AmbientLight::AddToImGui()
 	{
 		if (::ImGui::CollapsingHeader("Ambient Light"))
 		{
-			::ImGui::ColorPicker3("Ambient Light Color", glm::value_ptr(Color));
-			::ImGui::DragFloat("Ambient Light Intensity", &Intensity, 0.01f);
+			::ImGui::Checkbox("Enabled ##ambient", &Enabled);
+			::ImGui::ColorPicker3("Color ##ambient", glm::value_ptr(Color));
+			::ImGui::DragFloat("Intensity ##ambient", &Intensity, 0.01f);
 		}
 	}
 }

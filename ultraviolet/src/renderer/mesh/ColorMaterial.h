@@ -12,7 +12,7 @@ namespace ultraviolet
 		float Roughness;
 
 	public:
-		ColorMaterial(const glm::vec4& color, float metallic, float roughness);
+		ColorMaterial(const glm::vec3& color, float metallic, float roughness);
 		virtual ~ColorMaterial() = default;
 
 		virtual void Apply(const Shader& shader) const override;

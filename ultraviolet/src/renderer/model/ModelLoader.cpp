@@ -7,12 +7,8 @@
 
 namespace ultraviolet
 {
-	std::vector<std::shared_ptr<Texture>> LoadTextures(const std::filesystem::path& path, aiMaterial*& material, aiTextureType type)
+	std::shared_ptr<Texture> LoadTexture(const std::filesystem::path& path, aiMaterial*& material, aiTextureType type)
 	{
-		std::vector<std::shared_ptr<Texture>> textures{};
-
-		Logger::Log("loading textures of type: " + std::to_string(type), Logger::Level::Info);
-
 		for (size_t i{}; i < material->GetTextureCount(type); i++)
 		{
 			aiString texturePath{};
@@ -48,10 +44,10 @@ namespace ultraviolet
 			}
 
 			std::shared_ptr<Texture> texture{ std::make_shared<Texture>(path.parent_path().string() + "/" + texturePath.C_Str(), textureType) };
-			textures.push_back(texture);
+			return texture;
 		}
 
-		return textures;
+		return {};
 	}
 
 	std::optional<Model> ModelLoader::Load(const std::string& id, const std::filesystem::path& path)
@@ -148,44 +144,50 @@ namespace ultraviolet
 			{
 				auto& meshMaterial{ scene->mMaterials[mesh->mMaterialIndex] };
 
-				std::vector<std::shared_ptr<Texture>> textures{};
+				std::shared_ptr<TextureMaterial> textureMaterial{ std::make_shared<TextureMaterial>() };
 
-				auto albedoTextures{ LoadTextures(path, meshMaterial, aiTextureType_BASE_COLOR) };
-				textures.insert(textures.end(), albedoTextures.begin(), albedoTextures.end());
-			
-				// .obj uses aiTextureType_DIFFUSE instead of aiTextureType_BASE_COLOR
-				auto diffuseTextures{ LoadTextures(path, meshMaterial, aiTextureType_DIFFUSE) };
-				textures.insert(textures.end(), diffuseTextures.begin(), diffuseTextures.end());
+				auto albedo{ LoadTexture(path, meshMaterial, aiTextureType_BASE_COLOR) };
 
-				auto metallicTextures{ LoadTextures(path, meshMaterial, aiTextureType_METALNESS) };
-				textures.insert(textures.end(), metallicTextures.begin(), metallicTextures.end());
+				if (!albedo)
+					albedo = LoadTexture(path, meshMaterial, aiTextureType_DIFFUSE);
 
-				// .obj uses aiTextureType_REFLECTION instead of aiTextureType_METALNESS without pbr extensions
-				auto reflectionTextures{ LoadTextures(path, meshMaterial, aiTextureType_REFLECTION) };
-				textures.insert(textures.end(), reflectionTextures.begin(), reflectionTextures.end());
+				if (albedo)
+					textureMaterial->Albedo = albedo;
 
-				auto roughnessTextures{ LoadTextures(path, meshMaterial, aiTextureType_DIFFUSE_ROUGHNESS) };
-				textures.insert(textures.end(), roughnessTextures.begin(), roughnessTextures.end());
+				auto metallic{ LoadTexture(path, meshMaterial, aiTextureType_METALNESS) };
 
-				// .obj uses aiTextureType_SHININESS instead of aiTextureType_DIFFUSE_ROUGHNESS without pbr extensions
-				auto shininessTextures{ LoadTextures(path, meshMaterial, aiTextureType_SHININESS) };
-				textures.insert(textures.end(), shininessTextures.begin(), shininessTextures.end());
+				if (!metallic)
+					metallic = LoadTexture(path, meshMaterial, aiTextureType_REFLECTION);
 
-				auto normalTextures{ LoadTextures(path, meshMaterial, aiTextureType_NORMAL_CAMERA) };
-				textures.insert(textures.end(), normalTextures.begin(), normalTextures.end());
+				if (metallic)
+					textureMaterial->Metallic = metallic;
 
-				// .obj uses aiTextureType_HEIGHT instead of aiTextureType_NORMAL_CAMERA
-				auto normalObjTextures{ LoadTextures(path, meshMaterial, aiTextureType_HEIGHT) };
-				textures.insert(textures.end(), normalObjTextures.begin(), normalObjTextures.end());
+				auto roughness{ LoadTexture(path, meshMaterial, aiTextureType_DIFFUSE_ROUGHNESS) };
 
-				auto ambientOcclusionTextures{ LoadTextures(path, meshMaterial, aiTextureType_AMBIENT_OCCLUSION) };
-				textures.insert(textures.end(), ambientOcclusionTextures.begin(), ambientOcclusionTextures.end());
+				if (!roughness)
+					roughness = LoadTexture(path, meshMaterial, aiTextureType_SHININESS);
 
-				material = std::make_shared<TextureMaterial>(textures);
+				if (roughness)
+					textureMaterial->Roughness = roughness;
+
+				auto normal{ LoadTexture(path, meshMaterial, aiTextureType_NORMAL_CAMERA) };
+
+				if (!normal)
+					normal = LoadTexture(path, meshMaterial, aiTextureType_HEIGHT);
+
+				if (normal)
+					textureMaterial->Normal = normal;
+
+				auto ambientOcclusion{ LoadTexture(path, meshMaterial, aiTextureType_AMBIENT_OCCLUSION) };
+
+				if (normal)
+					textureMaterial->AmbientOcclusion = ambientOcclusion;
+
+				material = textureMaterial;
 			}
 			else
 			{
-				material = std::make_shared<ColorMaterial>(glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f }, 0.5f, 0.5f);
+				material = std::make_shared<ColorMaterial>(glm::vec3{ 1.0f, 1.0f, 1.0f }, 0.5f, 0.5f);
 			}
 
 			meshes.emplace_back(vertices, indices, material);

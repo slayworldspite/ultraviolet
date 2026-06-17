@@ -5,6 +5,7 @@
 #include <imgui/imgui.h>
 #include <imgui/imgui_impl_sdl3.h>
 #include <imgui/imgui_impl_opengl3.h>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "Renderer.h"
 #include "../utils/Logger.h"
@@ -60,6 +61,10 @@ namespace ultraviolet
 
 		::ImGui_ImplSDL3_InitForOpenGL(m_Window, m_GLContext);
 		::ImGui_ImplOpenGL3_Init();
+
+		m_ShadowBuffer = std::make_unique<Framebuffer>(2048, 2048, GL_DEPTH_COMPONENT, GL_DEPTH_ATTACHMENT);
+		m_ShadowShader = std::make_unique<Shader>("assets/shaders/shadow.vert", "assets/shaders/shadow.frag");
+		m_LightProjection = glm::ortho(-20.0f, 20.0f, -20.0f, 20.0f, 0.1f, 50.0f);
 	}
 
 	Renderer::~Renderer()
@@ -71,8 +76,16 @@ namespace ultraviolet
 
 	void Renderer::BeginFrame() const
 	{
+		m_ShadowBuffer->Bind();
+
 		::glClear(
-			GL_COLOR_BUFFER_BIT | 
+			GL_DEPTH_BUFFER_BIT
+		);
+
+		m_ShadowBuffer->Unbind();
+
+		::glClear(
+			GL_COLOR_BUFFER_BIT |
 			GL_DEPTH_BUFFER_BIT
 		);
 
@@ -107,6 +120,35 @@ namespace ultraviolet
 		if (mesh.Material)
 			mesh.Material->Apply(shader);
 
+		auto shadowBufferSize{ m_ShadowBuffer->GetSize() };
+		::glViewport(0, 0, shadowBufferSize.first, shadowBufferSize.second);
+
+		m_ShadowBuffer->Bind();
+
+		m_ShadowShader->Use();
+		glm::mat4 lightView{ glm::lookAt(-m_LightDirection * 20.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f)) };
+		glm::mat4 lightSpaceMatrix{ m_LightProjection * lightView };
+		m_ShadowShader->Set("u_LightSpaceMatrix", lightSpaceMatrix);
+
+		::glCullFace(GL_FRONT);
+		::glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(mesh.GetIndexCount()), GL_UNSIGNED_INT, nullptr);
+		::glCullFace(GL_BACK);
+
+		m_ShadowBuffer->Unbind();
+
+		int width{};
+		int height{};
+
+		::SDL_GetWindowSizeInPixels(m_Window, &width, &height);
+		::glViewport(0, 0, width, height);
+
+		shader.Use();
+		shader.Set("u_LightSpaceMatrix", lightSpaceMatrix);
+
+		shader.Set("u_ShadowMap", 15);
+		::glActiveTexture(GL_TEXTURE15);
+		::glBindTexture(GL_TEXTURE_2D, m_ShadowBuffer->GetTexture());
+
 		::glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(mesh.GetIndexCount()), GL_UNSIGNED_INT, nullptr);
 	}
 
@@ -114,6 +156,9 @@ namespace ultraviolet
 	{
 		shader.Use();
 		shader.Set("u_Model", model.GetModelMatrix());
+
+		m_ShadowShader->Use();
+		m_ShadowShader->Set("u_Model", model.GetModelMatrix());
 
 		for (const Mesh& mesh : model.Meshes)
 		{
@@ -139,5 +184,16 @@ namespace ultraviolet
 	void Renderer::SetVSync(bool value) const
 	{
 		::SDL_GL_SetSwapInterval(value);
+	}
+
+	void Renderer::SetLightDirection(float yaw, float pitch)
+	{
+		glm::vec3 direction{};
+
+		direction.x = cos(glm::radians(pitch)) * cos(glm::radians(yaw));
+		direction.y = sin(glm::radians(pitch));
+		direction.z = cos(glm::radians(pitch)) * sin(glm::radians(yaw));
+
+		m_LightDirection = direction;
 	}
 }

@@ -34,8 +34,6 @@ namespace ultraviolet
 
 		LogShaderError(vertexShader);
 
-		Logger::Log("finished loading shader!", Logger::Level::Info);
-
 		Logger::Log("loading shader: " + m_FragmentPath.string(), Logger::Level::Info);
 
 		std::string fragmentSourceString{ ReadFile(m_FragmentPath) };
@@ -46,8 +44,6 @@ namespace ultraviolet
 		::glCompileShader(fragmentShader);
 
 		LogShaderError(fragmentShader);
-
-		Logger::Log("finished loading shader!", Logger::Level::Info);
 
 		Logger::Log("linking shaders...", Logger::Level::Info);
 

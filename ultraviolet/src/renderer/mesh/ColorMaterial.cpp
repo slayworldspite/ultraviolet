@@ -5,7 +5,7 @@
 
 namespace ultraviolet
 {
-	ColorMaterial::ColorMaterial(const glm::vec4& color, float metallic, float roughness) :
+	ColorMaterial::ColorMaterial(const glm::vec3& color, float metallic, float roughness) :
 		Metallic{ metallic },
 		Roughness{ roughness }
 	{
@@ -15,6 +15,7 @@ namespace ultraviolet
 	void ColorMaterial::Apply(const Shader& shader) const
 	{
 		shader.Use();
+
 		shader.Set("u_ColorMaterial.Color", Color);
 		shader.Set("u_ColorMaterial.Metallic", Metallic);
 		shader.Set("u_ColorMaterial.Roughness", Roughness);
@@ -30,7 +31,7 @@ namespace ultraviolet
 	{
 		if (::ImGui::CollapsingHeader(("Color Material ##" + id + std::to_string(index)).c_str()))
 		{
-			::ImGui::ColorPicker4(("Color ##material" + id + std::to_string(index)).c_str(), glm::value_ptr(Color));
+			::ImGui::ColorPicker3(("Color ##material" + id + std::to_string(index)).c_str(), glm::value_ptr(Color));
 			::ImGui::DragFloat(("Metallic ##material" + id + std::to_string(index)).c_str(), &Metallic, 0.01f, 0.0f, 1.0f);
 			::ImGui::DragFloat(("Roughness ##material" + id + std::to_string(index)).c_str(), &Roughness, 0.01f, 0.0f, 1.0f);
 		}
