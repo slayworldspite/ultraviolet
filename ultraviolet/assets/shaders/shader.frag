@@ -83,11 +83,32 @@ void main()
 	
 	if (u_HasTexture) 
 	{
-		albedo = texture(u_TextureMaterial.Albedo, o_TextureCoordinates).rgb;
-		normal = texture(u_TextureMaterial.Normal, o_TextureCoordinates).rgb;
-		metallic = texture(u_TextureMaterial.Metallic, o_TextureCoordinates).r;
-		roughness = texture(u_TextureMaterial.Roughness, o_TextureCoordinates).r;
-		ambientOcclusion = texture(u_TextureMaterial.AmbientOcclusion, o_TextureCoordinates).r;
+		// lots of branches...
+
+		if (u_TextureMaterial.HasAlbedo)
+			albedo = texture(u_TextureMaterial.Albedo, o_TextureCoordinates).rgb;
+		else
+			albedo = vec3(1.0);
+
+		if (u_TextureMaterial.HasNormal)
+			normal = texture(u_TextureMaterial.Normal, o_TextureCoordinates).rgb;
+		else
+			normal = o_Normal;
+
+		if (u_TextureMaterial.HasMetallic)
+			metallic = texture(u_TextureMaterial.Metallic, o_TextureCoordinates).r;
+		else
+			metallic = 0.5;
+		
+		if (u_TextureMaterial.HasRoughness)
+			roughness = texture(u_TextureMaterial.Roughness, o_TextureCoordinates).r;
+		else
+			roughness = 0.5;
+
+		if (u_TextureMaterial.HasAmbientOcclusion)
+			ambientOcclusion = texture(u_TextureMaterial.AmbientOcclusion, o_TextureCoordinates).r;
+		else
+			ambientOcclusion = 1.0;
 	}
 	else
 	{
