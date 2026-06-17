@@ -34,24 +34,7 @@ namespace ultraviolet
 		m_Camera.Position = { 0.0f, 1.0f, 3.0f };
 
 		m_AmbientLight.Color = { 0.05f, 0.65f, 1.0f };
-		m_AmbientLight.Intensity = 0.05f;
-
-		PointLight light1{};
-
-		light1.Color = { 1.0f, 1.0f, 1.0f };
-		light1.Position.x += 3;
-		light1.Position.y += 1;
-
-		m_PointLights.push_back(light1);
-
-		PointLight light2{};
-
-		light2.Index++;
-		light2.Color = { 1.0f, 0.0f, 1.0f };
-		light2.Position.x -= 3;
-		light2.Position.y -= 1;
-
-		m_PointLights.push_back(light2);
+		m_AmbientLight.Intensity = 0.55f;
 
 		LoadAssets();
 	}
@@ -153,7 +136,7 @@ namespace ultraviolet
 		if (::ImGui::GetIO().WantCaptureKeyboard)
 			return;
 
-		float movementSpeed{ 5.0f };
+		float movementSpeed{ 10.0f };
 
 		glm::vec3 movementVector{};
 
