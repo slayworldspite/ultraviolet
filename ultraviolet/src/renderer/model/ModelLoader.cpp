@@ -185,7 +185,7 @@ namespace ultraviolet
 			}
 			else
 			{
-				material = std::make_shared<ColorMaterial>(glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f }, 32);
+				material = std::make_shared<ColorMaterial>(glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f }, 0.5f, 0.5f);
 			}
 
 			meshes.emplace_back(vertices, indices, material);
