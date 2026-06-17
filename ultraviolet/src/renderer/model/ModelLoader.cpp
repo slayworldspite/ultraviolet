@@ -11,6 +11,8 @@ namespace ultraviolet
 	{
 		std::vector<std::shared_ptr<Texture>> textures{};
 
+		Logger::Log("loading textures of type: " + std::to_string(type), Logger::Level::Info);
+
 		for (size_t i{}; i < material->GetTextureCount(type); i++)
 		{
 			aiString texturePath{};
@@ -21,18 +23,22 @@ namespace ultraviolet
 			switch (type)
 			{
 				case aiTextureType_BASE_COLOR:
+				case aiTextureType_DIFFUSE:
 					textureType = TextureType::Albedo;
 					break;
 
 				case aiTextureType_METALNESS:
+				case aiTextureType_REFLECTION:
 					textureType = TextureType::Metallic;
 					break;
 
 				case aiTextureType_DIFFUSE_ROUGHNESS:
+				case aiTextureType_SHININESS:
 					textureType = TextureType::Roughness;
 					break;
 
 				case aiTextureType_NORMAL_CAMERA:
+				case aiTextureType_HEIGHT:
 					textureType = TextureType::Normal;
 					break;
 
@@ -54,6 +60,8 @@ namespace ultraviolet
 
 		::Assimp::Importer importer{};
 
+		// .obj files must have "PBR Extensions" disabled, or it will save anisotropic values, which assimp cannot process
+		// it is recommended to keep the pbr extensions and remove the values from the .mtl file manually
 		const ::aiScene* scene{ importer.ReadFile(
 			path.string(),
 			aiProcess_Triangulate |
@@ -142,14 +150,36 @@ namespace ultraviolet
 
 				std::vector<std::shared_ptr<Texture>> textures{};
 
+				auto albedoTextures{ LoadTextures(path, meshMaterial, aiTextureType_BASE_COLOR) };
+				textures.insert(textures.end(), albedoTextures.begin(), albedoTextures.end());
+			
+				// .obj uses aiTextureType_DIFFUSE instead of aiTextureType_BASE_COLOR
 				auto diffuseTextures{ LoadTextures(path, meshMaterial, aiTextureType_DIFFUSE) };
 				textures.insert(textures.end(), diffuseTextures.begin(), diffuseTextures.end());
 
-				auto specularTextures{ LoadTextures(path, meshMaterial, aiTextureType_SPECULAR) };
-				textures.insert(textures.end(), specularTextures.begin(), specularTextures.end());
+				auto metallicTextures{ LoadTextures(path, meshMaterial, aiTextureType_METALNESS) };
+				textures.insert(textures.end(), metallicTextures.begin(), metallicTextures.end());
 
-				auto normalsTextures{ LoadTextures(path, meshMaterial, aiTextureType_NORMALS) };
-				textures.insert(textures.end(), normalsTextures.begin(), normalsTextures.end());
+				// .obj uses aiTextureType_REFLECTION instead of aiTextureType_METALNESS without pbr extensions
+				auto reflectionTextures{ LoadTextures(path, meshMaterial, aiTextureType_REFLECTION) };
+				textures.insert(textures.end(), reflectionTextures.begin(), reflectionTextures.end());
+
+				auto roughnessTextures{ LoadTextures(path, meshMaterial, aiTextureType_DIFFUSE_ROUGHNESS) };
+				textures.insert(textures.end(), roughnessTextures.begin(), roughnessTextures.end());
+
+				// .obj uses aiTextureType_SHININESS instead of aiTextureType_DIFFUSE_ROUGHNESS without pbr extensions
+				auto shininessTextures{ LoadTextures(path, meshMaterial, aiTextureType_SHININESS) };
+				textures.insert(textures.end(), shininessTextures.begin(), shininessTextures.end());
+
+				auto normalTextures{ LoadTextures(path, meshMaterial, aiTextureType_NORMAL_CAMERA) };
+				textures.insert(textures.end(), normalTextures.begin(), normalTextures.end());
+
+				// .obj uses aiTextureType_HEIGHT instead of aiTextureType_NORMAL_CAMERA
+				auto normalObjTextures{ LoadTextures(path, meshMaterial, aiTextureType_HEIGHT) };
+				textures.insert(textures.end(), normalObjTextures.begin(), normalObjTextures.end());
+
+				auto ambientOcclusionTextures{ LoadTextures(path, meshMaterial, aiTextureType_AMBIENT_OCCLUSION) };
+				textures.insert(textures.end(), ambientOcclusionTextures.begin(), ambientOcclusionTextures.end());
 
 				material = std::make_shared<TextureMaterial>(textures);
 			}

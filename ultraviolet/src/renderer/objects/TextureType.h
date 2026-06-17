@@ -4,8 +4,10 @@ namespace ultraviolet
 {
 	enum class TextureType
 	{
-		Diffuse,
-		Specular,
-		Normals
+		Albedo,
+		Metallic,
+		Roughness,
+		Normal,
+		AmbientOcclusion
 	};
 }

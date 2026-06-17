@@ -24,8 +24,8 @@ namespace ultraviolet
 			::ImGui::Checkbox(("Enabled ##point" + std::to_string(Index)).c_str(), &Enabled);
 			::ImGui::DragFloat3(("Position ##point" + std::to_string(Index)).c_str(), glm::value_ptr(Position), 0.1f);
 			::ImGui::ColorPicker3(("Color ##point" + std::to_string(Index)).c_str(), glm::value_ptr(Color));
-			::ImGui::DragFloat(("Linear Attenuation ##point" + std::to_string(Index)).c_str(), &LinearAttenuation, 0.001f);
-			::ImGui::DragFloat(("Quadratic Attenuation ##point" + std::to_string(Index)).c_str(), &QuadraticAttenuation, 0.0001f);
+			::ImGui::DragFloat(("Linear Attenuation ##point" + std::to_string(Index)).c_str(), &LinearAttenuation, 0.00001f);
+			::ImGui::DragFloat(("Quadratic Attenuation ##point" + std::to_string(Index)).c_str(), &QuadraticAttenuation, 0.000001f);
 			::ImGui::DragFloat(("Intensity ##point" + std::to_string(Index)).c_str(), &Intensity, 0.01f);
 		}
 	}

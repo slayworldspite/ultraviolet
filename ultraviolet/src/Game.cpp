@@ -34,7 +34,7 @@ namespace ultraviolet
 		m_Camera.Position = { 0.0f, 1.0f, 3.0f };
 
 		m_AmbientLight.Color = { 0.05f, 0.65f, 1.0f };
-		m_AmbientLight.Intensity = 0.55f;
+		m_AmbientLight.Intensity = 0.0f;
 
 		LoadAssets();
 	}
@@ -53,9 +53,11 @@ namespace ultraviolet
 		m_Renderer.BeginFrame();
 
 		// reloading shaders unsets these
-		m_Shader.Set("u_TextureMaterial.Diffuse", 0);
-		m_Shader.Set("u_TextureMaterial.Specular", 1);
-		m_Shader.Set("u_TextureMaterial.Normal", 2);
+		m_Shader.Set("u_TextureMaterial.Albedo", 0);
+		m_Shader.Set("u_TextureMaterial.Metallic", 1);
+		m_Shader.Set("u_TextureMaterial.Roughness", 2);
+		m_Shader.Set("u_TextureMaterial.Normal", 3);
+		m_Shader.Set("u_TextureMaterial.AmbientOcclusion", 4);
 
 		m_Camera.Apply(m_Shader, GetWindowSize());
 
@@ -136,7 +138,7 @@ namespace ultraviolet
 		if (::ImGui::GetIO().WantCaptureKeyboard)
 			return;
 
-		float movementSpeed{ 10.0f };
+		float movementSpeed{ 2.5f };
 
 		glm::vec3 movementVector{};
 
@@ -177,6 +179,20 @@ namespace ultraviolet
 
 		if (::ImGui::Button("Reload Shaders"))
 			m_Shader.Load();
+
+		if (::ImGui::Button("Add Point Light"))
+		{
+			PointLight light{};
+			light.Index = m_LastPointLightIndex++;
+
+			m_PointLights.push_back(light);
+		}
+
+		if (::ImGui::Button("Remove Point Light"))
+		{
+			m_PointLights.pop_back();
+			m_LastPointLightIndex--;
+		}
 
 		m_Camera.AddToImGui();
 

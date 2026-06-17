@@ -33,6 +33,7 @@ namespace ultraviolet
 
 		AmbientLight m_AmbientLight;
 		std::vector<PointLight> m_PointLights;
+		size_t m_LastPointLightIndex{ 0 };
 
 		std::vector<Model> m_Models;
 

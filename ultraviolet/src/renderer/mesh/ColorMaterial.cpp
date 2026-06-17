@@ -5,9 +5,9 @@
 
 namespace ultraviolet
 {
-	ColorMaterial::ColorMaterial(const glm::vec4& color, int specular) :
-		Color{ color },
-		Specular{ specular }
+	ColorMaterial::ColorMaterial(const glm::vec4& color, float metallic, float roughness) :
+		Metallic{ metallic },
+		Roughness{ roughness }
 	{
 
 	}
@@ -16,7 +16,8 @@ namespace ultraviolet
 	{
 		shader.Use();
 		shader.Set("u_ColorMaterial.Color", Color);
-		shader.Set("u_ColorMaterial.Specular", Specular);
+		shader.Set("u_ColorMaterial.Metallic", Metallic);
+		shader.Set("u_ColorMaterial.Roughness", Roughness);
 		shader.Set("u_HasTexture", false);
 	}
 
@@ -30,7 +31,8 @@ namespace ultraviolet
 		if (::ImGui::CollapsingHeader(("Color Material ##" + id + std::to_string(index)).c_str()))
 		{
 			::ImGui::ColorPicker4(("Color ##material" + id + std::to_string(index)).c_str(), glm::value_ptr(Color));
-			::ImGui::DragInt(("Specular ##material" + id + std::to_string(index)).c_str(), &Specular, 1.0f, 4, 256);
+			::ImGui::DragFloat(("Metallic ##material" + id + std::to_string(index)).c_str(), &Metallic, 0.01f, 0.0f, 1.0f);
+			::ImGui::DragFloat(("Roughness ##material" + id + std::to_string(index)).c_str(), &Roughness, 0.01f, 0.0f, 1.0f);
 		}
 	}
 }

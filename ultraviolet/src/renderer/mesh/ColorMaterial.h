@@ -7,11 +7,12 @@ namespace ultraviolet
 	class ColorMaterial : public IMaterial
 	{
 	public:
-		glm::vec4 Color;
-		int Specular;
+		glm::vec3 Color;
+		float Metallic;
+		float Roughness;
 
 	public:
-		ColorMaterial(const glm::vec4& color, int specular);
+		ColorMaterial(const glm::vec4& color, float metallic, float roughness);
 		virtual ~ColorMaterial() = default;
 
 		virtual void Apply(const Shader& shader) const override;
