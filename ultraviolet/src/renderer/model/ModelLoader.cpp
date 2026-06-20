@@ -190,7 +190,7 @@ namespace ultraviolet
 				material = std::make_shared<ColorMaterial>(glm::vec3{ 1.0f, 1.0f, 1.0f }, 0.5f, 0.5f);
 			}
 
-			meshes.emplace_back(vertices, indices, material);
+			meshes.emplace_back(mesh->mName.C_Str(), vertices, indices, material);
 		}
 
 		Logger::Log("finished loading " + path.string() + "!", Logger::Level::Info);

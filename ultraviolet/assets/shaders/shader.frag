@@ -65,6 +65,7 @@ uniform AmbientLight u_AmbientLight;
 uniform PointLight u_PointLights[8];
 uniform mat4 u_LightSpaceMatrix;
 uniform sampler2D u_ShadowMap;
+uniform float u_DefaultMetallic;
 
 vec3 GetNormal(vec3 normal);
 float DistributionGGX(vec3 n, vec3 h, float roughness);
@@ -80,7 +81,7 @@ void main()
 	float metallic;
 	float roughness;
 	float ambientOcclusion;
-	
+
 	if (u_HasTexture) 
 	{
 		// lots of branches...
@@ -98,7 +99,7 @@ void main()
 		if (u_TextureMaterial.HasMetallic)
 			metallic = texture(u_TextureMaterial.Metallic, o_TextureCoordinates).r;
 		else
-			metallic = 0.5;
+			metallic = u_DefaultMetallic;
 		
 		if (u_TextureMaterial.HasRoughness)
 			roughness = texture(u_TextureMaterial.Roughness, o_TextureCoordinates).r;

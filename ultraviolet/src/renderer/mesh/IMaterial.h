@@ -11,6 +11,6 @@ namespace ultraviolet
 
 		virtual void Apply(const Shader& shader) const = 0;
 		virtual void Free() = 0;
-		virtual void AddToImGui(const std::string& id, size_t index) = 0;
+		virtual void AddToImGui(const std::string& id) = 0;
 	};
 }

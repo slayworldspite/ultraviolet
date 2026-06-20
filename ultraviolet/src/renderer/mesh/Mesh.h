@@ -14,10 +14,11 @@ namespace ultraviolet
 	class Mesh
 	{
 	public:
+		std::string ID;
 		std::shared_ptr<IMaterial> Material;
 
 	public:
-		Mesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, std::shared_ptr<IMaterial> material);
+		Mesh(std::string_view id, const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, std::shared_ptr<IMaterial> material);
 		Mesh(const Mesh&) = delete;
 		Mesh& operator=(const Mesh&) = delete;
 
@@ -26,7 +27,7 @@ namespace ultraviolet
 
 		void Bind() const;
 		size_t GetIndexCount() const;
-		void AddToImGui(const std::string& id, size_t index);
+		void AddToImGui(const std::string& id);
 
 	private:
 		VertexBuffer m_VertexBuffer;

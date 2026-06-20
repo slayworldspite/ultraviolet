@@ -27,13 +27,13 @@ namespace ultraviolet
 
 	}
 
-	void ColorMaterial::AddToImGui(const std::string& id, size_t index)
+	void ColorMaterial::AddToImGui(const std::string& id)
 	{
-		if (::ImGui::CollapsingHeader(("Color Material ##" + id + std::to_string(index)).c_str()))
+		if (::ImGui::CollapsingHeader(("Color Material ##" + id).c_str()))
 		{
-			::ImGui::ColorPicker3(("Color ##material" + id + std::to_string(index)).c_str(), glm::value_ptr(Color));
-			::ImGui::DragFloat(("Metallic ##material" + id + std::to_string(index)).c_str(), &Metallic, 0.01f, 0.0f, 1.0f);
-			::ImGui::DragFloat(("Roughness ##material" + id + std::to_string(index)).c_str(), &Roughness, 0.01f, 0.0f, 1.0f);
+			::ImGui::ColorPicker3(("Color ##material" + id).c_str(), glm::value_ptr(Color));
+			::ImGui::DragFloat(("Metallic ##material" + id).c_str(), &Metallic, 0.01f, 0.0f, 1.0f);
+			::ImGui::DragFloat(("Roughness ##material" + id).c_str(), &Roughness, 0.01f, 0.0f, 1.0f);
 		}
 	}
 }

@@ -7,52 +7,24 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.500000
 d 1.000000
 illum 2
+Pm 0.000000
 Ps 0.000000
 Pc 0.000000
 Pcr 0.030000
-map_Kd Grass001_2K-JPG_Color.jpg
-map_Pm black.png
-map_Pr Grass001_2K-JPG_Roughness.jpg
-map_Bump -bm 1.000000 Grass001_2K-JPG_NormalGL.jpg
+map_Kd Rock022_2K-JPG_Color.jpg
+map_Pr Rock022_2K-JPG_Roughness.jpg
+map_Bump -bm 1.000000 Rock022_2K-JPG_NormalGL.jpg
 
 newmtl Material.001
-Ks 0.000000 0.000000 0.000000
-Ke 0.000000 0.000000 0.000000
-Ni 1.500000
-d 1.000000
-illum 1
-Ps 0.000000
-Pc 0.000000
-Pcr 0.030000
-map_Kd PavingStones070_2K-JPG_Color.jpg
-map_Pm black.png
-map_Pr PavingStones070_2K-JPG_Roughness.jpg
-map_Bump -bm 1.000000 PavingStones070_2K-JPG_NormalGL.jpg
-
-newmtl Material.002
 Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
 Ni 1.500000
 d 1.000000
 illum 2
+Pm 0.000000
 Ps 0.000000
 Pc 0.000000
 Pcr 0.030000
-map_Kd Bricks076C_2K-JPG_Color.jpg
-map_Pm black.png
-map_Pr Bricks076C_2K-JPG_Roughness.jpg
-map_Bump -bm 1.000000 Bricks076C_2K-JPG_NormalGL.jpg
-
-newmtl Material.003
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.500000
-d 1.000000
-illum 2
-Ps 0.000000
-Pc 0.000000
-Pcr 0.030000
-map_Kd MetalPlates005_2K-JPG_Color.jpg
-map_Pm MetalPlates005_2K-JPG_Metalness.jpg
-map_Pr MetalPlates005_2K-JPG_Roughness.jpg
-map_Bump -bm 1.000000 MetalPlates005_2K-JPG_NormalGL.jpg
+map_Kd Rock032_2K-JPG_Color.jpg
+map_Pr Rock032_2K-JPG_Roughness.jpg
+map_Bump -bm 1.000000 Rock032_2K-JPG_NormalGL.jpg

@@ -4,7 +4,8 @@
 
 namespace ultraviolet
 {
-	Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, std::shared_ptr<IMaterial> material) :
+	Mesh::Mesh(std::string_view id, const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, std::shared_ptr<IMaterial> material) :
+		ID{ id },
 		Material{ std::move(material) },
 		m_VertexBuffer{ vertices },
 		m_ElementBuffer{ indices },
@@ -24,12 +25,12 @@ namespace ultraviolet
 		return m_IndexCount;
 	}
 
-	void Mesh::AddToImGui(const std::string& id, size_t index)
+	void Mesh::AddToImGui(const std::string& id)
 	{
-		if (::ImGui::CollapsingHeader(("Mesh #" + std::to_string(index) + "##" + id).c_str()))
+		if (::ImGui::CollapsingHeader((ID + "##" + id).c_str()))
 		{
 			::ImGui::Text("Index Count: %d", m_IndexCount);
-			Material->AddToImGui(id, index);
+			Material->AddToImGui(ID);
 		}
 	}
 }

@@ -15,9 +15,10 @@ namespace ultraviolet
 
 
 	public:
-		Model(const std::string& id, std::vector<Mesh>& meshes);
+		Model(std::string_view id, std::vector<Mesh>& meshes);
 
 		glm::mat4 GetModelMatrix() const;
 		void AddToImGui();
+		Mesh* GetMesh(std::string_view id);
 	};
 }

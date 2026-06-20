@@ -29,16 +29,12 @@ namespace ultraviolet
 
 	void Game::OnStart()
 	{
-		m_Renderer.SetClearColor({ 0.05f, 0.65f, 1.0f, 1.0f });
+		m_Renderer.SetClearColor({ 0.05f, 0.15f, 0.15f, 1.0f });
 
 		m_Camera.Position = { 0.0f, 1.0f, 3.0f };
 
 		m_AmbientLight.Color = { 0.05f, 0.65f, 1.0f };
 		m_AmbientLight.Intensity = 0.1f;
-
-		m_DirectionalLight.Color = { 1.0f, 1.0f, 0.85f };
-		m_DirectionalLight.Pitch = -21.0f;
-		m_DirectionalLight.Yaw = 225.0f;
 
 		LoadAssets();
 	}
@@ -56,12 +52,11 @@ namespace ultraviolet
 	{
 		m_Renderer.BeginFrame();
 
+		m_Shader.Set("u_DefaultMetallic", m_DefaultMetallic);
+
 		m_Camera.Apply(m_Shader, GetWindowSize());
 
 		m_AmbientLight.Apply(m_Shader);
-		m_DirectionalLight.Apply(m_Shader);
-
-		m_Renderer.SetLightDirection(m_DirectionalLight.Yaw, m_DirectionalLight.Pitch);
 			
 		for (const PointLight& light : m_PointLights)
 			light.Apply(m_Shader);
@@ -200,11 +195,11 @@ namespace ultraviolet
 			m_LastPointLightIndex--;
 		}
 
+		::ImGui::DragFloat("Default Metallic", &m_DefaultMetallic, 0.01f, 0.0f, 1.0f);
+
 		m_Camera.AddToImGui();
 
 		m_AmbientLight.AddToImGui();
-
-		m_DirectionalLight.AddToImGui();
 			
 		for (PointLight& light : m_PointLights)
 			light.AddToImGui();

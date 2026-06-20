@@ -86,7 +86,7 @@ namespace ultraviolet
 			AmbientOcclusion->Delete();
 	}
 
-	void TextureMaterial::AddToImGui(const std::string& id, size_t index)
+	void TextureMaterial::AddToImGui(const std::string& id)
 	{
 		if (::ImGui::CollapsingHeader("Texture Material"))
 		{

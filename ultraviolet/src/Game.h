@@ -33,11 +33,11 @@ namespace ultraviolet
 		double m_DeltaTime;
 
 		AmbientLight m_AmbientLight;
-		DirectionalLight m_DirectionalLight;
 		std::vector<PointLight> m_PointLights;
 		size_t m_LastPointLightIndex{ 0 };
 
 		std::vector<Model> m_Models;
+		float m_DefaultMetallic{};
 
 	private:
 		void ProcessInput(double deltaTime);

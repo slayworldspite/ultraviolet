@@ -6,7 +6,7 @@
 
 namespace ultraviolet
 {
-	Model::Model(const std::string& id, std::vector<Mesh>& meshes) :
+	Model::Model(std::string_view id, std::vector<Mesh>& meshes) :
 		ID{ id },
 		Meshes{ std::move(meshes) },
 		Position{},
@@ -42,9 +42,20 @@ namespace ultraviolet
 			{
 				for (size_t i{}; i < Meshes.size(); i++)
 				{
-					Meshes[i].AddToImGui(ID, i);
+					Meshes[i].AddToImGui(ID);
 				}
 			}
 		}
+	}
+
+	Mesh* Model::GetMesh(std::string_view id)
+	{
+		for (auto& mesh : Meshes)
+		{
+			if (mesh.ID == id)
+				return &mesh;
+		}
+
+		return nullptr;
 	}
 }
