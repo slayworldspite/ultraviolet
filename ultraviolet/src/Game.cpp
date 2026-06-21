@@ -33,9 +33,6 @@ namespace ultraviolet
 
 		m_Camera.Position = { 0.0f, 1.0f, 3.0f };
 
-		m_AmbientLight.Color = { 0.05f, 0.65f, 1.0f };
-		m_AmbientLight.Intensity = 0.1f;
-
 		LoadAssets();
 	}
 
@@ -56,10 +53,7 @@ namespace ultraviolet
 
 		m_Camera.Apply(m_Shader, GetWindowSize());
 
-		m_AmbientLight.Apply(m_Shader);
-			
-		for (const PointLight& light : m_PointLights)
-			light.Apply(m_Shader);
+		m_Renderer.Draw(m_Scene, m_Shader);
 
 		DebugMenu();
 
@@ -160,7 +154,7 @@ namespace ultraviolet
 
 	void Game::LoadAssets()
 	{
-		m_Models.clear();
+		m_Scene.Models.clear();
 	}
 
 	void Game::DebugMenu()
@@ -170,30 +164,8 @@ namespace ultraviolet
 		if (::ImGui::Button("Reload Shaders"))
 			m_Shader.Load();
 
-		if (::ImGui::Button("Add Point Light"))
-		{
-			PointLight light{};
-			light.Index = m_LastPointLightIndex++;
-
-			m_PointLights.push_back(light);
-		}
-
-		if (::ImGui::Button("Remove Point Light"))
-		{
-			m_PointLights.pop_back();
-			m_LastPointLightIndex--;
-		}
-
 		::ImGui::DragFloat("Default Metallic", &m_DefaultMetallic, 0.01f, 0.0f, 1.0f);
 
 		m_Camera.AddToImGui();
-
-		m_AmbientLight.AddToImGui();
-			
-		for (PointLight& light : m_PointLights)
-			light.AddToImGui();
-
-		for (Model& model : m_Models)
-			model.AddToImGui();
 	}
 }

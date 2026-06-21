@@ -3,8 +3,7 @@
 #include <glm/glm.hpp>
 
 #include "../core/NativeWindow.h"
-#include "model/Model.h"
-#include "Shader.h"
+#include "scene/Scene.h"
 
 namespace ultraviolet
 {
@@ -19,6 +18,7 @@ namespace ultraviolet
 		void SetClearColor(const glm::vec4& color) const;
 		void Draw(const Mesh& mesh, const Shader& shader) const;
 		void Draw(const Model& model, const Shader& shader) const;
+		void Draw(const Scene& scene, const Shader& shader) const;
 		void SetViewport(int width, int height) const;
 		void ToggleWireframeMode() const;
 		void SetVSync(bool value) const;

@@ -2,12 +2,7 @@
 
 #include "core/GameWindow.h"
 #include "renderer/Renderer.h"
-#include "renderer/Shader.h"
-#include "renderer/model/Model.h"
 #include "renderer/camera/ProjectionCamera.h"
-#include "renderer/lights/AmbientLight.h"
-#include "renderer/lights/DirectionalLight.h"
-#include "renderer/lights/PointLight.h"
 
 namespace ultraviolet
 {
@@ -32,11 +27,8 @@ namespace ultraviolet
 
 		double m_DeltaTime;
 
-		AmbientLight m_AmbientLight;
-		std::vector<PointLight> m_PointLights;
-		size_t m_LastPointLightIndex{ 0 };
+		Scene m_Scene;
 
-		std::vector<Model> m_Models;
 		float m_DefaultMetallic{};
 
 	private:

@@ -122,6 +122,16 @@ namespace ultraviolet
 		}
 	}
 
+	void Renderer::Draw(const Scene& scene, const Shader& shader) const
+	{
+		shader.Use();
+
+		for (const Model& model : scene.Models)
+		{
+			Draw(model, shader);
+		}
+	}
+
 	void Renderer::SetViewport(int width, int height) const
 	{
 		::glViewport(0, 0, width, height);
@@ -133,8 +143,7 @@ namespace ultraviolet
 
 		value = !value;
 
-		// hacky, but shouldn't fail if GL_LINE = 0x1b01 and GL_FILL = 0x1b02
-		::glPolygonMode(GL_FRONT_AND_BACK, GL_LINE + (!value));
+		::glPolygonMode(GL_FRONT_AND_BACK, value ? GL_LINE : GL_FILL);
 	}
 
 	void Renderer::SetVSync(bool value) const
