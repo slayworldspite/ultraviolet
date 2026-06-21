@@ -60,11 +60,6 @@ namespace ultraviolet
 			
 		for (const PointLight& light : m_PointLights)
 			light.Apply(m_Shader);
-		
-		for (const Model& model : m_Models)
-		{
-			m_Renderer.Draw(model, m_Shader);
-		}
 
 		DebugMenu();
 
@@ -166,12 +161,6 @@ namespace ultraviolet
 	void Game::LoadAssets()
 	{
 		m_Models.clear();
-
-		auto map{ ModelLoader::Load("map", "assets/models/map/map.obj") };
-		if (map)
-		{
-			m_Models.push_back(std::move(*map));
-		}
 	}
 
 	void Game::DebugMenu()
