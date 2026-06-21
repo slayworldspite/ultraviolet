@@ -72,6 +72,11 @@ namespace ultraviolet
 
 	void Renderer::BeginFrame() const
 	{
+		::glClear(
+			GL_COLOR_BUFFER_BIT |
+			GL_DEPTH_BUFFER_BIT
+		);
+
 		::ImGui_ImplOpenGL3_NewFrame();
 		::ImGui_ImplSDL3_NewFrame();
 		::ImGui::NewFrame();
@@ -135,16 +140,5 @@ namespace ultraviolet
 	void Renderer::SetVSync(bool value) const
 	{
 		::SDL_GL_SetSwapInterval(value);
-	}
-
-	void Renderer::SetLightDirection(float yaw, float pitch)
-	{
-		glm::vec3 direction{};
-
-		direction.x = cos(glm::radians(pitch)) * cos(glm::radians(yaw));
-		direction.y = sin(glm::radians(pitch));
-		direction.z = cos(glm::radians(pitch)) * sin(glm::radians(yaw));
-
-		m_LightDirection = direction;
 	}
 }
