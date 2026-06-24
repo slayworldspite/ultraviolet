@@ -5,9 +5,7 @@
 #include "../objects/VertexArray.h"
 #include "../objects/ElementBuffer.h"
 #include "Vertex.h"
-#include "IMaterial.h"
-#include "TextureMaterial.h"
-#include "ColorMaterial.h"
+#include "../materials/IMaterial.h"
 
 namespace ultraviolet
 {

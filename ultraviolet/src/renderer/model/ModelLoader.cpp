@@ -4,6 +4,9 @@
 
 #include "ModelLoader.h"
 #include "../../utils/Logger.h"
+#include "../objects/Texture.h"
+#include "../materials/TextureMaterial.h"
+#include "../materials/ColorMaterial.h"
 
 namespace ultraviolet
 {

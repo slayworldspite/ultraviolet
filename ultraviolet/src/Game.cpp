@@ -7,7 +7,7 @@
 #include "Game.h"
 #include "input/Input.h"
 #include "utils/Logger.h"
-#include "renderer/mesh/ColorMaterial.h"
+#include "renderer/materials/ColorMaterial.h"
 #include "renderer/model/ModelLoader.h"
 
 namespace ultraviolet
@@ -49,7 +49,7 @@ namespace ultraviolet
 	{
 		m_Renderer.BeginFrame();
 
-		m_Shader.Set("u_DefaultMetallic", m_DefaultMetallic);
+		m_Shader.Set("u_DefaultMetallic", 32);
 
 		m_Camera.Apply(m_Shader, GetWindowSize());
 
@@ -163,8 +163,6 @@ namespace ultraviolet
 
 		if (::ImGui::Button("Reload Shaders"))
 			m_Shader.Load();
-
-		::ImGui::DragFloat("Default Metallic", &m_DefaultMetallic, 0.01f, 0.0f, 1.0f);
 
 		m_Camera.AddToImGui();
 	}

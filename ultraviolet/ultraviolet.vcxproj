@@ -148,8 +148,8 @@
     <ClCompile Include="src\renderer\lights\AmbientLight.cpp" />
     <ClCompile Include="src\renderer\lights\DirectionalLight.cpp" />
     <ClCompile Include="src\renderer\lights\PointLight.cpp" />
-    <ClCompile Include="src\renderer\mesh\ColorMaterial.cpp" />
-    <ClCompile Include="src\renderer\mesh\TextureMaterial.cpp" />
+    <ClCompile Include="src\renderer\materials\ColorMaterial.cpp" />
+    <ClCompile Include="src\renderer\materials\TextureMaterial.cpp" />
     <ClCompile Include="src\renderer\model\Model.cpp" />
     <ClCompile Include="src\renderer\model\ModelLoader.cpp" />
     <ClCompile Include="src\renderer\objects\ElementBuffer.cpp" />
@@ -184,11 +184,11 @@
     <ClInclude Include="src\renderer\lights\AmbientLight.h" />
     <ClInclude Include="src\renderer\lights\DirectionalLight.h" />
     <ClInclude Include="src\renderer\lights\PointLight.h" />
-    <ClInclude Include="src\renderer\mesh\ColorMaterial.h" />
-    <ClInclude Include="src\renderer\mesh\IMaterial.h" />
+    <ClInclude Include="src\renderer\materials\ColorMaterial.h" />
+    <ClInclude Include="src\renderer\materials\IMaterial.h" />
     <ClInclude Include="src\renderer\objects\ElementBuffer.h" />
     <ClInclude Include="src\renderer\objects\Texture.h" />
-    <ClInclude Include="src\renderer\mesh\TextureMaterial.h" />
+    <ClInclude Include="src\renderer\materials\TextureMaterial.h" />
     <ClInclude Include="src\renderer\model\Model.h" />
     <ClInclude Include="src\renderer\model\ModelLoader.h" />
     <ClInclude Include="src\renderer\objects\GLObject.h" />
