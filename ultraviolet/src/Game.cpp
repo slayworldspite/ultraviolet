@@ -9,6 +9,7 @@
 #include "utils/Logger.h"
 #include "renderer/materials/ColorMaterial.h"
 #include "renderer/model/ModelLoader.h"
+#include "renderer/model/Primitives.h"
 
 namespace ultraviolet
 {
@@ -155,6 +156,12 @@ namespace ultraviolet
 	void Game::LoadAssets()
 	{
 		m_Scene.Models.clear();
+
+		m_Scene.DirectionalLight.Enabled = true;
+		m_Scene.DirectionalLight.Color = { 1.0f, 1.0f, 1.0f };
+		m_Scene.DirectionalLight.Pitch = 45.0f;
+
+		m_Scene.Models.push_back(std::move(Primitives::GetPlane("plane", std::make_shared<ColorMaterial>(glm::vec3{ 1.0f }, 0.0f, 1.0f))));
 	}
 
 	void Game::DebugMenu()

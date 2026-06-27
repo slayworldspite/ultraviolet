@@ -6,6 +6,7 @@
 namespace ultraviolet
 {
 	ColorMaterial::ColorMaterial(const glm::vec3& color, float metallic, float roughness) :
+		Color{ color },
 		Metallic{ metallic },
 		Roughness{ roughness }
 	{

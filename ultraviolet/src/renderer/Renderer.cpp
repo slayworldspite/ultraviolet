@@ -126,6 +126,14 @@ namespace ultraviolet
 	{
 		shader.Use();
 
+		scene.AmbientLight.Apply(shader);
+		scene.DirectionalLight.Apply(shader);
+
+		for (const PointLight& pointLight : scene.PointLights)
+		{
+			pointLight.Apply(shader);
+		}
+
 		for (const Model& model : scene.Models)
 		{
 			Draw(model, shader);
