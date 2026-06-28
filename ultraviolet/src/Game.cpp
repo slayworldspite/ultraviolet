@@ -161,7 +161,7 @@ namespace ultraviolet
 		m_Scene.DirectionalLight.Color = { 1.0f, 1.0f, 1.0f };
 		m_Scene.DirectionalLight.Pitch = 45.0f;
 
-		m_Scene.Models.push_back(std::move(Primitives::GetPlane("plane", std::make_shared<ColorMaterial>(glm::vec3{ 1.0f }, 0.0f, 1.0f))));
+		m_Scene.Models.push_back(std::move(Primitives::GetPlane("plane")));
 	}
 
 	void Game::DebugMenu()
@@ -172,5 +172,7 @@ namespace ultraviolet
 			m_Shader.Load();
 
 		m_Camera.AddToImGui();
+
+		m_Scene.AddToImGui();
 	}
 }

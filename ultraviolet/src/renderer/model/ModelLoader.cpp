@@ -5,12 +5,11 @@
 #include "ModelLoader.h"
 #include "../../utils/Logger.h"
 #include "../objects/Texture.h"
-#include "../materials/TextureMaterial.h"
 #include "../materials/ColorMaterial.h"
 
 namespace ultraviolet
 {
-	std::shared_ptr<Texture> LoadTexture(const std::filesystem::path& path, aiMaterial*& material, aiTextureType type)
+	static std::shared_ptr<Texture> LoadTexture(const std::filesystem::path& path, aiMaterial*& material, aiTextureType type)
 	{
 		for (size_t i{}; i < material->GetTextureCount(type); i++)
 		{
@@ -141,59 +140,7 @@ namespace ultraviolet
 				}
 			}
 
-			std::shared_ptr<IMaterial> material;
-
-			if (mesh->mMaterialIndex >= 0)
-			{
-				auto& meshMaterial{ scene->mMaterials[mesh->mMaterialIndex] };
-
-				std::shared_ptr<TextureMaterial> textureMaterial{ std::make_shared<TextureMaterial>() };
-
-				auto albedo{ LoadTexture(path, meshMaterial, aiTextureType_BASE_COLOR) };
-
-				if (!albedo)
-					albedo = LoadTexture(path, meshMaterial, aiTextureType_DIFFUSE);
-
-				if (albedo)
-					textureMaterial->Albedo = albedo;
-
-				auto metallic{ LoadTexture(path, meshMaterial, aiTextureType_METALNESS) };
-
-				if (!metallic)
-					metallic = LoadTexture(path, meshMaterial, aiTextureType_REFLECTION);
-
-				if (metallic)
-					textureMaterial->Metallic = metallic;
-
-				auto roughness{ LoadTexture(path, meshMaterial, aiTextureType_DIFFUSE_ROUGHNESS) };
-
-				if (!roughness)
-					roughness = LoadTexture(path, meshMaterial, aiTextureType_SHININESS);
-
-				if (roughness)
-					textureMaterial->Roughness = roughness;
-
-				auto normal{ LoadTexture(path, meshMaterial, aiTextureType_NORMAL_CAMERA) };
-
-				if (!normal)
-					normal = LoadTexture(path, meshMaterial, aiTextureType_HEIGHT);
-
-				if (normal)
-					textureMaterial->Normal = normal;
-
-				auto ambientOcclusion{ LoadTexture(path, meshMaterial, aiTextureType_AMBIENT_OCCLUSION) };
-
-				if (normal)
-					textureMaterial->AmbientOcclusion = ambientOcclusion;
-
-				material = textureMaterial;
-			}
-			else
-			{
-				material = std::make_shared<ColorMaterial>(glm::vec3{ 1.0f, 1.0f, 1.0f }, 0.5f, 0.5f);
-			}
-
-			meshes.emplace_back(mesh->mName.C_Str(), vertices, indices, material);
+			meshes.emplace_back(mesh->mName.C_Str(), vertices, indices);
 		}
 
 		Logger::Log("finished loading " + path.string() + "!", Logger::Level::Info);

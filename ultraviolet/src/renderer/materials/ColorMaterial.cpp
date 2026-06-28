@@ -6,6 +6,7 @@
 namespace ultraviolet
 {
 	ColorMaterial::ColorMaterial(const glm::vec3& color, float metallic, float roughness) :
+		Material{ MaterialType::Color },
 		Color{ color },
 		Metallic{ metallic },
 		Roughness{ roughness }
@@ -13,14 +14,14 @@ namespace ultraviolet
 
 	}
 
-	void ColorMaterial::Apply(const Shader& shader) const
+	void ColorMaterial::Apply() const
 	{
-		shader.Use();
-
-		shader.Set("u_ColorMaterial.Color", Color);
-		shader.Set("u_ColorMaterial.Metallic", Metallic);
-		shader.Set("u_ColorMaterial.Roughness", Roughness);
-		shader.Set("u_HasTexture", false);
+		m_Shader->Use();
+		
+		m_Shader->Set("u_ColorMaterial.Color", Color);
+		m_Shader->Set("u_ColorMaterial.Metallic", Metallic);
+		m_Shader->Set("u_ColorMaterial.Roughness", Roughness);
+		m_Shader->Set("u_HasTexture", false);
 	}
 
 	void ColorMaterial::Free()

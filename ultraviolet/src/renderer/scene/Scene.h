@@ -18,5 +18,7 @@ namespace ultraviolet
 	public:
 		Model* GetModel(std::string_view id);
 		PointLight* GetPointLight(std::string_view id);
+
+		void AddToImGui();
 	};
 }

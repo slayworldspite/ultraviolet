@@ -6,6 +6,6 @@ namespace ultraviolet
 {
 	namespace Primitives
 	{
-		Model GetPlane(std::string_view id, std::shared_ptr<IMaterial> material);
+		Model GetPlane(std::string_view id);
 	};
 }

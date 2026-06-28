@@ -106,7 +106,7 @@ namespace ultraviolet
 		mesh.Bind();
 		
 		if (mesh.Material)
-			mesh.Material->Apply(shader);
+			mesh.Material->Apply();
 
 		::glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(mesh.GetIndexCount()), GL_UNSIGNED_INT, nullptr);
 	}

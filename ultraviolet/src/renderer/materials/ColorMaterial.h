@@ -1,10 +1,10 @@
 #pragma once
 
-#include "IMaterial.h"
+#include "Material.h"
 
 namespace ultraviolet
 {
-	class ColorMaterial : public IMaterial
+	class ColorMaterial : public Material
 	{
 	public:
 		glm::vec3 Color;
@@ -15,7 +15,7 @@ namespace ultraviolet
 		ColorMaterial(const glm::vec3& color, float metallic, float roughness);
 		virtual ~ColorMaterial() = default;
 
-		virtual void Apply(const Shader& shader) const override;
+		virtual void Apply() const override;
 		virtual void Free() override;
 		virtual void AddToImGui(const std::string& id) override;
 	};
