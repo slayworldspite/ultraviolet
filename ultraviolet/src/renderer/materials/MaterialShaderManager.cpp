@@ -36,6 +36,8 @@ namespace ultraviolet
 
 	void MaterialShaderManager::Reload(MaterialType type)
 	{
+		assert(s_IsInitialized);
+
 		s_Shaders.at(type)->Load();
 	}
 }

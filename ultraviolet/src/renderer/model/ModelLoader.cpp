@@ -104,11 +104,14 @@ namespace ultraviolet
 				vertex.Normal.y = meshNormal.y;
 				vertex.Normal.z = meshNormal.z;
 
-				auto& meshTangent{ mesh->mTangents[vertexIndex] };
+				if (mesh->mTangents)
+				{
+					auto& meshTangent{ mesh->mTangents[vertexIndex] };
 
-				vertex.Tangent.x = meshTangent.x;
-				vertex.Tangent.y = meshTangent.y;
-				vertex.Tangent.z = meshTangent.z;
+					vertex.Tangent.x = meshTangent.x;
+					vertex.Tangent.y = meshTangent.y;
+					vertex.Tangent.z = meshTangent.z;
+				}
 				
 				if (mesh->HasTextureCoords(0) && mesh->mTextureCoords[0])
 				{
