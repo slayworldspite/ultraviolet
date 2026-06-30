@@ -72,15 +72,11 @@ namespace ultraviolet
 				SetRelativeMouseMode(!GetRelativeMouseMode());
 				break;
 
-			case Keycode::O:
-				m_Renderer.ToggleWireframeMode();
-				break;
-
 			case Keycode::R:
 				LoadAssets();
 				break;
 
-			case Keycode::PLUS:
+			case Keycode::RIGHTBRACKET:
 				static bool vsync{ true };
 				vsync = !vsync;
 				m_Renderer.SetVSync(vsync);
@@ -167,15 +163,29 @@ namespace ultraviolet
 	{
 		::ImGui::Text("FPS: %f", 1.0 / m_DeltaTime);
 
-		if (::ImGui::Button("Reload All Shaders"))
-			MaterialShaderManager::Initialize();
+		if (::ImGui::CollapsingHeader("Renderer"))
+		{
+			static bool wireframeMode{ false };
+			static bool lastWireframeMode{ wireframeMode };
 
-		static int materialIndex{};
+			::ImGui::Checkbox("Wireframe Mode", &wireframeMode);
 
-		::ImGui::InputInt("Index of Material", &materialIndex);
+			if (wireframeMode != lastWireframeMode)
+			{
+				lastWireframeMode = wireframeMode;
+				m_Renderer.SetWireframeMode(wireframeMode);
+			}
 
-		if (::ImGui::Button("[RISKY] Reload Shader of Value"))
-			MaterialShaderManager::Reload(static_cast<MaterialType>(materialIndex));
+			if (::ImGui::Button("Reload All Shaders"))
+				MaterialShaderManager::Initialize();
+
+			static int materialIndex{};
+
+			::ImGui::InputInt("Index of Material", &materialIndex);
+
+			if (::ImGui::Button("[RISKY] Reload Shader of Value"))
+				MaterialShaderManager::Reload(static_cast<MaterialType>(materialIndex));
+		}
 
 		m_Camera.AddToImGui();
 

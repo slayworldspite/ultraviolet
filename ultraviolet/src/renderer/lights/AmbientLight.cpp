@@ -7,8 +7,8 @@ namespace
 {
 	struct AmbientLightData
 	{
-		glm::vec3 Color{ 1.0f };
-		float Intensity{ 1.0f };
+		glm::vec3 Color;
+		float Intensity;
 	};
 }
 

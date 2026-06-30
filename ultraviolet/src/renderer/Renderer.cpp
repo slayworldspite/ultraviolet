@@ -124,11 +124,6 @@ namespace ultraviolet
 		}
 
 		::glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(mesh.GetIndexCount()), GL_UNSIGNED_INT, nullptr);
-
-		::GLenum error{ ::glGetError() };
-
-		if (error != GL_NO_ERROR)
-			Logger::Log("opengl error: " + std::to_string(error), Logger::Level::Error);
 	}
 
 	void Renderer::Draw(const Model& model) const
@@ -152,12 +147,8 @@ namespace ultraviolet
 		::glViewport(0, 0, width, height);
 	}
 
-	void Renderer::ToggleWireframeMode() const
+	void Renderer::SetWireframeMode(bool value) const
 	{
-		static bool value{ false };
-
-		value = !value;
-
 		::glPolygonMode(GL_FRONT_AND_BACK, value ? GL_LINE : GL_FILL);
 	}
 

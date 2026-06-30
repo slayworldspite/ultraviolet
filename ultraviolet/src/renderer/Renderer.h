@@ -22,7 +22,7 @@ namespace ultraviolet
 		void Draw(const Model& model) const;
 		void Draw(const Scene& scene) const;
 		void SetViewport(int width, int height) const;
-		void ToggleWireframeMode() const;
+		void SetWireframeMode(bool value) const;
 		void SetVSync(bool value) const;
 
 	private:

@@ -11,7 +11,7 @@ namespace ultraviolet
 		PointLights{},
 		m_AmbientLightUniformBuffer{ &AmbientLight, sizeof(AmbientLight), 1 }
 	{
-		m_AmbientLightUniformBuffer.Bind();
+
 	}
 
 	Model* Scene::GetModel(std::string_view id)

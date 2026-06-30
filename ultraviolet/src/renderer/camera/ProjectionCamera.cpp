@@ -29,7 +29,6 @@ namespace ultraviolet
 		CameraData data{};
 
 		m_UniformBuffer = std::make_unique<UniformBuffer>(&data, sizeof(data), 0);
-		m_UniformBuffer->Bind();
 	}
 
 	void ProjectionCamera::Update()
@@ -45,20 +44,21 @@ namespace ultraviolet
 
 	void ProjectionCamera::Apply(std::pair<int, int> size)
 	{
-		glm::mat4 projection{ glm::perspective(
+		CameraData data{};
+
+		data.Projection = glm::perspective(
 			glm::radians(FOV),
 			(float)size.first / (float)size.second,
 			0.1f,
 			100.0f
-		) };
+		);
 
-		glm::mat4 view{ glm::lookAt(
+		data.View = glm::lookAt(
 			Position,
 			Position + m_Front,
 			c_WorldUp
-		) };
+		);
 
-		CameraData data{ .Projection = projection, .View = view };
 		m_UniformBuffer->SetData(&data, sizeof(data));
 	}
 
