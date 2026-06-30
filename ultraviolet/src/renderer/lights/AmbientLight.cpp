@@ -3,22 +3,27 @@
 
 #include "AmbientLight.h"
 
+namespace
+{
+	struct AmbientLightData
+	{
+		glm::vec3 Color{ 1.0f };
+		float Intensity{ 1.0f };
+	};
+}
+
 namespace ultraviolet
 {
-	void AmbientLight::Apply(const Shader& shader) const
+	void AmbientLight::Apply(const UniformBuffer& uniformBuffer) const
 	{
-		shader.Use();
-
-		shader.Set("u_AmbientLight.Color", Color);
-		shader.Set("u_AmbientLight.Intensity", Intensity);
-		shader.Set("u_AmbientLight.Enabled", Enabled);
+		AmbientLightData data{ .Color = Color, .Intensity = Intensity };
+		uniformBuffer.SetData(&data, sizeof(data));
 	}
 
 	void AmbientLight::AddToImGui()
 	{
 		if (::ImGui::CollapsingHeader("Ambient Light"))
 		{
-			::ImGui::Checkbox("Enabled ##ambient", &Enabled);
 			::ImGui::ColorPicker3("Color ##ambient", glm::value_ptr(Color));
 			::ImGui::DragFloat("Intensity ##ambient", &Intensity, 0.01f);
 		}

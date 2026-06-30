@@ -8,6 +8,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "Renderer.h"
+#include "materials/MaterialShaderManager.h"
 #include "../utils/Logger.h"
 
 namespace ultraviolet
@@ -61,6 +62,8 @@ namespace ultraviolet
 
 		::ImGui_ImplSDL3_InitForOpenGL(m_Window, m_GLContext);
 		::ImGui_ImplOpenGL3_Init();
+
+		MaterialShaderManager::Initialize();
 	}
 
 	Renderer::~Renderer()
@@ -100,43 +103,47 @@ namespace ultraviolet
 		::glClearColor(color.r, color.g, color.b, color.a);
 	}
 
-	void Renderer::Draw(const Mesh& mesh, const Shader& shader) const
+	void Renderer::Draw(const Mesh& mesh) const
 	{
-		shader.Use();
 		mesh.Bind();
-		
+
 		if (mesh.Material)
 			mesh.Material->Apply();
 
 		::glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(mesh.GetIndexCount()), GL_UNSIGNED_INT, nullptr);
 	}
 
-	void Renderer::Draw(const Model& model, const Shader& shader) const
+	void Renderer::Draw(const Mesh& mesh, const glm::mat4& model) const
 	{
-		shader.Use();
-		shader.Set("u_Model", model.GetModelMatrix());
+		mesh.Bind();
 
+		if (mesh.Material)
+		{
+			mesh.Material->Apply();
+			mesh.Material->Shader->Set("u_Model", model);
+		}
+
+		::glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(mesh.GetIndexCount()), GL_UNSIGNED_INT, nullptr);
+
+		::GLenum error{ ::glGetError() };
+
+		if (error != GL_NO_ERROR)
+			Logger::Log("opengl error: " + std::to_string(error), Logger::Level::Error);
+	}
+
+	void Renderer::Draw(const Model& model) const
+	{
 		for (const Mesh& mesh : model.Meshes)
 		{
-			Draw(mesh, shader);
+			Draw(mesh, model.GetModelMatrix());
 		}
 	}
 
-	void Renderer::Draw(const Scene& scene, const Shader& shader) const
+	void Renderer::Draw(const Scene& scene) const
 	{
-		shader.Use();
-
-		scene.AmbientLight.Apply(shader);
-		scene.DirectionalLight.Apply(shader);
-
-		for (const PointLight& pointLight : scene.PointLights)
-		{
-			pointLight.Apply(shader);
-		}
-
 		for (const Model& model : scene.Models)
 		{
-			Draw(model, shader);
+			Draw(model);
 		}
 	}
 

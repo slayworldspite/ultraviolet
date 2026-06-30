@@ -1,13 +1,11 @@
-#include <format>
-
 #include <imgui/imgui.h>
-#include <imgui/imgui_stdlib.h>
 #include <glm/gtc/type_ptr.hpp>
 
 #include "Game.h"
 #include "input/Input.h"
 #include "utils/Logger.h"
 #include "renderer/materials/ColorMaterial.h"
+#include "renderer/materials/MaterialShaderManager.h"
 #include "renderer/model/ModelLoader.h"
 #include "renderer/model/Primitives.h"
 
@@ -22,17 +20,20 @@ namespace ultraviolet
 			}
 	},
 		m_Renderer{ *this },
-		m_Shader{ "assets/shaders/shader.vert", "assets/shaders/shader.frag" },
 		m_DeltaTime{}
 	{
-		SetRelativeMouseMode(true);
+		
 	}
 
 	void Game::OnStart()
 	{
+		SetRelativeMouseMode(true);
+
 		m_Renderer.SetClearColor({ 0.05f, 0.15f, 0.15f, 1.0f });
 
 		m_Camera.Position = { 0.0f, 1.0f, 3.0f };
+		m_Scene.AmbientLight.Color = { 1.0f, 0.0f, 0.0f };
+		m_Scene.AmbientLight.Intensity = 0.25f;
 
 		LoadAssets();
 	}
@@ -42,6 +43,7 @@ namespace ultraviolet
 		m_DeltaTime = deltaTime;
 
 		m_Camera.Update();
+		//m_Scene.Update();
 
 		ProcessInput(deltaTime);
 	}
@@ -50,11 +52,8 @@ namespace ultraviolet
 	{
 		m_Renderer.BeginFrame();
 
-		m_Shader.Set("u_DefaultMetallic", 32);
-
-		m_Camera.Apply(m_Shader, GetWindowSize());
-
-		m_Renderer.Draw(m_Scene, m_Shader);
+		m_Camera.Apply(GetWindowSize());
+		m_Renderer.Draw(m_Scene);
 
 		DebugMenu();
 
@@ -168,8 +167,15 @@ namespace ultraviolet
 	{
 		::ImGui::Text("FPS: %f", 1.0 / m_DeltaTime);
 
-		if (::ImGui::Button("Reload Shaders"))
-			m_Shader.Load();
+		if (::ImGui::Button("Reload All Shaders"))
+			MaterialShaderManager::Initialize();
+
+		static int materialIndex{};
+
+		::ImGui::InputInt("Index of Material", &materialIndex);
+
+		if (::ImGui::Button("[RISKY] Reload Shader of Value"))
+			MaterialShaderManager::Reload(static_cast<MaterialType>(materialIndex));
 
 		m_Camera.AddToImGui();
 

@@ -4,6 +4,7 @@
 
 #include "../core/NativeWindow.h"
 #include "scene/Scene.h"
+#include "camera/ProjectionCamera.h"
 
 namespace ultraviolet
 {
@@ -16,9 +17,10 @@ namespace ultraviolet
 		void BeginFrame() const;
 		void EndFrame() const;
 		void SetClearColor(const glm::vec4& color) const;
-		void Draw(const Mesh& mesh, const Shader& shader) const;
-		void Draw(const Model& model, const Shader& shader) const;
-		void Draw(const Scene& scene, const Shader& shader) const;
+		void Draw(const Mesh& mesh) const;
+		void Draw(const Mesh& mesh, const glm::mat4& model) const;
+		void Draw(const Model& model) const;
+		void Draw(const Scene& scene) const;
 		void SetViewport(int width, int height) const;
 		void ToggleWireframeMode() const;
 		void SetVSync(bool value) const;

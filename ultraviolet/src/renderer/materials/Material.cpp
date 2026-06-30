@@ -4,7 +4,7 @@
 namespace ultraviolet
 {
 	Material::Material(MaterialType type) :
-		m_Shader{ MaterialShaderManager::Get(type) }
+		Shader{ MaterialShaderManager::Get(type) }
 	{
 
 	}

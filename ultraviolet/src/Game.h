@@ -21,7 +21,6 @@ namespace ultraviolet
 
 	private:
 		Renderer m_Renderer;
-		Shader m_Shader;
 		ProjectionCamera m_Camera;
 		double m_DeltaTime;
 		Scene m_Scene;

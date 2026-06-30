@@ -40,10 +40,14 @@ namespace ultraviolet
 
 			if (::ImGui::CollapsingHeader(("Meshes ##" + ID).c_str()))
 			{
+				::ImGui::Indent(16.0f);
+
 				for (size_t i{}; i < Meshes.size(); i++)
 				{
 					Meshes[i].AddToImGui(ID);
 				}
+
+				::ImGui::Indent(-16.0f);
 			}
 		}
 	}

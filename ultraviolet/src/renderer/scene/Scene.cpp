@@ -4,6 +4,16 @@
 
 namespace ultraviolet
 {
+	Scene::Scene() :
+		Models{},
+		AmbientLight{},
+		DirectionalLight{},
+		PointLights{},
+		m_AmbientLightUniformBuffer{ &AmbientLight, sizeof(AmbientLight), 1 }
+	{
+		m_AmbientLightUniformBuffer.Bind();
+	}
+
 	Model* Scene::GetModel(std::string_view id)
 	{
 		for (Model& model : Models)
@@ -26,27 +36,49 @@ namespace ultraviolet
 		return nullptr;
 	}
 
+	void Scene::Update()
+	{
+		AmbientLight.Apply(m_AmbientLightUniformBuffer);
+	}
+
 	void Scene::AddToImGui()
 	{
-		if (ImGui::CollapsingHeader("Scene"))
+		if (::ImGui::CollapsingHeader("Scene"))
 		{
+			::ImGui::Indent(16.0f);
+
 			AmbientLight.AddToImGui();
 			DirectionalLight.AddToImGui();
 			
-			if (ImGui::CollapsingHeader("Point Lights"))
+			if (::ImGui::CollapsingHeader("Point Lights"))
 			{
-				if (ImGui::Button("Push Point Light"))
-					PointLights.emplace_back();
+				::ImGui::Indent(16.0f);
 
-				if (ImGui::Button("Pop Point Light"))
+				static size_t lastPointLightIndex{ PointLights.size() };
+
+				if (::ImGui::Button("Push Point Light"))
+				{
+					
+					PointLights.emplace_back();
+					PointLights[lastPointLightIndex - 1].Index = lastPointLightIndex++;
+				}
+
+				if (::ImGui::Button("Pop Point Light") && !PointLights.empty())
+				{
 					PointLights.pop_back();
+					lastPointLightIndex--;
+				}
 
 				for (PointLight& pointLight : PointLights)
 					pointLight.AddToImGui();
+
+				::ImGui::Indent(-16.0f);
 			}
 
-			if (ImGui::CollapsingHeader("Models"))
+			if (::ImGui::CollapsingHeader("Models"))
 			{
+				::ImGui::Indent(16.0f);
+
 				for (Model& model : Models)
 					model.AddToImGui();
 			}

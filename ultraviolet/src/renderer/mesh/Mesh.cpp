@@ -29,7 +29,9 @@ namespace ultraviolet
 		if (::ImGui::CollapsingHeader((ID + "##" + id).c_str()))
 		{
 			::ImGui::Text("Index Count: %d", m_IndexCount);
-			Material->AddToImGui(ID);
+
+			if (Material)
+				Material->AddToImGui(ID);
 		}
 	}
 }

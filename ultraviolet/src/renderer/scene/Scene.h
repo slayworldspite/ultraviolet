@@ -16,9 +16,15 @@ namespace ultraviolet
 		std::vector<PointLight> PointLights;
 
 	public:
+		Scene();
+
 		Model* GetModel(std::string_view id);
 		PointLight* GetPointLight(std::string_view id);
+		void Update();
 
 		void AddToImGui();
+
+	private:
+		UniformBuffer m_AmbientLightUniformBuffer;
 	};
 }

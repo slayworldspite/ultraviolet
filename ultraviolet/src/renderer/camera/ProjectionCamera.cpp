@@ -3,6 +3,16 @@
 #include <imgui/imgui.h>
 
 #include "ProjectionCamera.h"
+#include "../../utils/Logger.h"
+
+namespace
+{
+	struct CameraData
+	{
+		glm::mat4 Projection;
+		glm::mat4 View;
+	};
+}
 
 namespace ultraviolet
 {
@@ -11,9 +21,15 @@ namespace ultraviolet
 		Yaw{ -90 },
 		Pitch{},
 		FOV{ 75 },
-		m_Front{}
+		m_Front{},
+		m_UniformBuffer{ nullptr }
 	{
 		Update();
+
+		CameraData data{};
+
+		m_UniformBuffer = std::make_unique<UniformBuffer>(&data, sizeof(data), 0);
+		m_UniformBuffer->Bind();
 	}
 
 	void ProjectionCamera::Update()
@@ -27,7 +43,7 @@ namespace ultraviolet
 		m_Front = glm::normalize(direction);
 	}
 
-	void ProjectionCamera::Apply(const Shader& shader, std::pair<int, int> size) const
+	void ProjectionCamera::Apply(std::pair<int, int> size)
 	{
 		glm::mat4 projection{ glm::perspective(
 			glm::radians(FOV),
@@ -42,11 +58,8 @@ namespace ultraviolet
 			c_WorldUp
 		) };
 
-		shader.Use();
-
-		shader.Set("u_Projection", projection);
-		shader.Set("u_View", view);
-		shader.Set("u_CameraPosition", Position);
+		CameraData data{ .Projection = projection, .View = view };
+		m_UniformBuffer->SetData(&data, sizeof(data));
 	}
 
 	void ProjectionCamera::Move(const glm::vec3& vector)

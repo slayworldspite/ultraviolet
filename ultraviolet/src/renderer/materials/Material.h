@@ -8,7 +8,7 @@ namespace ultraviolet
 	class Material
 	{
 	public:
-		MaterialType Type;
+		std::shared_ptr<Shader> Shader;
 
 	public:
 		Material(MaterialType type);
@@ -17,8 +17,5 @@ namespace ultraviolet
 		virtual void Apply() const = 0;
 		virtual void Free() = 0;
 		virtual void AddToImGui(const std::string& id) = 0;
-
-	protected:
-		std::shared_ptr<Shader> m_Shader;
 	};
 }

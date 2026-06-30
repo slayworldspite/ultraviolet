@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../Shader.h"
+#include "../objects/UniformBuffer.h"
 
 namespace ultraviolet
 {
@@ -8,9 +9,8 @@ namespace ultraviolet
 	{
 		glm::vec3 Color;
 		float Intensity{ 1.0f };
-		bool Enabled{ true };
 
-		void Apply(const Shader& shader) const;
+		void Apply(const UniformBuffer& uniformBuffer) const;
 		void AddToImGui();
 	};
 }

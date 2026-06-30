@@ -16,12 +16,11 @@ namespace ultraviolet
 
 	void ColorMaterial::Apply() const
 	{
-		m_Shader->Use();
+		Shader->Use();
 		
-		m_Shader->Set("u_ColorMaterial.Color", Color);
-		m_Shader->Set("u_ColorMaterial.Metallic", Metallic);
-		m_Shader->Set("u_ColorMaterial.Roughness", Roughness);
-		m_Shader->Set("u_HasTexture", false);
+		Shader->Set("u_ColorMaterial.Color", Color);
+		Shader->Set("u_ColorMaterial.Metallic", Metallic);
+		Shader->Set("u_ColorMaterial.Roughness", Roughness);
 	}
 
 	void ColorMaterial::Free()

@@ -1,9 +1,10 @@
 #include "Primitives.h"
+#include "../materials/ColorMaterial.h"
 #include "../../utils/Logger.h"
 
 namespace ultraviolet
 {
-	Model Primitives::GetPlane(std::string_view id)
+	Model Primitives::GetPlane(std::string_view id, std::shared_ptr<Material> material)
 	{
 		std::vector<Vertex> vertices{};
 		vertices.reserve(4);
@@ -34,6 +35,11 @@ namespace ultraviolet
 		vertices.push_back(vertex);
 
 		Mesh mesh{ id, vertices, {0, 2, 1, 1, 2, 3} };
+
+		if (material)
+			mesh.Material = material;
+		else
+			mesh.Material = std::make_shared<ColorMaterial>(glm::vec3{ 1.0f }, 0.5f, 0.5f);
 
 		std::vector<Mesh> meshes{};
 		meshes.push_back(std::move(mesh));
