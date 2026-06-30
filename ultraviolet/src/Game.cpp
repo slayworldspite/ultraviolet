@@ -43,7 +43,7 @@ namespace ultraviolet
 		m_DeltaTime = deltaTime;
 
 		m_Camera.Update();
-		//m_Scene.Update();
+		m_Scene.Update();
 
 		ProcessInput(deltaTime);
 	}
