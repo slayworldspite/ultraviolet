@@ -41,4 +41,10 @@ namespace ultraviolet
 		Bind();
 		::glBufferSubData(GL_UNIFORM_BUFFER, 0, size, data);
 	}
+
+	void UniformBuffer::SetData(const void* data, size_t size, size_t offset) const
+	{
+		Bind();
+		::glBufferSubData(GL_UNIFORM_BUFFER, offset, size, data);
+	}
 }

@@ -15,5 +15,6 @@ namespace ultraviolet
 		virtual void Delete() override;
 		
 		void SetData(const void* data, size_t size) const;
+		void SetData(const void* data, size_t size, size_t offset) const;
 	};
 }

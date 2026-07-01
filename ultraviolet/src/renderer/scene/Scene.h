@@ -26,5 +26,6 @@ namespace ultraviolet
 
 	private:
 		UniformBuffer m_AmbientLightUniformBuffer;
+		UniformBuffer m_PointLightsUniformBuffer;
 	};
 }

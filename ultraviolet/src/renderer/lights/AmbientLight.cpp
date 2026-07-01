@@ -17,6 +17,7 @@ namespace ultraviolet
 	void AmbientLight::Apply(const UniformBuffer& uniformBuffer) const
 	{
 		AmbientLightData data{ .Color = Color, .Intensity = Intensity };
+
 		uniformBuffer.SetData(&data, sizeof(data));
 	}
 

@@ -7,8 +7,9 @@ layout (location = 3) in vec3 a_Tangent;
 
 layout (std140, binding = 0) uniform CameraData
 {
-	mat4 Projection;
-	mat4 View;
+	mat4 ub_Projection;
+	mat4 ub_View;
+	vec3 ub_CameraPosition;
 };
 
 uniform mat4 u_Model;
@@ -16,12 +17,14 @@ uniform mat4 u_Model;
 out vec3 o_Normal;
 out vec2 o_TextureCoordinates;
 out vec3 o_FragmentPosition;
+out vec3 o_CameraPosition;
 
 void main()
 {
-	gl_Position = Projection * View * u_Model * vec4(a_Position, 1.0);
+	gl_Position = ub_Projection * ub_View * u_Model * vec4(a_Position, 1.0);
 	
 	o_Normal = mat3(u_Model) * a_Normal;
 	o_TextureCoordinates = a_TextureCoordinates;
 	o_FragmentPosition = vec3(u_Model * vec4(a_Position, 1.0));
+	o_CameraPosition = ub_CameraPosition;
 }

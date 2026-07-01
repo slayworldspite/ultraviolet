@@ -32,8 +32,11 @@ namespace ultraviolet
 		m_Renderer.SetClearColor({ 0.05f, 0.15f, 0.15f, 1.0f });
 
 		m_Camera.Position = { 0.0f, 1.0f, 3.0f };
-		m_Scene.AmbientLight.Color = { 1.0f, 0.0f, 0.0f };
-		m_Scene.AmbientLight.Intensity = 0.25f;
+		m_Scene.AmbientLight.Color = { 1.0f, 1.0f, 1.0f };
+		m_Scene.AmbientLight.Intensity = 0.10f;
+
+		m_Scene.PointLights.emplace_back("light");
+		m_Scene.GetPointLight("light")->Position.y += 0.25f;
 
 		LoadAssets();
 	}
@@ -177,7 +180,7 @@ namespace ultraviolet
 			}
 
 			if (::ImGui::Button("Reload All Shaders"))
-				MaterialShaderManager::Initialize();
+				MaterialShaderManager::ReloadAll();
 
 			static int materialIndex{};
 

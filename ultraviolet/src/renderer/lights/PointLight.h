@@ -1,21 +1,25 @@
 #pragma once
 
-#include "../Shader.h"
+#include "../objects/UniformBuffer.h"
 
 namespace ultraviolet
 {
 	struct PointLight
 	{
 		std::string ID;
-		glm::vec3 Position{};
-		glm::vec3 Color{ 1.0f };
-		float Intensity{ 1.0f };
-		float LinearAttenuation{ 0.02f };
-		float QuadraticAttenuation{ 0.032f };
-		bool Enabled{ true };
-		size_t Index;
+		glm::vec3 Position;
+		glm::vec3 Color;
+		float Intensity;
+		float LinearAttenuation;
+		float QuadraticAttenuation;
+		bool Enabled;
 
-		void Apply(const Shader& shader) const;
+		PointLight();
+		PointLight(std::string_view id);
+
+		void Apply(const UniformBuffer& uniformBuffer, size_t index) const;
 		void AddToImGui();
+
+		static size_t GetSizeOfData();
 	};
 }

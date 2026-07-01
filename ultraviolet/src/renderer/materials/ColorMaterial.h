@@ -8,11 +8,11 @@ namespace ultraviolet
 	{
 	public:
 		glm::vec3 Color;
-		float Metallic;
-		float Roughness;
+		int Specular;
 
 	public:
-		ColorMaterial(const glm::vec3& color, float metallic, float roughness);
+		ColorMaterial();
+		ColorMaterial(const glm::vec3& color, int specular);
 		virtual ~ColorMaterial() = default;
 
 		virtual void Apply() const override;

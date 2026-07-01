@@ -39,7 +39,7 @@ namespace ultraviolet
 		if (material)
 			mesh.Material = material;
 		else
-			mesh.Material = std::make_shared<ColorMaterial>(glm::vec3{ 1.0f }, 0.5f, 0.5f);
+			mesh.Material = std::make_shared<ColorMaterial>(glm::vec3{ 1.0f }, 32);
 
 		std::vector<Mesh> meshes{};
 		meshes.push_back(std::move(mesh));

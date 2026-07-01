@@ -11,6 +11,7 @@ namespace
 	{
 		glm::mat4 Projection;
 		glm::mat4 View;
+		glm::vec3 Position;
 	};
 }
 
@@ -44,20 +45,21 @@ namespace ultraviolet
 
 	void ProjectionCamera::Apply(std::pair<int, int> size)
 	{
-		CameraData data{};
-
-		data.Projection = glm::perspective(
-			glm::radians(FOV),
-			(float)size.first / (float)size.second,
-			0.1f,
-			100.0f
-		);
-
-		data.View = glm::lookAt(
-			Position,
-			Position + m_Front,
-			c_WorldUp
-		);
+		CameraData data{
+			.Projection{ glm::perspective(
+				glm::radians(FOV), 
+				static_cast<float>(size.first) / static_cast<float>(size.second), 
+				0.1f, 
+				100.0f)
+			},
+			.View{
+				glm::lookAt(
+					Position, 
+					Position + m_Front, 
+					c_WorldUp)
+			},
+			.Position{ Position }
+		};
 
 		m_UniformBuffer->SetData(&data, sizeof(data));
 	}

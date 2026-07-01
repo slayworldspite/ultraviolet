@@ -40,4 +40,11 @@ namespace ultraviolet
 
 		s_Shaders.at(type)->Load();
 	}
+
+	void MaterialShaderManager::ReloadAll()
+	{
+		assert(s_IsInitialized);
+
+		s_Shaders.at(MaterialType::Color)->Load();
+	}
 }
