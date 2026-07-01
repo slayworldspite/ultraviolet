@@ -5,6 +5,7 @@
 #include "input/Input.h"
 #include "utils/Logger.h"
 #include "renderer/materials/ColorMaterial.h"
+#include "renderer/materials/TextureMaterial.h"
 #include "renderer/materials/MaterialShaderManager.h"
 #include "renderer/model/ModelLoader.h"
 #include "renderer/model/Primitives.h"
@@ -155,11 +156,16 @@ namespace ultraviolet
 	{
 		m_Scene.Models.clear();
 
-		m_Scene.DirectionalLight.Enabled = true;
-		m_Scene.DirectionalLight.Color = { 1.0f, 1.0f, 1.0f };
-		m_Scene.DirectionalLight.Pitch = 45.0f;
-
-		m_Scene.Models.push_back(std::move(Primitives::GetPlane("plane")));
+		m_Scene.Models.push_back(std::move(
+			Primitives::GetPlane(
+				"plane", 
+				std::make_shared<TextureMaterial>(
+					"assets/textures/test_diff.png", 
+					"assets/textures/test_spec.png",
+					32
+				)
+			)
+		));
 	}
 
 	void Game::DebugMenu()
@@ -168,6 +174,8 @@ namespace ultraviolet
 
 		if (::ImGui::CollapsingHeader("Renderer"))
 		{
+			::ImGui::Indent(16.0f);
+
 			static bool wireframeMode{ false };
 			static bool lastWireframeMode{ wireframeMode };
 
@@ -188,6 +196,18 @@ namespace ultraviolet
 
 			if (::ImGui::Button("[RISKY] Reload Shader of Value"))
 				MaterialShaderManager::Reload(static_cast<MaterialType>(materialIndex));
+
+			::ImGui::Indent(-16.0f);
+		}
+
+		if (::ImGui::CollapsingHeader("Game"))
+		{
+			::ImGui::Indent(16.0f);
+
+			if (::ImGui::Button("Reload Assets"))
+				LoadAssets();
+
+			::ImGui::Indent(-16.0f);
 		}
 
 		m_Camera.AddToImGui();

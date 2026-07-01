@@ -77,10 +77,14 @@ namespace ultraviolet
 	{
 		if (::ImGui::CollapsingHeader("Camera"))
 		{
+			::ImGui::Indent(16.0f);
+
 			::ImGui::DragFloat3("Position", glm::value_ptr(Position));
 			::ImGui::DragFloat("Yaw", &Yaw);
 			::ImGui::DragFloat("Pitch", &Pitch);
 			::ImGui::DragFloat("FOV", &FOV);
+
+			::ImGui::Indent(-16.0f);
 		}
 	}
 

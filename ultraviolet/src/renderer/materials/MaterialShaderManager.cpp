@@ -15,6 +15,7 @@ namespace ultraviolet
 		std::string directory{ "assets/shaders" };
 
 		s_Shaders.emplace(MaterialType::Color, std::make_shared<Shader>(directory + "/DefaultShader.vert", directory + "/ColorMaterial.frag"));
+		s_Shaders.emplace(MaterialType::Texture, std::make_shared<Shader>(directory + "/DefaultShader.vert", directory + "/TextureMaterial.frag"));
 
 		s_IsInitialized = true;
 
@@ -28,6 +29,9 @@ namespace ultraviolet
 		switch (type)
 		{
 			case MaterialType::Color:
+				return s_Shaders.at(type);
+
+			case MaterialType::Texture:
 				return s_Shaders.at(type);
 		}
 
@@ -46,5 +50,6 @@ namespace ultraviolet
 		assert(s_IsInitialized);
 
 		s_Shaders.at(MaterialType::Color)->Load();
+		s_Shaders.at(MaterialType::Texture)->Load();
 	}
 }

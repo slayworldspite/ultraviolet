@@ -22,26 +22,16 @@ namespace ultraviolet
 			{
 				case aiTextureType_BASE_COLOR:
 				case aiTextureType_DIFFUSE:
-					textureType = TextureType::Albedo;
+					textureType = TextureType::Diffuse;
 					break;
 
-				case aiTextureType_METALNESS:
-				case aiTextureType_REFLECTION:
-					textureType = TextureType::Metallic;
-					break;
-
-				case aiTextureType_DIFFUSE_ROUGHNESS:
 				case aiTextureType_SHININESS:
-					textureType = TextureType::Roughness;
+					textureType = TextureType::Specular;
 					break;
 
 				case aiTextureType_NORMAL_CAMERA:
 				case aiTextureType_HEIGHT:
 					textureType = TextureType::Normal;
-					break;
-
-				case aiTextureType_AMBIENT_OCCLUSION:
-					textureType = TextureType::AmbientOcclusion;
 					break;
 			}
 
