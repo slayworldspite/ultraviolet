@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Shader.h"
+#include "../objects/UniformBuffer.h"
 
 namespace ultraviolet
 {
@@ -12,7 +12,9 @@ namespace ultraviolet
 		float Pitch;
 		bool Enabled{ true };
 
-		void Apply(const Shader& shader) const;
+		void Apply(const UniformBuffer& uniformBuffer) const;
 		void AddToImGui();
+
+		static size_t GetSizeOfData();
 	};
 }

@@ -12,7 +12,8 @@ namespace ultraviolet
 		DirectionalLight{},
 		PointLights{},
 		m_AmbientLightUniformBuffer{ &AmbientLight, sizeof(AmbientLight), 1 },
-		m_PointLightsUniformBuffer{ PointLights.data(), PointLight::GetSizeOfData() * MAX_POINT_LIGHT_COUNT + sizeof(int), 2}
+		m_DirectionalLightUniformBuffer{ &DirectionalLight, DirectionalLight::GetSizeOfData(), 2 },
+		m_PointLightsUniformBuffer{ PointLights.data(), PointLight::GetSizeOfData() * MAX_POINT_LIGHT_COUNT + sizeof(int), 3 }
 	{
 
 	}
@@ -42,6 +43,7 @@ namespace ultraviolet
 	void Scene::Update()
 	{
 		AmbientLight.Apply(m_AmbientLightUniformBuffer);
+		DirectionalLight.Apply(m_DirectionalLightUniformBuffer);
 		
 		for (size_t i{}; i < PointLights.size(); i++)
 			PointLights[i].Apply(m_PointLightsUniformBuffer, i);

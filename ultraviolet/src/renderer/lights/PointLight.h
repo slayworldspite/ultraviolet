@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../model/Model.h"
 #include "../objects/UniformBuffer.h"
 
 namespace ultraviolet

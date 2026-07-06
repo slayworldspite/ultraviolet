@@ -150,6 +150,7 @@
     <ClCompile Include="src\renderer\lights\DirectionalLight.cpp" />
     <ClCompile Include="src\renderer\lights\PointLight.cpp" />
     <ClCompile Include="src\renderer\materials\ColorMaterial.cpp" />
+    <ClCompile Include="src\renderer\materials\LightMaterial.cpp" />
     <ClCompile Include="src\renderer\materials\Material.cpp" />
     <ClCompile Include="src\renderer\materials\MaterialShaderManager.cpp" />
     <ClCompile Include="src\renderer\materials\TextureMaterial.cpp" />
@@ -191,6 +192,7 @@
     <ClInclude Include="src\renderer\lights\DirectionalLight.h" />
     <ClInclude Include="src\renderer\lights\PointLight.h" />
     <ClInclude Include="src\renderer\materials\ColorMaterial.h" />
+    <ClInclude Include="src\renderer\materials\LightMaterial.h" />
     <ClInclude Include="src\renderer\materials\Material.h" />
     <ClInclude Include="src\renderer\materials\MaterialShaderManager.h" />
     <ClInclude Include="src\renderer\materials\MaterialType.h" />

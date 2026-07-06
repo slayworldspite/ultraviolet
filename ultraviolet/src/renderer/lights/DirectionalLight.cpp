@@ -3,22 +3,33 @@
 
 #include "DirectionalLight.h"
 
+namespace
+{
+	struct DirectionalLightData
+	{
+		glm::vec4 Color;
+		glm::vec4 Direction;
+		float Intensity;
+		int Enabled;
+	};
+}
+
 namespace ultraviolet
 {
-	void DirectionalLight::Apply(const Shader& shader) const
+	void DirectionalLight::Apply(const UniformBuffer& uniformBuffer) const
 	{
-		shader.Use();
+		DirectionalLightData data{};
 
-		glm::vec3 direction{};
+		data.Color = glm::vec4{ Color.r, Color.g, Color.b, 0.0f };
 
-		direction.x = glm::cos(glm::radians(Pitch)) * glm::sin(glm::radians(Yaw));
-		direction.y = glm::sin(glm::radians(Pitch));
-		direction.z = glm::sin(glm::radians(Pitch)) * glm::cos(glm::radians(Yaw));
+		data.Direction.x = glm::cos(glm::radians(-Pitch)) * glm::sin(glm::radians(Yaw));
+		data.Direction.y = glm::sin(glm::radians(-Pitch));
+		data.Direction.z = glm::sin(glm::radians(-Pitch)) * glm::cos(glm::radians(Yaw));
 
-		shader.Set("u_DirectionalLight.Color", Color);
-		shader.Set("u_DirectionalLight.Direction", direction);
-		shader.Set("u_DirectionalLight.Intensity", Intensity);
-		shader.Set("u_DirectionalLight.Enabled", Enabled);
+		data.Intensity = Intensity;
+		data.Enabled = Enabled;
+
+		uniformBuffer.SetData(&data, sizeof(data));
 	}
 	
 	void DirectionalLight::AddToImGui()
@@ -31,5 +42,10 @@ namespace ultraviolet
 			::ImGui::DragFloat("Pitch ##directional", &Pitch, 0.1f);
 			::ImGui::DragFloat("Intensity ##directional", &Intensity, 0.1f, 0.0f, 1.0f);
 		}
+	}
+
+	size_t DirectionalLight::GetSizeOfData()
+	{
+		return sizeof(DirectionalLightData);
 	}
 }

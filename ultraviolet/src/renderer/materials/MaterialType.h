@@ -5,6 +5,7 @@ namespace ultraviolet
 	enum class MaterialType
 	{
 		Color,
-		Texture
+		Texture,
+		Light
 	};
 }

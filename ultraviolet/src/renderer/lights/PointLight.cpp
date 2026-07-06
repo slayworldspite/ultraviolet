@@ -4,6 +4,9 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "PointLight.h"
+#include "../model/Primitives.h"
+#include "../materials/MaterialShaderManager.h"
+#include "../materials/LightMaterial.h"
 
 namespace
 {
@@ -27,7 +30,7 @@ namespace ultraviolet
 		Intensity{ 1.0f },
 		LinearAttenuation{ 0.02f },
 		QuadraticAttenuation{ 0.032f },
-		Enabled{ true }	
+		Enabled{ true }
 	{
 
 	}

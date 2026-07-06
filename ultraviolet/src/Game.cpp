@@ -33,6 +33,8 @@ namespace ultraviolet
 
 		m_Renderer.SetClearColor({ 0.05f, 0.15f, 0.15f, 1.0f });
 
+		m_Camera.Position = { 0.0f, 1.0f, 3.0f };
+
 		LoadScene();
 	}
 
@@ -43,6 +45,16 @@ namespace ultraviolet
 
 		m_Camera.Update();
 		m_Scene.Update();
+
+		Model* pointLightModel{ m_Scene.GetModel("plmesh") };
+		PointLight* pointLight{ m_Scene.GetPointLight("light") };
+
+		if (pointLightModel && pointLight)
+		{
+			pointLightModel->Position = pointLight->Position;
+			m_PointLightMaterial->Color = pointLight->Color;
+			m_PointLightMaterial->Enabled = pointLight->Enabled;
+		}
 
 		ProcessInput(deltaTime);
 	}
@@ -152,7 +164,6 @@ namespace ultraviolet
 	{
 		m_Scene.Clear();
 
-		m_Camera.Position = { 0.0f, 1.0f, 3.0f };
 		m_Scene.AmbientLight.Color = { 1.0f, 1.0f, 1.0f };
 		m_Scene.AmbientLight.Intensity = 0.10f;
 
@@ -187,6 +198,12 @@ namespace ultraviolet
 				)
 			)
 		));
+
+		m_PointLightMaterial = std::make_shared<LightMaterial>(m_Scene.GetPointLight("light")->Color);
+
+		m_Scene.Models.push_back(std::move(Primitives::GetSphere("plmesh", 8, 8, m_PointLightMaterial)));
+		m_Scene.GetModel("plmesh")->Scale /= 10.0f;
+		m_Scene.GetModel("plmesh")->Position = m_Scene.GetPointLight("light")->Position;
 	}
 
 	void Game::DebugMenu()
