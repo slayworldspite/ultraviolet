@@ -6,6 +6,7 @@
 #include <imgui/imgui_impl_sdl3.h>
 #include <imgui/imgui_impl_opengl3.h>
 #include <glm/gtc/matrix_transform.hpp>
+#include <tracy/tracy/Tracy.hpp>
 
 #include "Renderer.h"
 #include "materials/MaterialShaderManager.h"
@@ -96,6 +97,8 @@ namespace ultraviolet
 		::ImGui::RenderPlatformWindowsDefault();
 
 		::SDL_GL_MakeCurrent(m_Window, static_cast<SDL_GLContext>(m_GLContext));
+
+		FrameMark;
 	}
 
 	void Renderer::SetClearColor(const glm::vec4& color) const

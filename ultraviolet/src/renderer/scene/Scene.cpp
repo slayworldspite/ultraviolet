@@ -50,6 +50,21 @@ namespace ultraviolet
 		m_PointLightsUniformBuffer.SetData(&maxPointLightIndex, sizeof(int), PointLight::GetSizeOfData() * MAX_POINT_LIGHT_COUNT);
 	}
 
+	void Scene::Clear()
+	{
+		PointLights.clear();
+		Models.clear();
+
+		AmbientLight.Color = glm::vec3{ 1.0f };
+		AmbientLight.Intensity = 0.0f;
+
+		DirectionalLight.Color = glm::vec3{ 1.0f };
+		DirectionalLight.Intensity = 1.0f;
+		DirectionalLight.Enabled = false;
+		DirectionalLight.Yaw = 0.0f;
+		DirectionalLight.Pitch = 0.0f;
+	}
+
 	void Scene::AddToImGui()
 	{
 		if (::ImGui::CollapsingHeader("Scene"))

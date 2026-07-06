@@ -47,12 +47,15 @@ void main()
 {
 	vec3 normal = normalize(o_Normal);
 
+	if (gl_FrontFacing)
+		normal = -normal;
+
 	vec3 viewDirection = normalize(o_CameraPosition - o_FragmentPosition);
 
 	vec3 diffuse = vec3(0.0);
 	vec3 specular = vec3(0.0);
 
-	vec3 ambient = ub_AmbientLight.Color * ub_AmbientLight.Intensity;
+	vec3 ambient = u_ColorMaterial.Color * ub_AmbientLight.Color * ub_AmbientLight.Intensity;
 
 	for (int i = 0; i < ub_MaxPointLightIndex; i++)
 	{
@@ -65,7 +68,7 @@ void main()
 		vec3 lightDirection = normalize(ub_PointLights[i].Position.xyz - o_FragmentPosition);
 
 		float diffuseStrength = max(dot(normal, lightDirection), 0.0);
-		diffuse += ub_PointLights[i].Color.rgb * diffuseStrength * ub_PointLights[i].Intensity * attenuation;
+		diffuse += u_ColorMaterial.Color * ub_PointLights[i].Color.rgb * diffuseStrength * ub_PointLights[i].Intensity * attenuation;
 
 		vec3 reflectionDirection = reflect(-lightDirection, normal);
 
@@ -73,6 +76,6 @@ void main()
 		specular += specularStrength * ub_PointLights[i].Color.rgb * 0.25 * ub_PointLights[i].Intensity * attenuation;
 	}
 
-	Output.rgb = (diffuse + ambient + specular) * u_ColorMaterial.Color;
+	Output.rgb = diffuse + ambient + specular;
 	Output.a = 1.0;
 }

@@ -62,9 +62,13 @@ namespace ultraviolet
 	{
 		if (::ImGui::CollapsingHeader(("TextureMaterial ##" + id).c_str()))
 		{
-			::ImGui::Text("Diffuse: %s", Diffuse ? "loaded" : "not loaded");
-			::ImGui::Text("Specular: %s", Specular ? "loaded" : "not loaded");
 			::ImGui::DragInt(("Shininess ##" + id).c_str(), &Shininess, 1.0f, 0, 256);
+
+			auto diffuseSize{ Diffuse->GetSize() };
+			::ImGui::Image((ImTextureID)(intptr_t)Diffuse->GetID(), ImVec2{ static_cast<float>(diffuseSize.first), static_cast<float>(diffuseSize.second) });
+
+			auto specularSize{ Specular->GetSize() };
+			::ImGui::Image((ImTextureID)(intptr_t)Specular->GetID(), ImVec2{ static_cast<float>(specularSize.first), static_cast<float>(diffuseSize.second) });
 		}
 	}
 }

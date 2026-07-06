@@ -21,6 +21,9 @@ namespace ultraviolet
 		::stbi_set_flip_vertically_on_load(1);
 		uint8_t* data{ ::stbi_load(path.string().c_str(), &width, &height, &channelCount, 0) };
 		
+		m_Size.first = width;
+		m_Size.second = height;
+
 		::glGenTextures(1, &m_ID);
 		Bind();
 
@@ -65,6 +68,11 @@ namespace ultraviolet
 	Texture::~Texture()
 	{
 		Delete();
+	}
+
+	std::pair<int, int> Texture::GetSize() const
+	{
+		return m_Size;
 	}
 
 	void Texture::Bind(size_t index) const

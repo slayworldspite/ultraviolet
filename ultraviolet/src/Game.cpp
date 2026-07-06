@@ -1,5 +1,6 @@
 #include <imgui/imgui.h>
 #include <glm/gtc/type_ptr.hpp>
+#include <tracy/tracy/Tracy.hpp>
 
 #include "Game.h"
 #include "input/Input.h"
@@ -16,8 +17,8 @@ namespace ultraviolet
 		GameWindow{
 			NativeWindowSettings{
 				.Title{ "ultraviolet" },
-				.Width{ 1280 },
-				.Height{ 720 }
+				.Width{ 1920 },
+				.Height{ 1080 }
 			}
 	},
 		m_Renderer{ *this },
@@ -32,18 +33,12 @@ namespace ultraviolet
 
 		m_Renderer.SetClearColor({ 0.05f, 0.15f, 0.15f, 1.0f });
 
-		m_Camera.Position = { 0.0f, 1.0f, 3.0f };
-		m_Scene.AmbientLight.Color = { 1.0f, 1.0f, 1.0f };
-		m_Scene.AmbientLight.Intensity = 0.10f;
-
-		m_Scene.PointLights.emplace_back("light");
-		m_Scene.GetPointLight("light")->Position.y += 0.25f;
-
-		LoadAssets();
+		LoadScene();
 	}
 
 	void Game::OnUpdate(double deltaTime)
 	{
+		ZoneScoped;
 		m_DeltaTime = deltaTime;
 
 		m_Camera.Update();
@@ -54,6 +49,7 @@ namespace ultraviolet
 
 	void Game::OnRender()
 	{
+		ZoneScoped;
 		m_Renderer.BeginFrame();
 
 		m_Camera.Apply(GetWindowSize());
@@ -77,7 +73,7 @@ namespace ultraviolet
 				break;
 
 			case Keycode::R:
-				LoadAssets();
+				LoadScene();
 				break;
 
 			case Keycode::RIGHTBRACKET:
@@ -152,8 +148,17 @@ namespace ultraviolet
 		m_Camera.Move(movementVector * static_cast<float>(deltaTime));
 	}
 
-	void Game::LoadAssets()
+	void Game::LoadScene()
 	{
+		m_Scene.Clear();
+
+		m_Camera.Position = { 0.0f, 1.0f, 3.0f };
+		m_Scene.AmbientLight.Color = { 1.0f, 1.0f, 1.0f };
+		m_Scene.AmbientLight.Intensity = 0.10f;
+
+		m_Scene.PointLights.emplace_back("light");
+		m_Scene.GetPointLight("light")->Position += 2.0f;
+
 		m_Scene.Models.clear();
 
 		m_Scene.Models.push_back(std::move(
@@ -162,6 +167,22 @@ namespace ultraviolet
 				std::make_shared<TextureMaterial>(
 					"assets/textures/test_diff.png", 
 					"assets/textures/test_spec.png",
+					32
+				)
+			)
+		));
+
+		m_Scene.GetModel("plane")->Position.y -= 1.0f;
+		m_Scene.GetModel("plane")->Scale.x *= 4.0f;
+		m_Scene.GetModel("plane")->Scale.z *= 4.0f;
+
+		m_Scene.Models.push_back(std::move(
+			Primitives::GetSphere(
+				"sphere",
+				32,
+				32,
+				std::make_shared<ColorMaterial>(
+					glm::vec3{ 1.0f },
 					32
 				)
 			)
@@ -205,7 +226,7 @@ namespace ultraviolet
 			::ImGui::Indent(16.0f);
 
 			if (::ImGui::Button("Reload Assets"))
-				LoadAssets();
+				LoadScene();
 
 			::ImGui::Indent(-16.0f);
 		}

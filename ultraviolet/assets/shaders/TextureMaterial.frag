@@ -49,6 +49,9 @@ void main()
 {
 	vec3 normal = normalize(o_Normal);
 
+	if (gl_FrontFacing)
+		normal = -normal;
+
 	vec3 viewDirection = normalize(o_CameraPosition - o_FragmentPosition);
 
 	vec3 diffuse = vec3(0.0);
