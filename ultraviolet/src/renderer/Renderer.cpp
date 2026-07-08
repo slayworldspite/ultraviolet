@@ -146,106 +146,86 @@ namespace ultraviolet
 
 	void Renderer::EndFrame() const
 	{
+		ZoneScoped;
+
+		m_ScreenFramebuffer->Unbind();
+
+		::glDisable(GL_DEPTH_TEST);
+		::glDisable(GL_BLEND);
+
+		::glClear(GL_COLOR_BUFFER_BIT);
+
+		::glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
 		int windowWidth{};
 		int windowHeight{};
 
-		{
-			ZoneScoped;
+		::SDL_GetWindowSizeInPixels(m_Window, &windowWidth, &windowHeight);
 
-			m_ScreenFramebuffer->Unbind();
+		::glBindFramebuffer(GL_READ_FRAMEBUFFER, m_ScreenFramebuffer->GetID());
+		::glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_PostProcessFramebuffer->GetID());
+		::glBlitFramebuffer(0, 0, windowWidth, windowHeight, 0, 0, windowWidth, windowHeight, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
-			::glDisable(GL_DEPTH_TEST);
-			::glDisable(GL_BLEND);
+		// bright extract
+		m_BrightExtractFramebuffer->Bind();
+		m_BrightExtractShader->Use();
+		m_PostProcessFramebuffer->Texture.Bind();
 
-			::glClear(GL_COLOR_BUFFER_BIT);
+		m_ScreenQuad->Bind();
 
-			::glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		::glDrawArrays(GL_TRIANGLES, 0, 6);
 
+		m_BrightExtractFramebuffer->Unbind();
+
+		// horizontal blur
+		m_PostProcessFramebuffer->Texture.Unbind();
+		m_BrightExtractFramebuffer->Texture.Bind();
+		m_HorizontalBlurFramebuffer->Bind();
+		m_BlurShader->Use();
+		
+		m_BlurShader->Set("u_Resolution", glm::vec2{ windowWidth / 2, windowHeight / 2});
+		m_BlurShader->Set("u_Direction", glm::vec2{ 1.0f, 0.0f });
+
+		::glViewport(0, 0, windowWidth / 2, windowHeight / 2);
+		::glDrawArrays(GL_TRIANGLES, 0, 6);
+
+		m_HorizontalBlurFramebuffer->Unbind();
+
+		// vertical blur
+		m_BrightExtractFramebuffer->Texture.Unbind();
+		m_HorizontalBlurFramebuffer->Texture.Bind();
+
+		m_VerticalBlurFramebuffer->Bind();
+		m_BlurShader->Set("u_Direction", glm::vec2{ 0.0f, 1.0f });
+
+		::glViewport(0, 0, windowWidth / 2, windowHeight / 2);
+		::glDrawArrays(GL_TRIANGLES, 0, 6);
+
+		m_VerticalBlurFramebuffer->Unbind();
+
+		// draw to screen
+		m_PostProcessingShader->Use();
 			
+		m_PostProcessingShader->Set("u_Framebuffer", 0);
+		m_PostProcessingShader->Set("u_Blur", 1);
+		m_PostProcessingShader->Set("u_EnableBloom", m_EnableBloom);
 
-			::SDL_GetWindowSizeInPixels(m_Window, &windowWidth, &windowHeight);
+		m_PostProcessFramebuffer->Texture.Bind(0);
+		m_VerticalBlurFramebuffer->Texture.Bind(1);
 
-			::glBindFramebuffer(GL_READ_FRAMEBUFFER, m_ScreenFramebuffer->GetID());
-			::glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_PostProcessFramebuffer->GetID());
-			::glBlitFramebuffer(0, 0, windowWidth, windowHeight, 0, 0, windowWidth, windowHeight, GL_COLOR_BUFFER_BIT, GL_NEAREST);
-		}
+		::glViewport(0, 0, windowWidth, windowHeight);
+		::glDrawArrays(GL_TRIANGLES, 0, 6);
 
-		{
-			ZoneScopedN("Post Processing");
+		::ImGui::Render();
+		::ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-			// bright extract
-			m_BrightExtractFramebuffer->Bind();
-			m_BrightExtractShader->Use();
-			m_PostProcessFramebuffer->Texture.Bind();
+		::SDL_GL_SwapWindow(m_Window);
 
-			m_ScreenQuad->Bind();
+		::ImGui::UpdatePlatformWindows();
+		::ImGui::RenderPlatformWindowsDefault();
 
-			::glDrawArrays(GL_TRIANGLES, 0, 6);
+		::SDL_GL_MakeCurrent(m_Window, static_cast<SDL_GLContext>(m_GLContext));
 
-			m_BrightExtractFramebuffer->Unbind();
-
-			// horizontal blur
-			m_PostProcessFramebuffer->Texture.Unbind();
-			m_BrightExtractFramebuffer->Texture.Bind();
-			m_HorizontalBlurFramebuffer->Bind();
-			m_BlurShader->Use();
-
-			m_BlurShader->Set("u_Resolution", glm::vec2{ windowWidth / 2, windowHeight / 2 });
-			m_BlurShader->Set("u_Direction", glm::vec2{ 1.0f, 0.0f });
-
-			::glViewport(0, 0, windowWidth / 2, windowHeight / 2);
-			::glDrawArrays(GL_TRIANGLES, 0, 6);
-
-			m_HorizontalBlurFramebuffer->Unbind();
-
-			// vertical blur
-			m_BrightExtractFramebuffer->Texture.Unbind();
-			m_HorizontalBlurFramebuffer->Texture.Bind();
-
-			m_VerticalBlurFramebuffer->Bind();
-			m_BlurShader->Set("u_Direction", glm::vec2{ 0.0f, 1.0f });
-
-			::glViewport(0, 0, windowWidth / 2, windowHeight / 2);
-			::glDrawArrays(GL_TRIANGLES, 0, 6);
-
-			m_VerticalBlurFramebuffer->Unbind();
-
-			// draw to screen
-			m_PostProcessingShader->Use();
-
-			m_PostProcessingShader->Set("u_Framebuffer", 0);
-			m_PostProcessingShader->Set("u_Blur", 1);
-			m_PostProcessingShader->Set("u_EnableBloom", m_EnableBloom);
-
-			m_PostProcessFramebuffer->Texture.Bind(0);
-			m_VerticalBlurFramebuffer->Texture.Bind(1);
-
-			::glViewport(0, 0, windowWidth, windowHeight);
-			::glDrawArrays(GL_TRIANGLES, 0, 6);
-		}
-		{
-			ZoneScopedN("ImGui Render");
-
-			::ImGui::Render();
-			::ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-		}
-		{
-			ZoneScopedN("Finish");
-			::glFinish();
-		}
-		{
-			ZoneScopedN("SwapWindow");
-			::SDL_GL_SwapWindow(m_Window);
-		}
-		{
-			ZoneScopedN("Update and Render Windows");
-			::ImGui::UpdatePlatformWindows();
-			::ImGui::RenderPlatformWindowsDefault();
-		}
-		{
-			ZoneScopedN("MakeCurrent");
-			::SDL_GL_MakeCurrent(m_Window, static_cast<SDL_GLContext>(m_GLContext));
-		}
 		FrameMark;
 	}
 
@@ -295,69 +275,57 @@ namespace ultraviolet
 
 	void Renderer::Draw(const Scene& scene)
 	{
+		const DirectionalLight& light{ scene.DirectionalLight };
+
+		glm::vec3 lightDirection{};
+
+		lightDirection.x = glm::cos(glm::radians(light.Pitch)) * glm::sin(glm::radians(light.Yaw));
+		lightDirection.y = glm::sin(glm::radians(light.Pitch));
+		lightDirection.z = glm::cos(glm::radians(light.Pitch)) * glm::cos(glm::radians(light.Yaw));
+		
+		lightDirection = glm::normalize(lightDirection);
+
+		glm::mat4 lightView{ glm::lookAt(-lightDirection * 10.0f, glm::vec3{0.0f}, glm::vec3{0.0f, 1.0f, 0.0f}) };
+
+		glm::mat4 lightProjection{ glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 1.0f, 20.0f) };
+
+		m_LightSpaceMatrix = lightProjection * lightView;
+
+		m_DepthMapUniformBuffer->SetData(&m_LightSpaceMatrix, sizeof(m_LightSpaceMatrix));
+
+		m_ScreenFramebuffer->Unbind();
+		m_DepthMapFrameBuffer->Bind();
+
+		::glViewport(0, 0, 4096, 4096);
+		::glEnable(GL_CULL_FACE);
+		::glCullFace(GL_FRONT);
+
+		m_DepthMapShader->Use();
+
+		for (const Model& model : scene.Models)
 		{
-			ZoneScopedN("Pre-Draw");
+			if (!model.CastsShadow)
+				continue;
 
-			const DirectionalLight& light{ scene.DirectionalLight };
-
-			glm::vec3 lightDirection{};
-
-			lightDirection.x = glm::cos(glm::radians(light.Pitch)) * glm::sin(glm::radians(light.Yaw));
-			lightDirection.y = glm::sin(glm::radians(light.Pitch));
-			lightDirection.z = glm::cos(glm::radians(light.Pitch)) * glm::cos(glm::radians(light.Yaw));
-
-			lightDirection = glm::normalize(lightDirection);
-
-			glm::mat4 lightView{ glm::lookAt(-lightDirection * 10.0f, glm::vec3{0.0f}, glm::vec3{0.0f, 1.0f, 0.0f}) };
-
-			glm::mat4 lightProjection{ glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 1.0f, 20.0f) };
-
-			m_LightSpaceMatrix = lightProjection * lightView;
-
-			m_DepthMapUniformBuffer->SetData(&m_LightSpaceMatrix, sizeof(m_LightSpaceMatrix));
-		}
-
-		{
-			ZoneScopedN("Shadow Pass");
-
-			m_ScreenFramebuffer->Unbind();
-			m_DepthMapFrameBuffer->Bind();
-
-			::glViewport(0, 0, 4096, 4096);
-			::glEnable(GL_CULL_FACE);
-			::glCullFace(GL_FRONT);
-
-			m_DepthMapShader->Use();
-
-			for (const Model& model : scene.Models)
+			for (const Mesh& mesh : model.Meshes)
 			{
-				if (!model.CastsShadow)
-					continue;
+				m_DepthMapShader->Set("u_Model", model.GetModelMatrix());
 
-				for (const Mesh& mesh : model.Meshes)
-				{
-					m_DepthMapShader->Set("u_Model", model.GetModelMatrix());
+				mesh.Bind();
 
-					mesh.Bind();
-
-					::glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(mesh.GetIndexCount()), GL_UNSIGNED_INT, nullptr);
-				}
+				::glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(mesh.GetIndexCount()), GL_UNSIGNED_INT, nullptr);
 			}
 		}
 
+		m_DepthMapFrameBuffer->Unbind();
+		m_ScreenFramebuffer->Bind();
+
+		::glViewport(0, 0, m_ViewportWidth, m_ViewportHeight);
+		::glDisable(GL_CULL_FACE);
+
+		for (const Model& model : scene.Models)
 		{
-			ZoneScopedN("Geometry Pass");
-
-			m_DepthMapFrameBuffer->Unbind();
-			m_ScreenFramebuffer->Bind();
-
-			::glViewport(0, 0, m_ViewportWidth, m_ViewportHeight);
-			::glDisable(GL_CULL_FACE);
-
-			for (const Model& model : scene.Models)
-			{
-				Draw(model);
-			}
+			Draw(model);
 		}
 	}
 
