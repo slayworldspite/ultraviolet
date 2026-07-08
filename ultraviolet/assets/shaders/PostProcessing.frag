@@ -12,6 +12,7 @@ uniform sampler2D u_SSAO;
 
 uniform bool u_EnableBloom;
 uniform bool u_EnableSSAO;
+uniform float u_Gamma;
 uniform float u_BloomStrength;
 uniform float u_SSAOStrength;
 
@@ -27,7 +28,7 @@ void main()
     if (u_EnableSSAO)
         color.rgb *= mix(1.0, ao, u_SSAOStrength);
 
-    Output.rgb = pow(color.rgb, vec3(1.0 / 2.2));
+    Output.rgb = pow(color.rgb, vec3(1.0 / u_Gamma));
 
     vec4 overlay = texture(u_Overlay, o_TextureCoordinates);
 

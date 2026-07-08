@@ -38,6 +38,7 @@ namespace ultraviolet
 		bool m_WireframeMode;
 		bool m_EnableBloom;
 		bool m_EnableSSAO;
+		float m_Gamma;
 		float m_BloomStrength;
 		float m_SSAOStrength;
 

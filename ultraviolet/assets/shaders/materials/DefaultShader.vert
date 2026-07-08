@@ -24,6 +24,7 @@ out vec2 o_TextureCoordinates;
 out vec3 o_FragmentPosition;
 out vec4 o_FragmentPositionLightSpace;
 out vec3 o_CameraPosition;
+out mat3 o_TBN;
 
 void main()
 {
@@ -34,4 +35,10 @@ void main()
 	o_FragmentPosition = vec3(u_Model * vec4(a_Position, 1.0));
 	o_FragmentPositionLightSpace = ub_LightSpaceMatrix * vec4(o_FragmentPosition, 1.0);
 	o_CameraPosition = ub_CameraPosition;
+
+	vec3 t = normalize(vec3(u_Model * vec4(a_Tangent, 0.0)));
+	vec3 n = normalize(vec3(u_Model * vec4(a_Normal, 0.0)));
+	vec3 b = cross(n, t);
+
+	o_TBN = mat3(t, b, n);
 }

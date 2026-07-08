@@ -59,6 +59,9 @@ namespace ultraviolet
 		std::shared_ptr<Texture> overlay{ std::make_shared<Texture>("assets/textures/overlay.png", TextureType::Overlay) };
 		m_Renderer.SetOverlay(overlay);
 
+		m_ShowMenu = true;
+		m_FirstFrame = true;
+
 		LoadScene();
 	}
 
@@ -67,6 +70,13 @@ namespace ultraviolet
 		ZoneScoped;
 		m_DeltaTime = deltaTime;
 		m_Player.OnGround = false;
+
+		if (m_FirstFrame)
+		{
+			deltaTime = 0.0;
+			m_DeltaTime = 0.0;
+			m_FirstFrame = false;
+		}
 
 		m_Player.Update(deltaTime);
 
@@ -120,9 +130,8 @@ namespace ultraviolet
 					);
 
 					if (x < y && x < z)
-					{
 						m_Player.Position.x += x * glm::sign(m_Player.Position.x - model.Position.x);
-					}
+
 					else if (y < z)
 					{
 						if (playerBoundingBox.Min.y < modelBoundingBox.Max.y)
@@ -156,7 +165,8 @@ namespace ultraviolet
 		m_Camera.Apply(GetWindowSize());
 		m_Renderer.Draw(m_Scene);
 
-		DebugMenu();
+		if (m_ShowMenu)
+			DebugMenu();
 
 		m_Renderer.EndFrame();
 	}
@@ -175,6 +185,10 @@ namespace ultraviolet
 
 			case Keycode::R:
 				LoadScene();
+				break;
+
+			case Keycode::B:
+				m_ShowMenu = !m_ShowMenu;
 				break;
 
 			case Keycode::RIGHTBRACKET:
@@ -268,15 +282,16 @@ namespace ultraviolet
 	{
 		m_Scene.Clear();
 
-		m_Player.Position = { -5.0f, 50.0f, 0.0f };
+		m_Player.Position = { -5.0f, 0.0f, 0.0f };
+		m_Camera.Pitch = -45.0f;
 
 		m_Scene.AmbientLight.Color = { 1.0f, 1.0f, 1.0f };
-		m_Scene.AmbientLight.Intensity = 0.1f;
+		m_Scene.AmbientLight.Intensity = 0.2f;
 
 		m_Scene.DirectionalLight.Enabled = true;
-		m_Scene.DirectionalLight.Pitch = -45.0f;
-		m_Scene.DirectionalLight.Yaw = -45.0f;
-		m_Scene.DirectionalLight.Intensity = 0.6f;
+		m_Scene.DirectionalLight.Pitch = -25.0f;
+		m_Scene.DirectionalLight.Yaw = -75.0f;
+		m_Scene.DirectionalLight.Intensity = 1.0f;
 
 		PointLight pointLight{};
 		pointLight.ID = "light";
@@ -334,9 +349,11 @@ namespace ultraviolet
 
 		m_Scene.Models.push_back(std::move(sphere2));
 
-		Model cube{ Primitives::GetCube("cube", std::make_shared<ColorMaterial>(
-			glm::vec3{ 0.0f, 1.0f, 0.0f },
-			32
+		Model cube{ Primitives::GetCube("cube", std::make_shared<TextureMaterial>(
+			"assets/textures/wood_diffuse.jpg",
+			"assets/textures/wood_specular.jpg",
+			"assets/textures/wood_normal.jpg",
+			100
 		)) };
 
 		cube.Position = { 5.0f, 3.0f, 5.0f };

@@ -27,6 +27,7 @@ namespace ultraviolet
 		m_WireframeMode{ false },
 		m_EnableBloom{ true },
 		m_EnableSSAO{ true },
+		m_Gamma{ 2.2f },
 		m_BloomStrength{ 1.0f },
 		m_SSAOStrength{ 0.75f },
 		m_ViewportWidth{},
@@ -289,6 +290,7 @@ namespace ultraviolet
 		m_PostProcessingShader->Set("u_SSAO", 11);
 		m_PostProcessingShader->Set("u_EnableBloom", m_EnableBloom);
 		m_PostProcessingShader->Set("u_EnableSSAO", m_EnableSSAO);
+		m_PostProcessingShader->Set("u_Gamma", m_Gamma);
 		m_PostProcessingShader->Set("u_BloomStrength", m_BloomStrength);
 		m_PostProcessingShader->Set("u_SSAOStrength", m_SSAOStrength);
 
@@ -508,7 +510,8 @@ namespace ultraviolet
 
 		::ImGui::Checkbox("Enable Bloom", &m_EnableBloom);
 		::ImGui::Checkbox("Enable SSAO", &m_EnableSSAO);
-		::ImGui::DragFloat("Bloom Strength", &m_BloomStrength, 0.05f, 0.0f, 2.0f);
+		::ImGui::DragFloat("Gamma", &m_Gamma, 0.05f);
+		::ImGui::DragFloat("Bloom Strength", &m_BloomStrength, 0.05f, 0.0f, 5.0f);
 		::ImGui::DragFloat("SSAO Strength", &m_SSAOStrength, 0.05f, 0.0f, 2.0f);
 
 		if (::ImGui::CollapsingHeader("Framebuffers"))

@@ -27,11 +27,11 @@ namespace ultraviolet
 		double m_DeltaTime;
 		Scene m_Scene;
 
+		bool m_ShowMenu;
+		bool m_FirstFrame;
 		glm::vec4 m_ClearColor;
-
 		Player m_Player;
 		std::shared_ptr<LightMaterial> m_PointLightMaterial;
-
 		std::unique_ptr<Mesh> m_Overlay;
 
 	private:

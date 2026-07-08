@@ -55,6 +55,7 @@ in vec2 o_TextureCoordinates;
 in vec3 o_FragmentPosition;
 in vec4 o_FragmentPositionLightSpace;
 in vec3 o_CameraPosition;
+in mat3 o_TBN;
 
 out vec4 Output;
 
@@ -63,7 +64,9 @@ uniform sampler2D u_DepthMap;
 
 void main()
 {
-	vec3 normal = normalize(o_Normal);
+	vec3 normal = texture(u_TextureMaterial.Normal, o_TextureCoordinates).rgb;
+	normal = normal * 2.0 - 1.0;
+	normal = normalize(o_TBN * normal);
 
 	if (!gl_FrontFacing)
 		normal = -normal;
@@ -139,5 +142,6 @@ void main()
 	}
 
 	Output.rgb += diffuse + specular;
+
 	Output.a = 1.0;
 }
