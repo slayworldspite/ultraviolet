@@ -6,6 +6,7 @@ namespace ultraviolet
 	{
 		Color,
 		Texture,
-		Light
+		Light,
+		Overlay
 	};
 }

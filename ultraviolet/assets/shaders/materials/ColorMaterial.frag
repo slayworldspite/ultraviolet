@@ -62,8 +62,8 @@ void main()
 {
 	vec3 normal = normalize(o_Normal);
 
-	if (gl_FrontFacing)
-		normal = -normal;
+	if (!gl_FrontFacing)
+		normal = normal;
 
 	vec3 viewDirection = normalize(o_CameraPosition - o_FragmentPosition);
 
@@ -81,7 +81,8 @@ void main()
 
 		vec3 reflectionDirection = reflect(-lightDirection, normal);
 
-		float specularStrength = pow(max(dot(viewDirection, reflectionDirection), 0.0), u_ColorMaterial.Specular);
+		vec3 halfwayDirection = normalize(lightDirection + viewDirection);
+		float specularStrength = pow(max(dot(normal, halfwayDirection), 0.0), u_ColorMaterial.Specular);
 		specular += specularStrength * ub_DirectionalLight.Color.rgb * 0.25 * ub_DirectionalLight.Intensity;
 	}
 
@@ -92,7 +93,7 @@ void main()
 
     float currentDepth = projectionCoordinates.z;
 
-	float bias = max(0.055 * (1.0 - dot(normal, normalize(-ub_DirectionalLight.Direction.xyz))), 0.005);  
+	float bias = max(0.0005 * (1.0 - dot(normal, normalize(-ub_DirectionalLight.Direction.xyz))), 0.0001);  
     float shadow = 0.0;
 
 	vec2 texelSize = 1.0 / textureSize(u_DepthMap, 0);
@@ -127,9 +128,8 @@ void main()
 		float diffuseStrength = max(dot(normal, lightDirection), 0.0);
 		diffuse += u_ColorMaterial.Color * ub_PointLights[i].Color.rgb * diffuseStrength * ub_PointLights[i].Intensity * attenuation;
 
-		vec3 reflectionDirection = reflect(-lightDirection, normal);
-
-		float specularStrength = pow(max(dot(viewDirection, reflectionDirection), 0.0), u_ColorMaterial.Specular);
+		vec3 halfwayDirection = normalize(lightDirection + viewDirection);
+		float specularStrength = pow(max(dot(normal, halfwayDirection), 0.0), u_ColorMaterial.Specular);
 		specular += specularStrength * ub_PointLights[i].Color.rgb * 0.25 * ub_PointLights[i].Intensity * attenuation;
 	}
 

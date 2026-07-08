@@ -19,7 +19,7 @@ namespace ultraviolet
 {
 	ProjectionCamera::ProjectionCamera() :
 		Position{},
-		Yaw{ -90 },
+		Yaw{},
 		Pitch{},
 		FOV{ 75 },
 		m_Front{},
@@ -92,7 +92,7 @@ namespace ultraviolet
 	{
 		if (::ImGui::CollapsingHeader(("Camera " + id).c_str()))
 		{
-			::ImGui::DragFloat3(("Position ##" + id).c_str(), glm::value_ptr(Position));
+			::ImGui::DragFloat3(("Position ##" + id).c_str(), glm::value_ptr(Position), 0.1f);
 			::ImGui::DragFloat(("Yaw ##" + id).c_str(), &Yaw);
 			::ImGui::DragFloat(("Pitch ##" + id).c_str(), &Pitch);
 			::ImGui::DragFloat(("FOV ##" + id).c_str(), &FOV);

@@ -51,6 +51,161 @@ namespace ultraviolet
 		return model;
 	}
 
+	Model Primitives::GetCube(std::string_view id, std::shared_ptr<Material> material)
+	{
+		std::vector<Vertex> vertices{};
+		vertices.reserve(24);
+
+		Vertex vertex{};
+
+		// front
+		vertex.Normal = { 0.0f, 0.0f, 1.0f };
+		vertex.Tangent = { 1.0f, 0.0f, 0.0f };
+
+		vertex.Position = { -1.0f, -1.0f, 1.0f };
+		vertex.TextureCoordinates = { 0.0f, 0.0f };
+		vertices.push_back(vertex);
+
+		vertex.Position = { 1.0f, -1.0f, 1.0f };
+		vertex.TextureCoordinates = { 1.0f, 0.0f };
+		vertices.push_back(vertex);
+
+		vertex.Position = { -1.0f, 1.0f, 1.0f };
+		vertex.TextureCoordinates = { 0.0f, 1.0f };
+		vertices.push_back(vertex);
+
+		vertex.Position = { 1.0f, 1.0f, 1.0f };
+		vertex.TextureCoordinates = { 1.0f, 1.0f };
+		vertices.push_back(vertex);
+
+
+		// back
+		vertex.Normal = { 0.0f, 0.0f, -1.0f };
+		vertex.Tangent = { -1.0f, 0.0f, 0.0f };
+
+		vertex.Position = { 1.0f, -1.0f, -1.0f };
+		vertex.TextureCoordinates = { 0.0f, 0.0f };
+		vertices.push_back(vertex);
+
+		vertex.Position = { -1.0f, -1.0f, -1.0f };
+		vertex.TextureCoordinates = { 1.0f, 0.0f };
+		vertices.push_back(vertex);
+
+		vertex.Position = { 1.0f, 1.0f, -1.0f };
+		vertex.TextureCoordinates = { 0.0f, 1.0f };
+		vertices.push_back(vertex);
+
+		vertex.Position = { -1.0f, 1.0f, -1.0f };
+		vertex.TextureCoordinates = { 1.0f, 1.0f };
+		vertices.push_back(vertex);
+
+
+		// left
+		vertex.Normal = { -1.0f, 0.0f, 0.0f };
+		vertex.Tangent = { 0.0f, 0.0f, 1.0f };
+
+		vertex.Position = { -1.0f, -1.0f, -1.0f };
+		vertex.TextureCoordinates = { 0.0f, 0.0f };
+		vertices.push_back(vertex);
+
+		vertex.Position = { -1.0f, -1.0f, 1.0f };
+		vertex.TextureCoordinates = { 1.0f, 0.0f };
+		vertices.push_back(vertex);
+
+		vertex.Position = { -1.0f, 1.0f, -1.0f };
+		vertex.TextureCoordinates = { 0.0f, 1.0f };
+		vertices.push_back(vertex);
+
+		vertex.Position = { -1.0f, 1.0f, 1.0f };
+		vertex.TextureCoordinates = { 1.0f, 1.0f };
+		vertices.push_back(vertex);
+
+
+		// right
+		vertex.Normal = { 1.0f, 0.0f, 0.0f };
+		vertex.Tangent = { 0.0f, 0.0f, -1.0f };
+
+		vertex.Position = { 1.0f, -1.0f, 1.0f };
+		vertex.TextureCoordinates = { 0.0f, 0.0f };
+		vertices.push_back(vertex);
+
+		vertex.Position = { 1.0f, -1.0f, -1.0f };
+		vertex.TextureCoordinates = { 1.0f, 0.0f };
+		vertices.push_back(vertex);
+
+		vertex.Position = { 1.0f, 1.0f, 1.0f };
+		vertex.TextureCoordinates = { 0.0f, 1.0f };
+		vertices.push_back(vertex);
+
+		vertex.Position = { 1.0f, 1.0f, -1.0f };
+		vertex.TextureCoordinates = { 1.0f, 1.0f };
+		vertices.push_back(vertex);
+
+
+		// top
+		vertex.Normal = { 0.0f, 1.0f, 0.0f };
+		vertex.Tangent = { 1.0f, 0.0f, 0.0f };
+
+		vertex.Position = { -1.0f, 1.0f, 1.0f };
+		vertex.TextureCoordinates = { 0.0f, 0.0f };
+		vertices.push_back(vertex);
+
+		vertex.Position = { 1.0f, 1.0f, 1.0f };
+		vertex.TextureCoordinates = { 1.0f, 0.0f };
+		vertices.push_back(vertex);
+
+		vertex.Position = { -1.0f, 1.0f, -1.0f };
+		vertex.TextureCoordinates = { 0.0f, 1.0f };
+		vertices.push_back(vertex);
+
+		vertex.Position = { 1.0f, 1.0f, -1.0f };
+		vertex.TextureCoordinates = { 1.0f, 1.0f };
+		vertices.push_back(vertex);
+
+
+		// bottom
+		vertex.Normal = { 0.0f, -1.0f, 0.0f };
+		vertex.Tangent = { 1.0f, 0.0f, 0.0f };
+
+		vertex.Position = { -1.0f, -1.0f, -1.0f };
+		vertex.TextureCoordinates = { 0.0f, 0.0f };
+		vertices.push_back(vertex);
+
+		vertex.Position = { 1.0f, -1.0f, -1.0f };
+		vertex.TextureCoordinates = { 1.0f, 0.0f };
+		vertices.push_back(vertex);
+
+		vertex.Position = { -1.0f, -1.0f, 1.0f };
+		vertex.TextureCoordinates = { 0.0f, 1.0f };
+		vertices.push_back(vertex);
+
+		vertex.Position = { 1.0f, -1.0f, 1.0f };
+		vertex.TextureCoordinates = { 1.0f, 1.0f };
+		vertices.push_back(vertex);
+
+
+		std::vector<unsigned int> indices{
+			0, 2, 1, 1, 2, 3,
+			4, 6, 5, 5, 6, 7,
+			8, 10, 9, 9, 10, 11,
+			12, 14, 13, 13, 14, 15,
+			16, 18, 17, 17, 18, 19,
+			20, 22, 21, 21, 22, 23
+		};
+
+		Mesh mesh{ id, vertices, indices };
+
+		if (material)
+			mesh.Material = material;
+		else
+			mesh.Material = std::make_shared<ColorMaterial>(glm::vec3{ 1.0f }, 32);
+
+		std::vector<Mesh> meshes{};
+		meshes.push_back(std::move(mesh));
+
+		return Model{ id, meshes };
+	}
+
 	// https://stackoverflow.com/a/4082020
 	Model Primitives::GetSphere(std::string_view id, size_t horizontal, size_t vertical, std::shared_ptr<Material> material)
 	{

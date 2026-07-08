@@ -110,7 +110,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;TRACY_ENABLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp23</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -143,6 +143,7 @@
     <ClCompile Include="src\core\GameWindow.cpp" />
     <ClCompile Include="src\core\NativeWindow.cpp" />
     <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\game\Player.cpp" />
     <ClCompile Include="src\input\Input.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\renderer\camera\ProjectionCamera.cpp" />
@@ -153,6 +154,7 @@
     <ClCompile Include="src\renderer\materials\LightMaterial.cpp" />
     <ClCompile Include="src\renderer\materials\Material.cpp" />
     <ClCompile Include="src\renderer\materials\MaterialShaderManager.cpp" />
+    <ClCompile Include="src\renderer\materials\OverlayMaterial.cpp" />
     <ClCompile Include="src\renderer\materials\TextureMaterial.cpp" />
     <ClCompile Include="src\renderer\model\Model.cpp" />
     <ClCompile Include="src\renderer\model\ModelLoader.cpp" />
@@ -185,6 +187,7 @@
     <ClInclude Include="src\core\NativeWindow.h" />
     <ClInclude Include="src\core\NativeWindowSettings.h" />
     <ClInclude Include="src\Game.h" />
+    <ClInclude Include="src\game\Player.h" />
     <ClInclude Include="src\input\Input.h" />
     <ClInclude Include="src\input\Keycode.h" />
     <ClInclude Include="src\input\MouseButtonFlags.h" />
@@ -198,7 +201,9 @@
     <ClInclude Include="src\renderer\materials\Material.h" />
     <ClInclude Include="src\renderer\materials\MaterialShaderManager.h" />
     <ClInclude Include="src\renderer\materials\MaterialType.h" />
+    <ClInclude Include="src\renderer\materials\OverlayMaterial.h" />
     <ClInclude Include="src\renderer\materials\TextureMaterial.h" />
+    <ClInclude Include="src\renderer\model\AABB.h" />
     <ClInclude Include="src\renderer\model\Primitives.h" />
     <ClInclude Include="src\renderer\objects\ElementBuffer.h" />
     <ClInclude Include="src\renderer\objects\Framebuffer.h" />

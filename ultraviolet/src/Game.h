@@ -4,6 +4,7 @@
 #include "renderer/Renderer.h"
 #include "renderer/camera/ProjectionCamera.h"
 #include "renderer/materials/LightMaterial.h"
+#include "game/Player.h"
 
 namespace ultraviolet
 {
@@ -25,7 +26,13 @@ namespace ultraviolet
 		ProjectionCamera m_Camera;
 		double m_DeltaTime;
 		Scene m_Scene;
+
+		glm::vec4 m_ClearColor;
+
+		Player m_Player;
 		std::shared_ptr<LightMaterial> m_PointLightMaterial;
+
+		std::unique_ptr<Mesh> m_Overlay;
 
 	private:
 		void ProcessInput(double deltaTime);

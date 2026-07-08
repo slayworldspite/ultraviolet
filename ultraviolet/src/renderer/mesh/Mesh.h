@@ -14,6 +14,7 @@ namespace ultraviolet
 	public:
 		std::string ID;
 		std::shared_ptr<Material> Material;
+		std::vector<Vertex> Vertices;
 
 	public:
 		Mesh(std::string_view id, const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices);

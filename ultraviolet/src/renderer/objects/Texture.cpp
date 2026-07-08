@@ -11,9 +11,10 @@ namespace ultraviolet
 {
 	Texture::Texture(const std::filesystem::path& path, TextureType type) :
 		GLObject{},
-		Type{ type }
+		Type{ type },
+		m_Multisampled{ false }
 	{
-		Logger::Log("loading " + path.string(), Logger::Level::Info);
+			Logger::Log("loading " + path.string(), Logger::Level::Info);
 
 		int width{};
 		int height{};
@@ -36,20 +37,40 @@ namespace ultraviolet
 
 		if (data)
 		{
+			GLenum internalFormat{};
 			GLenum imageFormat{};
 
 			switch (channelCount)
 			{
 				case 1:
+					internalFormat = GL_RED;
 					imageFormat = GL_RED;
 					break;
 
 				case 3:
-					imageFormat = GL_SRGB;
+					if (type == TextureType::Diffuse || type == TextureType::Overlay)
+					{
+						internalFormat = GL_SRGB;
+						imageFormat = GL_RGB;
+					}
+					else
+					{
+						internalFormat = GL_RGB;
+						imageFormat = GL_RGB;
+					}
 					break;
 
 				case 4:
-					imageFormat = GL_SRGB_ALPHA;
+					if (type == TextureType::Diffuse || type == TextureType::Overlay)
+					{
+						internalFormat = GL_SRGB_ALPHA;
+						imageFormat = GL_RGBA;
+					}
+					else
+					{
+						internalFormat = GL_RGBA;
+						imageFormat = GL_RGBA;
+					}
 					break;
 			}
 

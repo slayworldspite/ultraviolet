@@ -1,3 +1,5 @@
+#include <array>
+
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <imgui/imgui.h>
@@ -12,9 +14,17 @@ namespace ultraviolet
 		Position{},
 		Scale{ 1.0 },
 		Rotation{},
-		CastsShadow{ true }
+		CastsShadow{ true },
+		Visible{ true }
 	{
-
+		for (const Mesh& mesh : Meshes)
+		{
+			for (const Vertex& vertex : mesh.Vertices)
+			{
+				BoundingBox.Min = glm::min(BoundingBox.Min, vertex.Position);
+				BoundingBox.Max = glm::max(BoundingBox.Max, vertex.Position);
+			}
+		}
 	}
 
 	glm::mat4 Model::GetModelMatrix() const
@@ -34,6 +44,8 @@ namespace ultraviolet
 	{
 		if (::ImGui::CollapsingHeader(ID.c_str()))
 		{
+			::ImGui::Checkbox(("Visible ##" + ID).c_str(), &Visible);
+			::ImGui::Checkbox(("Casts Shadow ##" + ID).c_str(), &CastsShadow);
 			::ImGui::Text("Mesh count: %d", Meshes.size());
 			::ImGui::DragFloat3(("Position ##" + ID).c_str(), glm::value_ptr(Position), 0.01f);
 			::ImGui::DragFloat3(("Rotation ##" + ID).c_str(), glm::value_ptr(Rotation), 1.0f);
@@ -62,5 +74,52 @@ namespace ultraviolet
 		}
 
 		return nullptr;
+	}
+
+	AABB Model::GetWorldAABB() const
+	{
+		std::array<glm::vec3, 8> corners{
+		{
+			{ BoundingBox.Min.x, BoundingBox.Min.y, BoundingBox.Min.z },
+			{ BoundingBox.Max.x, BoundingBox.Min.y, BoundingBox.Min.z },
+			{ BoundingBox.Min.x, BoundingBox.Max.y, BoundingBox.Min.z },
+			{ BoundingBox.Max.x, BoundingBox.Max.y, BoundingBox.Min.z },
+
+			{ BoundingBox.Min.x, BoundingBox.Min.y, BoundingBox.Max.z },
+			{ BoundingBox.Max.x, BoundingBox.Min.y, BoundingBox.Max.z },
+			{ BoundingBox.Min.x, BoundingBox.Max.y, BoundingBox.Max.z },
+			{ BoundingBox.Max.x, BoundingBox.Max.y, BoundingBox.Max.z }
+		} };
+
+		AABB result{};
+
+		result.Min = glm::vec3(FLT_MAX);
+		result.Max = glm::vec3(-FLT_MAX);
+
+		for (const glm::vec3& corner : corners)
+		{
+			glm::vec3 world{ glm::vec3(GetModelMatrix() * glm::vec4(corner, 1.0f)) };
+
+			result.Min = glm::min(result.Min, world);
+			result.Max = glm::max(result.Max, world);
+		}
+
+		return result;
+	}
+
+	bool Model::Intersects(const Model& other) const
+	{
+		AABB thisBoundingBox{ GetWorldAABB() };
+		AABB otherBoundingBox{ other.GetWorldAABB() };
+
+		return
+			thisBoundingBox.Min.x <= otherBoundingBox.Max.x &&
+			thisBoundingBox.Max.x >= otherBoundingBox.Min.x &&
+													  
+			thisBoundingBox.Min.y <= otherBoundingBox.Max.y &&
+			thisBoundingBox.Max.y >= otherBoundingBox.Min.y &&
+													  
+			thisBoundingBox.Min.z <= otherBoundingBox.Max.z &&
+			thisBoundingBox.Max.z >= otherBoundingBox.Min.z;
 	}
 }
