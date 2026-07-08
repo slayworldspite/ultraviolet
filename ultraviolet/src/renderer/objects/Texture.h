@@ -13,6 +13,8 @@ namespace ultraviolet
 		TextureType Type;
 
 		Texture(const std::filesystem::path& path, TextureType type);
+		// framebuffer texture constructor
+		Texture(int width, int height, int internalFormat, int format, int type, bool multisampled = false); 
 		virtual ~Texture() override;
 
 		std::pair<int, int> GetSize() const;
@@ -25,5 +27,6 @@ namespace ultraviolet
 
 	private:
 		std::pair<int, int> m_Size;
+		bool m_Multisampled;
 	};
 }

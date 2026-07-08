@@ -12,11 +12,17 @@ layout (std140, binding = 0) uniform CameraData
 	vec3 ub_CameraPosition;
 };
 
+layout (std140, binding = 4) uniform DepthMapData
+{
+	mat4 ub_LightSpaceMatrix;
+};
+
 uniform mat4 u_Model;
 
 out vec3 o_Normal;
 out vec2 o_TextureCoordinates;
 out vec3 o_FragmentPosition;
+out vec4 o_FragmentPositionLightSpace;
 out vec3 o_CameraPosition;
 
 void main()
@@ -26,5 +32,6 @@ void main()
 	o_Normal = mat3(u_Model) * a_Normal;
 	o_TextureCoordinates = a_TextureCoordinates;
 	o_FragmentPosition = vec3(u_Model * vec4(a_Position, 1.0));
+	o_FragmentPositionLightSpace = ub_LightSpaceMatrix * vec4(o_FragmentPosition, 1.0);
 	o_CameraPosition = ub_CameraPosition;
 }

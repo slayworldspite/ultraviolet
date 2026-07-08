@@ -12,7 +12,7 @@ namespace ultraviolet
 		glm::vec3 Position;
 		glm::vec3 Scale;
 		glm::vec3 Rotation;
-
+		bool CastsShadow;
 
 	public:
 		Model(std::string_view id, std::vector<Mesh>& meshes);

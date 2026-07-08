@@ -57,8 +57,6 @@ namespace ultraviolet
 
 		LogShaderError(fragmentShader);
 
-		Logger::Log("linking shaders...", Logger::Level::Info);
-
 		m_ID = ::glCreateProgram();
 
 		::glAttachShader(m_ID, vertexShader);
@@ -81,8 +79,6 @@ namespace ultraviolet
 
 		::glDeleteShader(vertexShader);
 		::glDeleteShader(fragmentShader);
-
-		Logger::Log("shaders linked!", Logger::Level::Info);
 	}
 
 	std::string Shader::ReadFile(const std::filesystem::path& path)
@@ -115,6 +111,12 @@ namespace ultraviolet
 	int Shader::GetLocation(std::string_view name) const
 	{
 		return ::glGetUniformLocation(m_ID, name.data());
+	}
+
+	void Shader::Set(std::string_view name, const glm::vec2& value) const
+	{
+		Use();
+		::glUniform2fv(GetLocation(name), 1, &value[0]);
 	}
 
 	void Shader::Set(std::string_view name, const glm::vec3& value) const

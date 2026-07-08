@@ -3,6 +3,7 @@
 struct LightMaterial
 {
 	vec3 Color;
+	float Intensity;
 	bool Enabled;
 };
 
@@ -15,5 +16,5 @@ void main()
 	Output.a = 1.0;
 
 	if (u_LightMaterial.Enabled)
-		Output.rgb = u_LightMaterial.Color;
+		Output.rgb = u_LightMaterial.Color * u_LightMaterial.Intensity * 10;
 }

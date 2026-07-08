@@ -7,5 +7,6 @@ namespace ultraviolet
 		Diffuse,
 		Specular,
 		Normal,
+		Framebuffer
 	};
 }

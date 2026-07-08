@@ -10,6 +10,7 @@ namespace ultraviolet
 	{
 	public:
 		glm::vec3 Color;
+		float Intensity;
 		bool Enabled;
 
 	public:

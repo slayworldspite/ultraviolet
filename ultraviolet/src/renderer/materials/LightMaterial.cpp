@@ -5,6 +5,7 @@ namespace ultraviolet
 	LightMaterial::LightMaterial() :
 		Material{ MaterialType::Light },
 		Color{ 1.0f },
+		Intensity{ 1.0f },
 		Enabled{ true }
 	{
 
@@ -13,6 +14,7 @@ namespace ultraviolet
 	LightMaterial::LightMaterial(const glm::vec3& color) :
 		Material{ MaterialType::Light },
 		Color{ color },
+		Intensity{ 1.0f },
 		Enabled{ true }
 	{
 
@@ -21,6 +23,7 @@ namespace ultraviolet
 	void LightMaterial::Apply() const
 	{
 		Shader->Set("u_LightMaterial.Color", Color);
+		Shader->Set("u_LightMaterial.Intensity", Intensity);
 		Shader->Set("u_LightMaterial.Enabled", Enabled);
 	}
 

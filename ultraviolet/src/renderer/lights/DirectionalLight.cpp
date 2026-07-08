@@ -22,9 +22,11 @@ namespace ultraviolet
 
 		data.Color = glm::vec4{ Color.r, Color.g, Color.b, 0.0f };
 
-		data.Direction.x = glm::cos(glm::radians(-Pitch)) * glm::sin(glm::radians(Yaw));
-		data.Direction.y = glm::sin(glm::radians(-Pitch));
-		data.Direction.z = glm::sin(glm::radians(-Pitch)) * glm::cos(glm::radians(Yaw));
+		data.Direction.x = glm::cos(glm::radians(Pitch)) * glm::sin(glm::radians(Yaw));
+		data.Direction.y = glm::sin(glm::radians(Pitch));
+		data.Direction.z = glm::cos(glm::radians(Pitch)) * glm::cos(glm::radians(Yaw));
+
+		data.Direction = glm::normalize(data.Direction);
 
 		data.Intensity = Intensity;
 		data.Enabled = Enabled;

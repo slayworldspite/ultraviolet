@@ -11,7 +11,8 @@ namespace ultraviolet
 		Meshes{ std::move(meshes) },
 		Position{},
 		Scale{ 1.0 },
-		Rotation{}
+		Rotation{},
+		CastsShadow{ true }
 	{
 
 	}

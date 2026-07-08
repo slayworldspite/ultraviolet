@@ -158,8 +158,10 @@
     <ClCompile Include="src\renderer\model\ModelLoader.cpp" />
     <ClCompile Include="src\renderer\model\Primitives.cpp" />
     <ClCompile Include="src\renderer\objects\ElementBuffer.cpp" />
+    <ClCompile Include="src\renderer\objects\Framebuffer.cpp" />
     <ClCompile Include="src\renderer\objects\GLObject.cpp" />
     <ClCompile Include="src\renderer\mesh\Mesh.cpp" />
+    <ClCompile Include="src\renderer\objects\Renderbuffer.cpp" />
     <ClCompile Include="src\renderer\objects\Texture.cpp" />
     <ClCompile Include="src\renderer\objects\UniformBuffer.cpp" />
     <ClCompile Include="src\renderer\Renderer.cpp" />
@@ -199,6 +201,8 @@
     <ClInclude Include="src\renderer\materials\TextureMaterial.h" />
     <ClInclude Include="src\renderer\model\Primitives.h" />
     <ClInclude Include="src\renderer\objects\ElementBuffer.h" />
+    <ClInclude Include="src\renderer\objects\Framebuffer.h" />
+    <ClInclude Include="src\renderer\objects\Renderbuffer.h" />
     <ClInclude Include="src\renderer\objects\Texture.h" />
     <ClInclude Include="src\renderer\model\Model.h" />
     <ClInclude Include="src\renderer\model\ModelLoader.h" />

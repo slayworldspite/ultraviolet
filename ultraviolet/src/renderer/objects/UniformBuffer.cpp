@@ -4,7 +4,8 @@
 
 namespace ultraviolet
 {
-	UniformBuffer::UniformBuffer(const void* data, size_t size, size_t bindingPoint)
+	UniformBuffer::UniformBuffer(const void* data, size_t size, size_t bindingPoint) :
+		GLObject{}
 	{
 		::glGenBuffers(1, &m_ID);
 

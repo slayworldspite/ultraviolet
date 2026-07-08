@@ -15,6 +15,7 @@ namespace ultraviolet
 		void Use() const;
 		void Load();
 
+		void Set(std::string_view name, const glm::vec2& value) const;
 		void Set(std::string_view name, const glm::vec3& value) const;
 		void Set(std::string_view name, const glm::vec4& value) const;
 		void Set(std::string_view name, const glm::mat4& value) const;

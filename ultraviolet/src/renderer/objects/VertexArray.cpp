@@ -4,6 +4,29 @@
 
 namespace ultraviolet
 {
+	VertexArray::VertexArray(const VertexBuffer& vertexBuffer) :
+		GLObject{}
+	{
+		::glGenVertexArrays(1, &m_ID);
+
+		Bind();
+		vertexBuffer.Bind();
+
+		::glEnableVertexAttribArray(0);
+		::glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Position));
+
+		::glEnableVertexAttribArray(1);
+		::glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
+
+		::glEnableVertexAttribArray(2);
+		::glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TextureCoordinates));
+
+		::glEnableVertexAttribArray(3);
+		::glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Tangent));
+
+		Unbind();
+	}
+
 	VertexArray::VertexArray(const VertexBuffer& vertexBuffer, const ElementBuffer& elementBuffer) :
 		GLObject{}
 	{

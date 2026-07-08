@@ -31,7 +31,7 @@ namespace ultraviolet
 	{
 		SetRelativeMouseMode(true);
 
-		m_Renderer.SetClearColor({ 0.05f, 0.15f, 0.15f, 1.0f });
+		m_Renderer.SetClearColor({ 0.025f, 0.025f, 0.025f, 1.0f });
 
 		m_Camera.Position = { 0.0f, 1.0f, 3.0f };
 
@@ -53,6 +53,7 @@ namespace ultraviolet
 		{
 			pointLightModel->Position = pointLight->Position;
 			m_PointLightMaterial->Color = pointLight->Color;
+			m_PointLightMaterial->Intensity = pointLight->Intensity;
 			m_PointLightMaterial->Enabled = pointLight->Enabled;
 		}
 
@@ -165,45 +166,72 @@ namespace ultraviolet
 		m_Scene.Clear();
 
 		m_Scene.AmbientLight.Color = { 1.0f, 1.0f, 1.0f };
-		m_Scene.AmbientLight.Intensity = 0.10f;
+		m_Scene.AmbientLight.Intensity = 0.1f;
 
-		m_Scene.PointLights.emplace_back("light");
-		m_Scene.GetPointLight("light")->Position += 2.0f;
+		m_Scene.DirectionalLight.Enabled = true;
+		m_Scene.DirectionalLight.Pitch = -45.0f;
+		m_Scene.DirectionalLight.Yaw = -45.0f;
+		m_Scene.DirectionalLight.Intensity = 0.6f;
+
+		PointLight pointLight{};
+		pointLight.ID = "light";
+		pointLight.Position = glm::vec3{ 0.6f, -0.8f, -0.4f };
+		pointLight.Color = glm::vec3{ 0.0f, 0.5f, 1.0f };
+		pointLight.Intensity = 1.0f;
+
+		m_Scene.PointLights.push_back(std::move(pointLight));
 
 		m_Scene.Models.clear();
 
-		m_Scene.Models.push_back(std::move(
-			Primitives::GetPlane(
-				"plane", 
-				std::make_shared<TextureMaterial>(
-					"assets/textures/test_diff.png", 
-					"assets/textures/test_spec.png",
-					32
-				)
+		Model plane{ Primitives::GetPlane(
+			"plane",
+			std::make_shared<ColorMaterial>(
+				glm::vec3{ 0.8f },
+				32
 			)
-		));
+		) };
 
-		m_Scene.GetModel("plane")->Position.y -= 1.0f;
-		m_Scene.GetModel("plane")->Scale.x *= 4.0f;
-		m_Scene.GetModel("plane")->Scale.z *= 4.0f;
+		plane.Position.y -= 1.0f;
+		plane.Scale.x *= 4.0f;
+		plane.Scale.z *= 4.0f;
 
-		m_Scene.Models.push_back(std::move(
-			Primitives::GetSphere(
-				"sphere",
-				32,
-				32,
-				std::make_shared<ColorMaterial>(
-					glm::vec3{ 1.0f },
-					32
-				)
+		m_Scene.Models.push_back(std::move(plane));
+
+		Model sphere1{ Primitives::GetSphere(
+			"sphere1",
+			32,
+			32,
+			std::make_shared<ColorMaterial>(
+				glm::vec3{ 1.0f },
+				32
 			)
-		));
+		) };
+		sphere1.Position = { 0.5f, -0.5f, -1.5f };
+		sphere1.Scale = { 0.5f, 0.5f, 0.5f };
+
+		m_Scene.Models.push_back(std::move(sphere1));
+
+		Model sphere2{ Primitives::GetSphere(
+			"sphere2",
+			32,
+			32,
+			std::make_shared<ColorMaterial>(
+				glm::vec3{ 1.0f, 0.0f, 0.0f },
+				32
+			)
+		) };
+		sphere2.Position = { 2.0f, 0.0f, -2.0f };
+
+		m_Scene.Models.push_back(std::move(sphere2));
 
 		m_PointLightMaterial = std::make_shared<LightMaterial>(m_Scene.GetPointLight("light")->Color);
 
-		m_Scene.Models.push_back(std::move(Primitives::GetSphere("plmesh", 8, 8, m_PointLightMaterial)));
-		m_Scene.GetModel("plmesh")->Scale /= 10.0f;
-		m_Scene.GetModel("plmesh")->Position = m_Scene.GetPointLight("light")->Position;
+		Model plmesh{ Primitives::GetSphere("plmesh", 6, 8, m_PointLightMaterial) };
+		plmesh.Scale /= 10.0f;
+		plmesh.Position = pointLight.Position;
+		plmesh.CastsShadow = false;
+
+		m_Scene.Models.push_back(std::move(plmesh));
 	}
 
 	void Game::DebugMenu()
@@ -234,6 +262,8 @@ namespace ultraviolet
 
 			if (::ImGui::Button("[RISKY] Reload Shader of Value"))
 				MaterialShaderManager::Reload(static_cast<MaterialType>(materialIndex));
+
+			m_Renderer.AddToImGui();
 
 			::ImGui::Indent(-16.0f);
 		}
