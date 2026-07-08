@@ -198,93 +198,100 @@ namespace ultraviolet
 		::glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_PostProcessFramebuffer->GetID());
 		::glBlitFramebuffer(0, 0, windowWidth, windowHeight, 0, 0, windowWidth, windowHeight, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
-		// bright extract
-		m_BrightExtractFramebuffer->Bind();
-		m_BrightExtractShader->Use();
-		m_PostProcessFramebuffer->Texture.Bind();
+		if (m_EnableBloom)
+		{
+			// bright extract
+			m_BrightExtractFramebuffer->Bind();
+			m_BrightExtractShader->Use();
+			m_PostProcessFramebuffer->Texture.Bind();
 
-		m_ScreenQuad->Bind();
+			m_ScreenQuad->Bind();
 
-		::glDrawArrays(GL_TRIANGLES, 0, 6);
+			::glDrawArrays(GL_TRIANGLES, 0, 6);
 
-		m_BrightExtractFramebuffer->Unbind();
+			m_BrightExtractFramebuffer->Unbind();
 
-		// horizontal blur
-		m_PostProcessFramebuffer->Texture.Unbind();
-		m_BrightExtractFramebuffer->Texture.Bind();
-		m_HorizontalBlurFramebuffer->Bind();
-		m_BlurShader->Use();
+			// horizontal blur
+			m_PostProcessFramebuffer->Texture.Unbind();
+			m_BrightExtractFramebuffer->Texture.Bind();
+			m_HorizontalBlurFramebuffer->Bind();
+			m_BlurShader->Use();
+
+			m_BlurShader->Set("u_Resolution", glm::vec2{ windowWidth / 2, windowHeight / 2 });
+			m_BlurShader->Set("u_Direction", glm::vec2{ 1.0f, 0.0f });
+
+			::glViewport(0, 0, windowWidth / 2, windowHeight / 2);
+			::glDrawArrays(GL_TRIANGLES, 0, 6);
+
+			m_HorizontalBlurFramebuffer->Unbind();
+
+			// vertical blur
+			m_BrightExtractFramebuffer->Texture.Unbind();
+			m_HorizontalBlurFramebuffer->Texture.Bind();
+
+			m_VerticalBlurFramebuffer->Bind();
+			m_BlurShader->Set("u_Direction", glm::vec2{ 0.0f, 1.0f });
+
+			::glViewport(0, 0, windowWidth / 2, windowHeight / 2);
+			::glDrawArrays(GL_TRIANGLES, 0, 6);
+
+			m_VerticalBlurFramebuffer->Unbind();
+			m_VerticalBlurFramebuffer->Texture.Unbind();
+			m_HorizontalBlurFramebuffer->Texture.Unbind();
+		}
 		
-		m_BlurShader->Set("u_Resolution", glm::vec2{ windowWidth / 2, windowHeight / 2});
-		m_BlurShader->Set("u_Direction", glm::vec2{ 1.0f, 0.0f });
+		if (m_EnableSSAO)
+		{
+			// ssao
+			m_SSAOFramebuffer->Bind();
+			m_SSAOShader->Set("u_NormalMap", 15);
+			m_SSAOShader->Set("u_DepthMap", 14);
+			m_NormalMapFramebuffer->Texture.Bind(15);
+			m_DepthMapFramebuffer->Texture.Bind(14);
 
-		::glViewport(0, 0, windowWidth / 2, windowHeight / 2);
-		::glDrawArrays(GL_TRIANGLES, 0, 6);
+			::glViewport(0, 0, windowWidth, windowHeight);
+			::glDrawArrays(GL_TRIANGLES, 0, 6);
 
-		m_HorizontalBlurFramebuffer->Unbind();
+			m_NormalMapFramebuffer->Texture.Unbind();
+			m_DepthMapFramebuffer->Texture.Unbind();
+			m_SSAOFramebuffer->Unbind();
 
-		// vertical blur
-		m_BrightExtractFramebuffer->Texture.Unbind();
-		m_HorizontalBlurFramebuffer->Texture.Bind();
+			// blur ssao
 
-		m_VerticalBlurFramebuffer->Bind();
-		m_BlurShader->Set("u_Direction", glm::vec2{ 0.0f, 1.0f });
+			m_SSAOFramebuffer->Texture.Bind();
+			m_SSAOHorizontalBlurFramebuffer->Bind();
+			m_BlurShader->Use();
 
-		::glViewport(0, 0, windowWidth / 2, windowHeight / 2);
-		::glDrawArrays(GL_TRIANGLES, 0, 6);
+			m_BlurShader->Set("u_Resolution", glm::vec2{ windowWidth / 2, windowHeight / 2 });
+			m_BlurShader->Set("u_Direction", glm::vec2{ 1.0f, 0.0f });
 
-		m_VerticalBlurFramebuffer->Unbind();
-		m_HorizontalBlurFramebuffer->Texture.Unbind();
+			::glViewport(0, 0, windowWidth / 2, windowHeight / 2);
+			::glDrawArrays(GL_TRIANGLES, 0, 6);
 
-		// ssao
-		m_SSAOFramebuffer->Bind();
-		m_SSAOShader->Set("u_NormalMap", 15);
-		m_SSAOShader->Set("u_DepthMap", 14);
-		m_NormalMapFramebuffer->Texture.Bind(15);
-		m_DepthMapFramebuffer->Texture.Bind(14);
+			m_SSAOHorizontalBlurFramebuffer->Unbind();
+			m_SSAOFramebuffer->Texture.Unbind();
+
+			m_SSAOHorizontalBlurFramebuffer->Texture.Bind();
+			m_SSAOVerticalBlurFramebuffer->Bind();
+
+			m_BlurShader->Set("u_Resolution", glm::vec2{ windowWidth / 2, windowHeight / 2 });
+			m_BlurShader->Set("u_Direction", glm::vec2{ 0.0f, 1.0f });
+
+			::glViewport(0, 0, windowWidth / 2, windowHeight / 2);
+			::glDrawArrays(GL_TRIANGLES, 0, 6);
+
+			m_SSAOHorizontalBlurFramebuffer->Texture.Unbind();
+			m_SSAOVerticalBlurFramebuffer->Unbind();
+		}
 
 		::glViewport(0, 0, windowWidth, windowHeight);
-		::glDrawArrays(GL_TRIANGLES, 0, 6);
-
-		m_NormalMapFramebuffer->Texture.Unbind();
-		m_DepthMapFramebuffer->Texture.Unbind();
-		m_SSAOFramebuffer->Unbind();
-
-		// blur ssao
-
-		m_SSAOFramebuffer->Texture.Bind();
-		m_SSAOHorizontalBlurFramebuffer->Bind();
-		m_BlurShader->Use();
-
-		m_BlurShader->Set("u_Resolution", glm::vec2{ windowWidth / 2, windowHeight / 2 });
-		m_BlurShader->Set("u_Direction", glm::vec2{ 1.0f, 0.0f });
-
-		::glViewport(0, 0, windowWidth / 2, windowHeight / 2);
-		::glDrawArrays(GL_TRIANGLES, 0, 6);
-
-		m_SSAOHorizontalBlurFramebuffer->Unbind();
-		m_SSAOFramebuffer->Texture.Unbind();
-		m_SSAOHorizontalBlurFramebuffer->Unbind();
-		
-		m_SSAOHorizontalBlurFramebuffer->Texture.Bind();
-		m_SSAOVerticalBlurFramebuffer->Bind();
-
-		m_BlurShader->Set("u_Resolution", glm::vec2{ windowWidth / 2, windowHeight / 2 });
-		m_BlurShader->Set("u_Direction", glm::vec2{ 0.0f, 1.0f });
-
-		::glViewport(0, 0, windowWidth / 2, windowHeight / 2);
-		::glDrawArrays(GL_TRIANGLES, 0, 6);
-
-		::glViewport(0, 0, windowWidth, windowHeight);
-
-		m_SSAOHorizontalBlurFramebuffer->Texture.Unbind();
-		m_SSAOVerticalBlurFramebuffer->Unbind();
 
 		// draw to screen
 		m_PostProcessingShader->Use();
 			
 		m_PostProcessingShader->Set("u_Framebuffer", 15);
-		m_PostProcessingShader->Set("u_Blur", 14);
+		if (m_EnableBloom)
+			m_PostProcessingShader->Set("u_Blur", 14);
 		m_PostProcessingShader->Set("u_Overlay", 13);
 		m_PostProcessingShader->Set("u_NormalMap", 12);
 		m_PostProcessingShader->Set("u_SSAO", 11);
@@ -295,7 +302,8 @@ namespace ultraviolet
 		m_PostProcessingShader->Set("u_SSAOStrength", m_SSAOStrength);
 
 		m_PostProcessFramebuffer->Texture.Bind(15);
-		m_VerticalBlurFramebuffer->Texture.Bind(14);
+		if (m_EnableBloom)
+			m_VerticalBlurFramebuffer->Texture.Bind(14);
 		m_OverlayTexture->Bind(13);
 		m_NormalMapFramebuffer->Texture.Bind(12);
 		m_SSAOVerticalBlurFramebuffer->Texture.Bind(11);
@@ -375,7 +383,7 @@ namespace ultraviolet
 
 		glm::mat4 lightView{ glm::lookAt(-lightDirection * 25.0f, glm::vec3{0.0f}, glm::vec3{0.0f, 1.0f, 0.0f}) };
 
-		glm::mat4 lightProjection{ glm::ortho(-20.0f, 20.0f, -20.0f, 20.0f, 1.0f, 35.0f) };
+		glm::mat4 lightProjection{ glm::ortho(-50.0f, 50.0f, -50.0f, 50.0f, 1.0f, 50.0f) };
 
 		m_LightSpaceMatrix = lightProjection * lightView;
 
@@ -404,52 +412,57 @@ namespace ultraviolet
 				::glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(mesh.GetIndexCount()), GL_UNSIGNED_INT, nullptr);
 			}
 		}
-
-		// normal map
+		
 		m_ShadowMapFramebuffer->Unbind();
-		m_NormalMapFramebuffer->Bind();
-		m_NormalMapShader->Use();
 
 		::glViewport(0, 0, m_ViewportWidth, m_ViewportHeight);
 		::glCullFace(GL_BACK);
 
-		for (const Model& model : scene.Models)
+		if (m_EnableSSAO)
 		{
-			if (!model.Visible || !model.CastsShadow)
-				continue;
+			// normal map
+			m_NormalMapFramebuffer->Bind();
+			m_NormalMapShader->Use();
 
-			for (const Mesh& mesh : model.Meshes)
+			for (const Model& model : scene.Models)
 			{
-				m_NormalMapShader->Set("u_Model", model.GetModelMatrix());
+				if (!model.Visible || !model.CastsShadow)
+					continue;
 
-				mesh.Bind();
+				for (const Mesh& mesh : model.Meshes)
+				{
+					m_NormalMapShader->Set("u_Model", model.GetModelMatrix());
 
-				::glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(mesh.GetIndexCount()), GL_UNSIGNED_INT, nullptr);
+					mesh.Bind();
+
+					::glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(mesh.GetIndexCount()), GL_UNSIGNED_INT, nullptr);
+				}
 			}
-		}
 
-		m_NormalMapFramebuffer->Unbind();
+			m_NormalMapFramebuffer->Unbind();
 
-		// depth map
-		m_DepthMapFramebuffer->Bind();
-		m_DepthMapShader->Use();
+			// depth map
+			m_DepthMapFramebuffer->Bind();
+			m_DepthMapShader->Use();
 
-		for (const Model& model : scene.Models)
-		{
-			if (!model.Visible)
-				continue;
-
-			for (const Mesh& mesh : model.Meshes)
+			for (const Model& model : scene.Models)
 			{
-				m_DepthMapShader->Set("u_Model", model.GetModelMatrix());
+				if (!model.Visible)
+					continue;
 
-				mesh.Bind();
+				for (const Mesh& mesh : model.Meshes)
+				{
+					m_DepthMapShader->Set("u_Model", model.GetModelMatrix());
 
-				::glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(mesh.GetIndexCount()), GL_UNSIGNED_INT, nullptr);
+					mesh.Bind();
+
+					::glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(mesh.GetIndexCount()), GL_UNSIGNED_INT, nullptr);
+				}
 			}
-		}
 
-		m_DepthMapFramebuffer->Unbind();
+			m_DepthMapFramebuffer->Unbind();
+		}
+		
 		m_ScreenFramebuffer->Bind();
 
 		for (const Model& model : scene.Models)
@@ -534,6 +547,8 @@ namespace ultraviolet
 			m_HorizontalBlurFramebuffer->AddToImGui();
 			::ImGui::Text("Horizontal and Vertical Blur");
 			m_VerticalBlurFramebuffer->AddToImGui();
+			::ImGui::Text("Overlay");
+			::ImGui::Image((ImTextureID)(intptr_t)m_OverlayTexture->GetID(), ImVec2{ 256.0f, 144.0f });
 		}
 	}
 }

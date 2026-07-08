@@ -23,7 +23,9 @@ namespace ultraviolet
 			}
 	},
 		m_Renderer{ *this },
-		m_DeltaTime{}
+		m_DeltaTime{},
+		m_ShowMenu{ false },
+		m_FirstFrame{ true }
 	{
 		
 	}
@@ -58,9 +60,6 @@ namespace ultraviolet
 
 		std::shared_ptr<Texture> overlay{ std::make_shared<Texture>("assets/textures/overlay.png", TextureType::Overlay) };
 		m_Renderer.SetOverlay(overlay);
-
-		m_ShowMenu = true;
-		m_FirstFrame = true;
 
 		LoadScene();
 	}
@@ -283,7 +282,6 @@ namespace ultraviolet
 		m_Scene.Clear();
 
 		m_Player.Position = { -5.0f, 0.0f, 0.0f };
-		m_Camera.Pitch = -45.0f;
 
 		m_Scene.AmbientLight.Color = { 1.0f, 1.0f, 1.0f };
 		m_Scene.AmbientLight.Intensity = 0.2f;
@@ -382,6 +380,7 @@ namespace ultraviolet
 	void Game::DebugMenu()
 	{
 		::ImGui::Text("FPS: %f", 1.0 / m_DeltaTime);
+		::ImGui::Text("Frametime: %f", m_DeltaTime);
 
 		if (::ImGui::CollapsingHeader("Renderer"))
 		{
