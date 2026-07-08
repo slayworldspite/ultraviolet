@@ -121,6 +121,8 @@ namespace ultraviolet
 
 	void Renderer::BeginFrame() const
 	{
+		ZoneScoped;
+
 		m_DepthMapFrameBuffer->Bind();
 		::glClear(GL_DEPTH_BUFFER_BIT);
 		m_DepthMapFrameBuffer->Unbind();
@@ -144,84 +146,102 @@ namespace ultraviolet
 
 	void Renderer::EndFrame() const
 	{
-		m_ScreenFramebuffer->Unbind();
-
-		::glDisable(GL_DEPTH_TEST);
-		::glDisable(GL_BLEND);
-
-		::glClear(GL_COLOR_BUFFER_BIT);
-
-		::glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
 		int windowWidth{};
 		int windowHeight{};
 
-		::SDL_GetWindowSizeInPixels(m_Window, &windowWidth, &windowHeight);
+		{
+			ZoneScoped;
 
-		::glBindFramebuffer(GL_READ_FRAMEBUFFER, m_ScreenFramebuffer->GetID());
-		::glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_PostProcessFramebuffer->GetID());
-		::glBlitFramebuffer(0, 0, windowWidth, windowHeight, 0, 0, windowWidth, windowHeight, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+			m_ScreenFramebuffer->Unbind();
 
-		// bright extract
-		m_BrightExtractFramebuffer->Bind();
-		m_BrightExtractShader->Use();
-		m_PostProcessFramebuffer->Texture.Bind();
+			::glDisable(GL_DEPTH_TEST);
+			::glDisable(GL_BLEND);
 
-		m_ScreenQuad->Bind();
+			::glClear(GL_COLOR_BUFFER_BIT);
 
-		::glDrawArrays(GL_TRIANGLES, 0, 6);
+			::glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-		m_BrightExtractFramebuffer->Unbind();
-
-		// horizontal blur
-		m_PostProcessFramebuffer->Texture.Unbind();
-		m_BrightExtractFramebuffer->Texture.Bind();
-		m_HorizontalBlurFramebuffer->Bind();
-		m_BlurShader->Use();
-		
-		m_BlurShader->Set("u_Resolution", glm::vec2{ windowWidth / 2, windowHeight / 2});
-		m_BlurShader->Set("u_Direction", glm::vec2{ 1.0f, 0.0f });
-
-		::glViewport(0, 0, windowWidth / 2, windowHeight / 2);
-		::glDrawArrays(GL_TRIANGLES, 0, 6);
-
-		m_HorizontalBlurFramebuffer->Unbind();
-
-		// vertical blur
-		m_BrightExtractFramebuffer->Texture.Unbind();
-		m_HorizontalBlurFramebuffer->Texture.Bind();
-
-		m_VerticalBlurFramebuffer->Bind();
-		m_BlurShader->Set("u_Direction", glm::vec2{ 0.0f, 1.0f });
-
-		::glViewport(0, 0, windowWidth / 2, windowHeight / 2);
-		::glDrawArrays(GL_TRIANGLES, 0, 6);
-
-		m_VerticalBlurFramebuffer->Unbind();
-
-		// draw to screen
-		m_PostProcessingShader->Use();
 			
-		m_PostProcessingShader->Set("u_Framebuffer", 0);
-		m_PostProcessingShader->Set("u_Blur", 1);
-		m_PostProcessingShader->Set("u_EnableBloom", m_EnableBloom);
 
-		m_PostProcessFramebuffer->Texture.Bind(0);
-		m_VerticalBlurFramebuffer->Texture.Bind(1);
+			::SDL_GetWindowSizeInPixels(m_Window, &windowWidth, &windowHeight);
 
-		::glViewport(0, 0, windowWidth, windowHeight);
-		::glDrawArrays(GL_TRIANGLES, 0, 6);
+			::glBindFramebuffer(GL_READ_FRAMEBUFFER, m_ScreenFramebuffer->GetID());
+			::glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_PostProcessFramebuffer->GetID());
+			::glBlitFramebuffer(0, 0, windowWidth, windowHeight, 0, 0, windowWidth, windowHeight, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+		}
 
-		::ImGui::Render();
-		::ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+		{
+			ZoneScopedN("Post Processing");
 
-		::SDL_GL_SwapWindow(m_Window);
+			// bright extract
+			m_BrightExtractFramebuffer->Bind();
+			m_BrightExtractShader->Use();
+			m_PostProcessFramebuffer->Texture.Bind();
 
-		::ImGui::UpdatePlatformWindows();
-		::ImGui::RenderPlatformWindowsDefault();
+			m_ScreenQuad->Bind();
 
-		::SDL_GL_MakeCurrent(m_Window, static_cast<SDL_GLContext>(m_GLContext));
+			::glDrawArrays(GL_TRIANGLES, 0, 6);
 
+			m_BrightExtractFramebuffer->Unbind();
+
+			// horizontal blur
+			m_PostProcessFramebuffer->Texture.Unbind();
+			m_BrightExtractFramebuffer->Texture.Bind();
+			m_HorizontalBlurFramebuffer->Bind();
+			m_BlurShader->Use();
+
+			m_BlurShader->Set("u_Resolution", glm::vec2{ windowWidth / 2, windowHeight / 2 });
+			m_BlurShader->Set("u_Direction", glm::vec2{ 1.0f, 0.0f });
+
+			::glViewport(0, 0, windowWidth / 2, windowHeight / 2);
+			::glDrawArrays(GL_TRIANGLES, 0, 6);
+
+			m_HorizontalBlurFramebuffer->Unbind();
+
+			// vertical blur
+			m_BrightExtractFramebuffer->Texture.Unbind();
+			m_HorizontalBlurFramebuffer->Texture.Bind();
+
+			m_VerticalBlurFramebuffer->Bind();
+			m_BlurShader->Set("u_Direction", glm::vec2{ 0.0f, 1.0f });
+
+			::glViewport(0, 0, windowWidth / 2, windowHeight / 2);
+			::glDrawArrays(GL_TRIANGLES, 0, 6);
+
+			m_VerticalBlurFramebuffer->Unbind();
+
+			// draw to screen
+			m_PostProcessingShader->Use();
+
+			m_PostProcessingShader->Set("u_Framebuffer", 0);
+			m_PostProcessingShader->Set("u_Blur", 1);
+			m_PostProcessingShader->Set("u_EnableBloom", m_EnableBloom);
+
+			m_PostProcessFramebuffer->Texture.Bind(0);
+			m_VerticalBlurFramebuffer->Texture.Bind(1);
+
+			::glViewport(0, 0, windowWidth, windowHeight);
+			::glDrawArrays(GL_TRIANGLES, 0, 6);
+		}
+		{
+			ZoneScopedN("ImGui Render");
+
+			::ImGui::Render();
+			::ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+		}
+		{
+			ZoneScopedN("SwapWindow");
+			::SDL_GL_SwapWindow(m_Window);
+		}
+		{
+			ZoneScopedN("Update and Render Windows");
+			::ImGui::UpdatePlatformWindows();
+			::ImGui::RenderPlatformWindowsDefault();
+		}
+		{
+			ZoneScopedN("MakeCurrent");
+			::SDL_GL_MakeCurrent(m_Window, static_cast<SDL_GLContext>(m_GLContext));
+		}
 		FrameMark;
 	}
 
@@ -232,6 +252,8 @@ namespace ultraviolet
 
 	void Renderer::Draw(const Mesh& mesh) const
 	{
+		ZoneScoped;
+
 		mesh.Bind();
 
 		if (mesh.Material)
@@ -242,6 +264,8 @@ namespace ultraviolet
 
 	void Renderer::Draw(const Mesh& mesh, const glm::mat4& model) const
 	{
+		ZoneScoped;
+
 		mesh.Bind();
 
 		if (mesh.Material)
@@ -257,6 +281,8 @@ namespace ultraviolet
 
 	void Renderer::Draw(const Model& model) const
 	{
+		ZoneScoped;
+
 		for (const Mesh& mesh : model.Meshes)
 		{
 			Draw(mesh, model.GetModelMatrix());
@@ -265,57 +291,69 @@ namespace ultraviolet
 
 	void Renderer::Draw(const Scene& scene)
 	{
-		const DirectionalLight& light{ scene.DirectionalLight };
-
-		glm::vec3 lightDirection{};
-
-		lightDirection.x = glm::cos(glm::radians(light.Pitch)) * glm::sin(glm::radians(light.Yaw));
-		lightDirection.y = glm::sin(glm::radians(light.Pitch));
-		lightDirection.z = glm::cos(glm::radians(light.Pitch)) * glm::cos(glm::radians(light.Yaw));
-		
-		lightDirection = glm::normalize(lightDirection);
-
-		glm::mat4 lightView{ glm::lookAt(-lightDirection * 10.0f, glm::vec3{0.0f}, glm::vec3{0.0f, 1.0f, 0.0f}) };
-
-		glm::mat4 lightProjection{ glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 1.0f, 20.0f) };
-
-		m_LightSpaceMatrix = lightProjection * lightView;
-
-		m_DepthMapUniformBuffer->SetData(&m_LightSpaceMatrix, sizeof(m_LightSpaceMatrix));
-
-		m_ScreenFramebuffer->Unbind();
-		m_DepthMapFrameBuffer->Bind();
-
-		::glViewport(0, 0, 4096, 4096);
-		::glEnable(GL_CULL_FACE);
-		::glCullFace(GL_FRONT);
-
-		m_DepthMapShader->Use();
-
-		for (const Model& model : scene.Models)
 		{
-			if (!model.CastsShadow)
-				continue;
+			ZoneScopedN("Pre-Draw");
 
-			for (const Mesh& mesh : model.Meshes)
+			const DirectionalLight& light{ scene.DirectionalLight };
+
+			glm::vec3 lightDirection{};
+
+			lightDirection.x = glm::cos(glm::radians(light.Pitch)) * glm::sin(glm::radians(light.Yaw));
+			lightDirection.y = glm::sin(glm::radians(light.Pitch));
+			lightDirection.z = glm::cos(glm::radians(light.Pitch)) * glm::cos(glm::radians(light.Yaw));
+
+			lightDirection = glm::normalize(lightDirection);
+
+			glm::mat4 lightView{ glm::lookAt(-lightDirection * 10.0f, glm::vec3{0.0f}, glm::vec3{0.0f, 1.0f, 0.0f}) };
+
+			glm::mat4 lightProjection{ glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 1.0f, 20.0f) };
+
+			m_LightSpaceMatrix = lightProjection * lightView;
+
+			m_DepthMapUniformBuffer->SetData(&m_LightSpaceMatrix, sizeof(m_LightSpaceMatrix));
+		}
+
+		{
+			ZoneScopedN("Shadow Pass");
+
+			m_ScreenFramebuffer->Unbind();
+			m_DepthMapFrameBuffer->Bind();
+
+			::glViewport(0, 0, 4096, 4096);
+			::glEnable(GL_CULL_FACE);
+			::glCullFace(GL_FRONT);
+
+			m_DepthMapShader->Use();
+
+			for (const Model& model : scene.Models)
 			{
-				m_DepthMapShader->Set("u_Model", model.GetModelMatrix());
+				if (!model.CastsShadow)
+					continue;
 
-				mesh.Bind();
+				for (const Mesh& mesh : model.Meshes)
+				{
+					m_DepthMapShader->Set("u_Model", model.GetModelMatrix());
 
-				::glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(mesh.GetIndexCount()), GL_UNSIGNED_INT, nullptr);
+					mesh.Bind();
+
+					::glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(mesh.GetIndexCount()), GL_UNSIGNED_INT, nullptr);
+				}
 			}
 		}
 
-		m_DepthMapFrameBuffer->Unbind();
-		m_ScreenFramebuffer->Bind();
-
-		::glViewport(0, 0, m_ViewportWidth, m_ViewportHeight);
-		::glDisable(GL_CULL_FACE);
-
-		for (const Model& model : scene.Models)
 		{
-			Draw(model);
+			ZoneScopedN("Geometry Pass");
+
+			m_DepthMapFrameBuffer->Unbind();
+			m_ScreenFramebuffer->Bind();
+
+			::glViewport(0, 0, m_ViewportWidth, m_ViewportHeight);
+			::glDisable(GL_CULL_FACE);
+
+			for (const Model& model : scene.Models)
+			{
+				Draw(model);
+			}
 		}
 	}
 
