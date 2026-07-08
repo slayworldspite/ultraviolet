@@ -230,6 +230,10 @@ namespace ultraviolet
 			::ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		}
 		{
+			ZoneScopedN("Finish");
+			::glFinish();
+		}
+		{
 			ZoneScopedN("SwapWindow");
 			::SDL_GL_SwapWindow(m_Window);
 		}
