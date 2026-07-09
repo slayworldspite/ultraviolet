@@ -8,6 +8,8 @@ struct TextureMaterial
 	sampler2D Specular;
 	sampler2D Normal;
 	int Shininess;
+	float NormalStrength;
+	bool FlipNormals;
 };
 
 struct AmbientLight
@@ -65,11 +67,15 @@ uniform sampler2D u_DepthMap;
 void main()
 {
 	vec3 normal = texture(u_TextureMaterial.Normal, o_TextureCoordinates).rgb;
-	normal = normal * 2.0 - 1.0;
-	normal = normalize(o_TBN * normal);
 
-	if (!gl_FrontFacing)
-		normal = -normal;
+	normal = normal * 2.0 - 1.0;
+
+	if (u_TextureMaterial.FlipNormals)
+		normal.y = -normal.y;
+
+	normal.xy *= u_TextureMaterial.NormalStrength;
+	
+	normal = normalize(o_TBN * normal);
 
 	vec3 viewDirection = normalize(o_CameraPosition - o_FragmentPosition);
 

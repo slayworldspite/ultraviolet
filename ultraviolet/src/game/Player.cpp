@@ -10,7 +10,7 @@ namespace ultraviolet
 		float dt{ static_cast<float>(deltaTime) };
 
 		if (!Flying)
-			Velocity.y -= 15.0f * dt;
+			Velocity.y -= Gravity * dt;
 
 		Position += Velocity * dt;
 
@@ -40,6 +40,7 @@ namespace ultraviolet
 			::ImGui::DragFloat("Speed ##Player", &Speed, 0.1f);
 			::ImGui::DragFloat("Jump Height ##Player", &JumpHeight, 0.1f);
 			::ImGui::DragFloat("Height ##Player", &Height, 0.1f);
+			::ImGui::DragFloat("Gravity ##Player", &Gravity, 0.1f);
 			::ImGui::Checkbox("On Ground ##Player", &OnGround);
 			::ImGui::Checkbox("Flying ##Player", &Flying);
 

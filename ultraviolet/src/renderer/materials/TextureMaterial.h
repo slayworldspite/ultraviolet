@@ -12,11 +12,13 @@ namespace ultraviolet
 		std::shared_ptr<Texture> Specular;
 		std::shared_ptr<Texture> Normal;
 		int Shininess;
+		float NormalStrength;
+		bool FlipNormals;
 
 	public:
 		TextureMaterial();
-		TextureMaterial(std::shared_ptr<Texture> diffuse, std::shared_ptr<Texture> specular, std::shared_ptr<Texture> normal, int shininess);
-		TextureMaterial(const std::filesystem::path& diffusePath, const std::filesystem::path& specularPath, const std::filesystem::path& normalPath, int shininess);
+		TextureMaterial(std::shared_ptr<Texture> diffuse, std::shared_ptr<Texture> specular, std::shared_ptr<Texture> normal, int shininess, float normalStrength = 1.0f, bool flipNormals = false);
+		TextureMaterial(const std::filesystem::path& diffusePath, const std::filesystem::path& specularPath, const std::filesystem::path& normalPath, int shininess, float normalStrength = 1.0f, bool flipNormals = false);
 		virtual ~TextureMaterial() override;
 
 		virtual void Apply() const override;

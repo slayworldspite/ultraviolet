@@ -9,27 +9,33 @@ namespace ultraviolet
 		Diffuse{ nullptr },
 		Specular{ nullptr },
 		Normal{ nullptr },
-		Shininess{ 32 }
+		Shininess{ 32 },
+		NormalStrength{ 1.0f },
+		FlipNormals{ false }
 	{
 
 	}
 
-	TextureMaterial::TextureMaterial(std::shared_ptr<Texture> diffuse, std::shared_ptr<Texture> specular, std::shared_ptr<Texture> normal, int shininess) :
+	TextureMaterial::TextureMaterial(std::shared_ptr<Texture> diffuse, std::shared_ptr<Texture> specular, std::shared_ptr<Texture> normal, int shininess, float normalStrength, bool flipNormals) :
 		Material{ MaterialType::Texture },
 		Diffuse{ diffuse },
 		Specular{ specular },
+		Normal{ normal },
 		Shininess{ shininess },
-		Normal{ normal }
+		NormalStrength{ normalStrength },
+		FlipNormals{ flipNormals }
 	{
 
 	}
 
-	TextureMaterial::TextureMaterial(const std::filesystem::path& diffusePath, const std::filesystem::path& specularPath, const std::filesystem::path& normalPath, int shininess) :
+	TextureMaterial::TextureMaterial(const std::filesystem::path& diffusePath, const std::filesystem::path& specularPath, const std::filesystem::path& normalPath, int shininess, float normalStrength, bool flipNormals) :
 		Material{ MaterialType::Texture },
 		Diffuse{ std::make_shared<Texture>(diffusePath, TextureType::Diffuse)},
 		Specular{ std::make_shared<Texture>(specularPath, TextureType::Specular) },
 		Normal{ std::make_shared<Texture>(normalPath, TextureType::Normal) },
-		Shininess{ shininess }
+		Shininess{ shininess },
+		NormalStrength{ normalStrength },
+		FlipNormals{ flipNormals }
 	{
 
 	}
@@ -45,6 +51,8 @@ namespace ultraviolet
 		Shader->Set("u_TextureMaterial.Specular", 1);
 		Shader->Set("u_TextureMaterial.Normal", 2);
 		Shader->Set("u_TextureMaterial.Shininess", Shininess);
+		Shader->Set("u_TextureMaterial.NormalStrength", NormalStrength);
+		Shader->Set("u_TextureMaterial.FlipNormals", FlipNormals);
 
 		if (Diffuse)
 			Diffuse->Bind(0);
@@ -70,6 +78,8 @@ namespace ultraviolet
 		if (::ImGui::CollapsingHeader(("TextureMaterial ##" + id).c_str()))
 		{
 			::ImGui::DragInt(("Shininess ##" + id).c_str(), &Shininess, 1.0f, 0, 256);
+			::ImGui::DragFloat(("Normal Strength ##" + id).c_str(), &NormalStrength, 0.05f);
+			::ImGui::Checkbox(("Flip Normals ##" + id).c_str(), &FlipNormals);
 
 			auto diffuseSize{ Diffuse->GetSize() };
 			::ImGui::Image((ImTextureID)(intptr_t)Diffuse->GetID(), ImVec2{ static_cast<float>(diffuseSize.first), static_cast<float>(diffuseSize.second) });

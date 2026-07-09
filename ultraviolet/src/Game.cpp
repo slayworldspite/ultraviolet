@@ -307,7 +307,8 @@ namespace ultraviolet
 				"assets/textures/brick_diffuse.jpg",
 				"assets/textures/brick_specular.jpg",
 				"assets/textures/brick_normal.png",
-				100
+				100,
+				0.35f
 			)
 		) };
 
