@@ -21,6 +21,7 @@ namespace ultraviolet
 		Position{},
 		Yaw{},
 		Pitch{},
+		Roll{},
 		FOV{ 75 },
 		m_Front{},
 		m_UniformBuffer{ nullptr }
@@ -45,18 +46,22 @@ namespace ultraviolet
 
 	void ProjectionCamera::Apply(std::pair<int, int> size)
 	{
+		glm::mat4 roll{ glm::rotate(glm::mat4{ 1.0f }, glm::radians(-Roll), m_Front) };
+
 		CameraData data{
-			.Projection{ glm::perspective(
-				glm::radians(FOV), 
-				static_cast<float>(size.first) / static_cast<float>(size.second), 
-				0.1f, 
-				100.0f)
+			.Projection{
+				glm::perspective(
+					glm::radians(FOV),
+					static_cast<float>(size.first) / static_cast<float>(size.second),
+					0.1f,
+					100.0f
+				)
 			},
 			.View{
 				glm::lookAt(
 					Position, 
 					Position + m_Front, 
-					c_WorldUp)
+					c_WorldUp * glm::mat3{ roll })
 			},
 			.Position{ Position }
 		};
@@ -79,10 +84,11 @@ namespace ultraviolet
 		{
 			::ImGui::Indent(16.0f);
 
-			::ImGui::DragFloat3("Position", glm::value_ptr(Position));
-			::ImGui::DragFloat("Yaw", &Yaw);
-			::ImGui::DragFloat("Pitch", &Pitch);
-			::ImGui::DragFloat("FOV", &FOV);
+			::ImGui::DragFloat3("Position ##camera", glm::value_ptr(Position));
+			::ImGui::DragFloat("Yaw ##camera", &Yaw);
+			::ImGui::DragFloat("Pitch ##camera", &Pitch);
+			::ImGui::DragFloat("Roll ##camera", &Roll);
+			::ImGui::DragFloat("FOV ##camera", &FOV);
 
 			::ImGui::Indent(-16.0f);
 		}
@@ -95,6 +101,7 @@ namespace ultraviolet
 			::ImGui::DragFloat3(("Position ##" + id).c_str(), glm::value_ptr(Position), 0.1f);
 			::ImGui::DragFloat(("Yaw ##" + id).c_str(), &Yaw);
 			::ImGui::DragFloat(("Pitch ##" + id).c_str(), &Pitch);
+			::ImGui::DragFloat(("Roll ##" + id).c_str(), &Roll);
 			::ImGui::DragFloat(("FOV ##" + id).c_str(), &FOV);
 		}
 	}

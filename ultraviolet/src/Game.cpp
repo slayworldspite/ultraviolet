@@ -96,6 +96,17 @@ namespace ultraviolet
 			m_PointLightMaterial->Enabled = pointLight->Enabled;
 		}
 
+		Model* pointLightModel2{ m_Scene.GetModel("plmesh2") };
+		PointLight* pointLight2{ m_Scene.GetPointLight("light2") };
+
+		if (pointLightModel2 && pointLight2)
+		{
+			pointLightModel2->Position = pointLight2->Position;
+			m_PointLightMaterial2->Color = pointLight2->Color;
+			m_PointLightMaterial2->Intensity = pointLight2->Intensity;
+			m_PointLightMaterial2->Enabled = pointLight2->Enabled;
+		}
+
 		Model* playerModel{ m_Scene.GetModel("playerModel") };
 
 		if (playerModel)
@@ -270,6 +281,17 @@ namespace ultraviolet
 				m_Player.Velocity.y -= m_Player.JumpHeight;
 		}
 
+		if (Input::IsKeyHeld(Scancode::Q) || Input::IsKeyHeld(Scancode::E))
+		{
+			if (Input::IsKeyHeld(Scancode::Q))
+				m_Camera.Roll = -15.0f;
+
+			if (Input::IsKeyHeld(Scancode::E))
+				m_Camera.Roll = 15.0f;
+		}
+		else
+			m_Camera.Roll = 0.0f;
+
 		if (glm::length(movementVector) > 0.0f)
 			movementVector = glm::normalize(movementVector);
 
@@ -299,6 +321,14 @@ namespace ultraviolet
 
 		m_Scene.PointLights.push_back(std::move(pointLight));
 
+		PointLight pointLight2{};
+		pointLight2.ID = "light2";
+		pointLight2.Position = glm::vec3{ 0.0f, 1.5f, -3.5f };
+		pointLight2.Color = glm::vec3{ 1.0f, 0.0f, 1.0f };
+		pointLight2.Intensity = 1.0f;
+
+		m_Scene.PointLights.push_back(std::move(pointLight2));
+
 		m_Scene.Models.clear();
 
 		Model ground{ Primitives::GetCube(
@@ -308,7 +338,8 @@ namespace ultraviolet
 				"assets/textures/brick_specular.jpg",
 				"assets/textures/brick_normal.png",
 				100,
-				0.35f
+				4.0f,
+				0.5f
 			)
 		) };
 
@@ -369,13 +400,20 @@ namespace ultraviolet
 		m_Scene.Models.push_back(std::move(playerModel));
 
 		m_PointLightMaterial = std::make_shared<LightMaterial>(m_Scene.GetPointLight("light")->Color);
+		m_PointLightMaterial2 = std::make_shared<LightMaterial>(m_Scene.GetPointLight("light2")->Color);
 
 		Model plmesh{ Primitives::GetSphere("plmesh", 6, 8, m_PointLightMaterial) };
 		plmesh.Scale /= 10.0f;
 		plmesh.Position = pointLight.Position;
 		plmesh.CastsShadow = false;
 
+		Model plmesh2{ Primitives::GetSphere("plmesh2", 6, 8, m_PointLightMaterial2) };
+		plmesh2.Scale /= 10.0f;
+		plmesh2.Position = pointLight2.Position;
+		plmesh2.CastsShadow = false;
+
 		m_Scene.Models.push_back(std::move(plmesh));
+		m_Scene.Models.push_back(std::move(plmesh2));
 	}
 
 	void Game::DebugMenu()

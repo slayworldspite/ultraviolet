@@ -298,15 +298,9 @@ namespace ultraviolet
 		m_PostProcessingShader->Set("u_EnableBloom", m_EnableBloom);
 		m_PostProcessingShader->Set("u_EnableSSAO", m_EnableSSAO);
 		m_PostProcessingShader->Set("u_Gamma", m_Gamma);
-		m_PostProcessingShader->Set("u_BloomStrength", m_BloomStrength);
-		m_PostProcessingShader->Set("u_SSAOStrength", m_SSAOStrength);
 
 		m_PostProcessFramebuffer->Texture.Bind(15);
-		if (m_EnableBloom)
-			m_VerticalBlurFramebuffer->Texture.Bind(14);
 		m_OverlayTexture->Bind(13);
-		m_NormalMapFramebuffer->Texture.Bind(12);
-		m_SSAOVerticalBlurFramebuffer->Texture.Bind(11);
 
 		::glDrawArrays(GL_TRIANGLES, 0, 6);
 

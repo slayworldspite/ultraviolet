@@ -32,6 +32,7 @@ namespace ultraviolet
 		glm::vec4 m_ClearColor;
 		Player m_Player;
 		std::shared_ptr<LightMaterial> m_PointLightMaterial;
+		std::shared_ptr<LightMaterial> m_PointLightMaterial2;
 		std::unique_ptr<Mesh> m_Overlay;
 
 	private:

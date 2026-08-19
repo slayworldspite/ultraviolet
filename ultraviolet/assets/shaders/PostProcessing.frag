@@ -5,28 +5,12 @@ out vec4 Output;
 in vec2 o_TextureCoordinates;
 
 uniform sampler2D u_Framebuffer;
-uniform sampler2D u_Blur;
 uniform sampler2D u_Overlay;
-uniform sampler2D u_NormalMap;
-uniform sampler2D u_SSAO;
-
-uniform bool u_EnableBloom;
-uniform bool u_EnableSSAO;
 uniform float u_Gamma;
-uniform float u_BloomStrength;
-uniform float u_SSAOStrength;
 
 void main()
 {
     vec4 color = texture(u_Framebuffer, o_TextureCoordinates);
-
-    if (u_EnableBloom)
-        color.rgb += texture(u_Blur, o_TextureCoordinates).rgb * u_BloomStrength;
-    
-    float ao = texture(u_SSAO, o_TextureCoordinates).r;
-    
-    if (u_EnableSSAO)
-        color.rgb *= mix(1.0, ao, u_SSAOStrength);
 
     Output.rgb = pow(color.rgb, vec3(1.0 / u_Gamma));
 

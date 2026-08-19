@@ -13,6 +13,7 @@ namespace ultraviolet
 		glm::vec3 Position;
 		float Yaw;
 		float Pitch;
+		float Roll;
 		float FOV;
 
 	public:

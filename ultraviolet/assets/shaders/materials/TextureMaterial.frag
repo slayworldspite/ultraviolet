@@ -8,6 +8,7 @@ struct TextureMaterial
 	sampler2D Specular;
 	sampler2D Normal;
 	int Shininess;
+	float TextureScale;
 	float NormalStrength;
 	bool FlipNormals;
 };
@@ -66,7 +67,9 @@ uniform sampler2D u_DepthMap;
 
 void main()
 {
-	vec3 normal = texture(u_TextureMaterial.Normal, o_TextureCoordinates).rgb;
+	vec2 textureCoordinates = o_TextureCoordinates * u_TextureMaterial.TextureScale;
+
+	vec3 normal = texture(u_TextureMaterial.Normal, textureCoordinates).rgb;
 
 	normal = normal * 2.0 - 1.0;
 
@@ -82,19 +85,19 @@ void main()
 	vec3 diffuse = vec3(0.0);
 	vec3 specular = vec3(0.0);
 
-	vec3 ambient = texture(u_TextureMaterial.Diffuse, o_TextureCoordinates).rgb * ub_AmbientLight.Color * ub_AmbientLight.Intensity;
+	vec3 ambient = texture(u_TextureMaterial.Diffuse, textureCoordinates).rgb * ub_AmbientLight.Color * ub_AmbientLight.Intensity;
 
 	if (ub_DirectionalLight.Enabled)
 	{
 		vec3 lightDirection = normalize(-ub_DirectionalLight.Direction.xyz);
 
 		float diffuseStrength = max(dot(normal, lightDirection), 0.0);
-		diffuse += texture(u_TextureMaterial.Diffuse, o_TextureCoordinates).rgb * ub_DirectionalLight.Color.rgb * diffuseStrength * ub_DirectionalLight.Intensity;
+		diffuse += texture(u_TextureMaterial.Diffuse, textureCoordinates).rgb * ub_DirectionalLight.Color.rgb * diffuseStrength * ub_DirectionalLight.Intensity;
 
 		vec3 reflectionDirection = reflect(-lightDirection, normal);
 
 		vec3 halfwayDirection = normalize(lightDirection + viewDirection);
-		float specularStrength = pow(max(dot(normal, halfwayDirection), 0.0), u_TextureMaterial.Shininess) * texture(u_TextureMaterial.Specular, o_TextureCoordinates).r;
+		float specularStrength = pow(max(dot(normal, halfwayDirection), 0.0), u_TextureMaterial.Shininess) * texture(u_TextureMaterial.Specular, textureCoordinates).r;
 		specular += specularStrength * ub_DirectionalLight.Color.rgb * 0.25 * ub_DirectionalLight.Intensity;
 	}
 
@@ -138,12 +141,12 @@ void main()
 		vec3 lightDirection = normalize(ub_PointLights[i].Position.xyz - o_FragmentPosition);
 
 		float diffuseStrength = max(dot(normal, lightDirection), 0.0);
-		diffuse += ub_PointLights[i].Color.rgb * diffuseStrength * ub_PointLights[i].Intensity * attenuation * texture(u_TextureMaterial.Diffuse, o_TextureCoordinates).rgb;
+		diffuse += ub_PointLights[i].Color.rgb * diffuseStrength * ub_PointLights[i].Intensity * attenuation * texture(u_TextureMaterial.Diffuse, textureCoordinates).rgb;
 
 		vec3 reflectionDirection = reflect(-lightDirection, normal);
 
 		vec3 halfwayDirection = normalize(lightDirection + viewDirection);
-		float specularStrength = pow(max(dot(normal, halfwayDirection), 0.0), u_TextureMaterial.Shininess) * texture(u_TextureMaterial.Specular, o_TextureCoordinates).r;
+		float specularStrength = pow(max(dot(normal, halfwayDirection), 0.0), u_TextureMaterial.Shininess) * texture(u_TextureMaterial.Specular, textureCoordinates).r;
 		specular += specularStrength * ub_PointLights[i].Color.rgb * 0.25 * ub_PointLights[i].Intensity * attenuation;
 	}
 

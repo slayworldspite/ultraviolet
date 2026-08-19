@@ -16,5 +16,5 @@ void main()
 	Output.a = 1.0;
 
 	if (u_LightMaterial.Enabled)
-		Output.rgb = u_LightMaterial.Color * u_LightMaterial.Intensity * 10;
+		Output.rgb = (vec3(1.0) + u_LightMaterial.Color) * u_LightMaterial.Intensity;
 }

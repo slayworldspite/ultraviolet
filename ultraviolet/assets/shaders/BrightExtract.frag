@@ -12,7 +12,7 @@ void main()
 
     float brightness = dot(Output.rgb, vec3(0.2126, 0.7152, 0.0722));
 
-    float factor = smoothstep(0.5, 1.0, brightness);
+    float factor = smoothstep(0.6, 1.0, brightness);
 
     Output.rgb *= factor;
 }
