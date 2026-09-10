@@ -4,6 +4,7 @@
 #include "../lights/AmbientLight.h"
 #include "../lights/DirectionalLight.h"
 #include "../lights/PointLight.h"
+#include "../camera/ProjectionCamera.h"
 
 namespace ultraviolet
 {
@@ -14,6 +15,7 @@ namespace ultraviolet
 		AmbientLight AmbientLight;
 		DirectionalLight DirectionalLight;
 		std::vector<PointLight> PointLights;
+		ProjectionCamera Camera;
 
 	public:
 		Scene();

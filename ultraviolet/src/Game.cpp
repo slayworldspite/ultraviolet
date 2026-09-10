@@ -79,10 +79,10 @@ namespace ultraviolet
 
 		m_Player.Update(deltaTime);
 
-		m_Camera.Position = m_Player.Position;
-		m_Camera.Position.y += m_Player.Height;
+		m_Scene.Camera.Position = m_Player.Position;
+		m_Scene.Camera.Position.y += m_Player.Height;
 
-		m_Camera.Update();
+		m_Scene.Camera.Update();
 		m_Scene.Update();
 
 		Model* pointLightModel{ m_Scene.GetModel("plmesh") };
@@ -172,7 +172,7 @@ namespace ultraviolet
 		ZoneScoped;
 		m_Renderer.BeginFrame();
 
-		m_Camera.Apply(GetWindowSize());
+		m_Scene.Camera.Apply(GetWindowSize());
 		m_Renderer.Draw(m_Scene);
 
 		if (m_ShowMenu)
@@ -216,21 +216,21 @@ namespace ultraviolet
 
 		float sensitivity{ 0.25f };
 
-		m_Camera.Yaw += x * sensitivity;
+		m_Scene.Camera.Yaw += x * sensitivity;
 		
-		if (m_Camera.Yaw >= 360.0f)
-			m_Camera.Yaw -= 360.0f;
+		if (m_Scene.Camera.Yaw >= 360.0f)
+			m_Scene.Camera.Yaw -= 360.0f;
 
-		if (m_Camera.Yaw < 0)
-			m_Camera.Yaw += 360.0f;
+		if (m_Scene.Camera.Yaw < 0)
+			m_Scene.Camera.Yaw += 360.0f;
 
-		m_Camera.Pitch -= y * sensitivity;
+		m_Scene.Camera.Pitch -= y * sensitivity;
 
-		if (m_Camera.Pitch < -89.0f)
-			m_Camera.Pitch = -89.0f;
+		if (m_Scene.Camera.Pitch < -89.0f)
+			m_Scene.Camera.Pitch = -89.0f;
 
-		if (m_Camera.Pitch > 89.0f)
-			m_Camera.Pitch = 89.0f;
+		if (m_Scene.Camera.Pitch > 89.0f)
+			m_Scene.Camera.Pitch = 89.0f;
 	}
 
 	void Game::OnResize(int width, int height)
@@ -244,15 +244,15 @@ namespace ultraviolet
 			return;
 
 		glm::vec3 forward{
-			glm::cos(glm::radians(m_Camera.Yaw)),
+			glm::cos(glm::radians(m_Scene.Camera.Yaw)),
 			0.0f,
-			glm::sin(glm::radians(m_Camera.Yaw))
+			glm::sin(glm::radians(m_Scene.Camera.Yaw))
 		};
 
 		glm::vec3 right{
-			-glm::sin(glm::radians(m_Camera.Yaw)),
+			-glm::sin(glm::radians(m_Scene.Camera.Yaw)),
 			0.0f,
-			glm::cos(glm::radians(m_Camera.Yaw))
+			glm::cos(glm::radians(m_Scene.Camera.Yaw))
 		};
 
 		glm::vec3 movementVector{};
@@ -284,13 +284,13 @@ namespace ultraviolet
 		if (Input::IsKeyHeld(Scancode::Q) || Input::IsKeyHeld(Scancode::E))
 		{
 			if (Input::IsKeyHeld(Scancode::Q))
-				m_Camera.Roll = -15.0f;
+				m_Scene.Camera.Roll = -15.0f;
 
 			if (Input::IsKeyHeld(Scancode::E))
-				m_Camera.Roll = 15.0f;
+				m_Scene.Camera.Roll = 15.0f;
 		}
 		else
-			m_Camera.Roll = 0.0f;
+			m_Scene.Camera.Roll = 0.0f;
 
 		if (glm::length(movementVector) > 0.0f)
 			movementVector = glm::normalize(movementVector);
@@ -463,7 +463,7 @@ namespace ultraviolet
 
 		m_Player.AddToImGui();
 
-		m_Camera.AddToImGui();
+		m_Scene.Camera.AddToImGui();
 
 		m_Scene.AddToImGui();
 	}
