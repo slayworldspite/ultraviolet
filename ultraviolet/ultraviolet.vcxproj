@@ -119,7 +119,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL3.lib;assimp-vc143-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL3.lib;assimp-vc143-mt.lib;box3d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -166,6 +166,7 @@
     <ClCompile Include="src\renderer\objects\Renderbuffer.cpp" />
     <ClCompile Include="src\renderer\objects\Texture.cpp" />
     <ClCompile Include="src\renderer\objects\UniformBuffer.cpp" />
+    <ClCompile Include="src\physics\PhysicsSystem.cpp" />
     <ClCompile Include="src\renderer\Renderer.cpp" />
     <ClCompile Include="src\renderer\scene\Scene.cpp" />
     <ClCompile Include="src\renderer\Shader.cpp" />
@@ -203,7 +204,6 @@
     <ClInclude Include="src\renderer\materials\MaterialType.h" />
     <ClInclude Include="src\renderer\materials\OverlayMaterial.h" />
     <ClInclude Include="src\renderer\materials\TextureMaterial.h" />
-    <ClInclude Include="src\renderer\model\AABB.h" />
     <ClInclude Include="src\renderer\model\Primitives.h" />
     <ClInclude Include="src\renderer\objects\ElementBuffer.h" />
     <ClInclude Include="src\renderer\objects\Framebuffer.h" />
@@ -215,6 +215,7 @@
     <ClInclude Include="src\renderer\mesh\Mesh.h" />
     <ClInclude Include="src\renderer\objects\TextureType.h" />
     <ClInclude Include="src\renderer\objects\UniformBuffer.h" />
+    <ClInclude Include="src\physics\PhysicsSystem.h" />
     <ClInclude Include="src\renderer\Renderer.h" />
     <ClInclude Include="src\renderer\scene\Scene.h" />
     <ClInclude Include="src\renderer\Shader.h" />
@@ -222,6 +223,14 @@
     <ClInclude Include="src\renderer\objects\VertexArray.h" />
     <ClInclude Include="src\renderer\objects\VertexBuffer.h" />
     <ClInclude Include="src\utils\Logger.h" />
+    <ClInclude Include="vendor\box3d\base.h" />
+    <ClInclude Include="vendor\box3d\box3d.h" />
+    <ClInclude Include="vendor\box3d\collision.h" />
+    <ClInclude Include="vendor\box3d\config.h" />
+    <ClInclude Include="vendor\box3d\constants.h" />
+    <ClInclude Include="vendor\box3d\id.h" />
+    <ClInclude Include="vendor\box3d\math_functions.h" />
+    <ClInclude Include="vendor\box3d\types.h" />
     <ClInclude Include="vendor\imgui\imconfig.h" />
     <ClInclude Include="vendor\imgui\imgui.h" />
     <ClInclude Include="vendor\imgui\imgui_impl_opengl3.h" />

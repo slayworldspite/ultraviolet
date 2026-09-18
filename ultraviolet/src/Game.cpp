@@ -1,6 +1,8 @@
 #include <imgui/imgui.h>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/string_cast.hpp>
 #include <tracy/tracy/Tracy.hpp>
+#include <box3d/box3d.h>
 
 #include "Game.h"
 #include "input/Input.h"
@@ -11,6 +13,7 @@
 #include "renderer/materials/MaterialShaderManager.h"
 #include "renderer/model/ModelLoader.h"
 #include "renderer/model/Primitives.h"
+#include "physics/PhysicsSystem.h"
 
 namespace ultraviolet
 {
@@ -18,20 +21,21 @@ namespace ultraviolet
 		GameWindow{
 			NativeWindowSettings{
 				.Title{ "ultraviolet" },
-				.Width{ 1920 },
-				.Height{ 1080 }
+				.Width{ 1280 },
+				.Height{ 720 }
 			}
 	},
 		m_Renderer{ *this },
 		m_DeltaTime{},
-		m_ShowMenu{ false },
-		m_FirstFrame{ true }
+		m_ShowMenu{ false }
 	{
 		
 	}
 
 	void Game::OnStart()
 	{
+		PhysicsSystem::Initialize();
+
 		SetRelativeMouseMode(true);
 
 		m_ClearColor = glm::vec4{ 0.0f, 0.55f, 1.0f, 1.0f };
@@ -58,10 +62,119 @@ namespace ultraviolet
 		vertex.TextureCoordinates = { 1.0f, 0.0f };
 		vertices.push_back(vertex);
 
+		m_Player.Flying = true;
+
+		m_Scene.AmbientLight.Color = glm::vec3{ 1.0f };
+		m_Scene.AmbientLight.Intensity = 0.2f;
+
+		m_Scene.DirectionalLight.Color = glm::vec3{ 1.0f };
+		m_Scene.DirectionalLight.Pitch = -22.5f;
+		m_Scene.DirectionalLight.Yaw = 22.5f;
+
+		m_Player.Position.x = -5.0f;
+
+		auto worldID{ PhysicsSystem::GetWorldID() };
+
+		// capsule
+		::b3BodyDef capsuleBodyDefinition{ ::b3DefaultBodyDef() };
+		capsuleBodyDefinition.position = { -5.0f, 15.0f, 0.0f };
+		capsuleBodyDefinition.type = ::b3_dynamicBody;
+		capsuleBodyDefinition.motionLocks.angularX = true;
+		capsuleBodyDefinition.motionLocks.angularZ = true;
+
+		m_PlayerBody = std::make_unique<::b3BodyId>(::b3CreateBody(worldID, &capsuleBodyDefinition));
+
+		m_PlayerCapsule = std::make_unique<::b3Capsule>();
+		m_PlayerCapsule->center1 = { 0.0f, 0.5f, 0.0f };
+		m_PlayerCapsule->center2 = { 0.0f, 1.5f, 0.0f };
+		m_PlayerCapsule->radius = 0.4f;
+
+		::b3ShapeDef capsuleShapeDefinition{ ::b3DefaultShapeDef() };
+		capsuleShapeDefinition.density = 1.0f;
+		capsuleShapeDefinition.baseMaterial.friction = 5.0f;
+
+		::b3CreateCapsuleShape(*m_PlayerBody, &capsuleShapeDefinition, m_PlayerCapsule.get());
+
+		// ground
+		::b3BodyDef groundBodyDefinition{ ::b3DefaultBodyDef() };
+		groundBodyDefinition.position = { 0.0f, 0.0f, 0.0f };
+
+		m_Ground = std::make_unique<::b3BodyId>(::b3CreateBody(worldID, &groundBodyDefinition));
+
+		::b3BoxHull groundBox{ ::b3MakeBoxHull(15.0f, 0.25f, 15.0f) };
+
+		::b3ShapeDef groundShapeDefinition{ ::b3DefaultShapeDef() };
+		::b3CreateHullShape(*m_Ground, &groundShapeDefinition, &groundBox.base);
+
+		// box
+		::b3BodyDef bodyDefinition{ ::b3DefaultBodyDef() };
+		bodyDefinition.type = ::b3_dynamicBody;
+		bodyDefinition.position = { 0.0f, 4.0f, 0.0f };
+		bodyDefinition.rotation.v.x = 0.183974f;
+		bodyDefinition.rotation.v.z = 0.5519221f;
+		bodyDefinition.rotation.s = 0.8133483f;
+
+		m_Box = std::make_unique<::b3BodyId>(::b3CreateBody(worldID, &bodyDefinition));
+		
+		::b3BoxHull dynamicBox{ ::b3MakeCubeHull(1.0f) };
+
+		::b3ShapeDef boxShapeDefinition{ ::b3DefaultShapeDef() };
+		boxShapeDefinition.density = 0.15f;
+		boxShapeDefinition.baseMaterial.friction = 0.3f;
+
+		::b3CreateHullShape(*m_Box, &boxShapeDefinition, &dynamicBox.base);
+
+		// ramp
+		::b3BodyDef rampBodyDefinition{ ::b3DefaultBodyDef() };
+		rampBodyDefinition.position = { 0.0f, -0.25f, 0.0f };
+		rampBodyDefinition.rotation.v.x = 0.1950903f;
+		rampBodyDefinition.rotation.s = 0.9807853f;
+
+		m_Ramp = std::make_unique<::b3BodyId>(::b3CreateBody(worldID, &rampBodyDefinition));
+
+		::b3BoxHull rampBox{ ::b3MakeBoxHull(1.0f, 1.0f, 5.0f) };
+
+		::b3ShapeDef rampShapeDefinition{ ::b3DefaultShapeDef() };
+		::b3CreateHullShape(*m_Ramp, &rampShapeDefinition, &rampBox.base);
+
+		// meshes
+		std::shared_ptr<TextureMaterial> brickMaterial{
+			std::make_shared<TextureMaterial>(
+				"assets/textures/brick_diffuse.jpg",
+				"assets/textures/brick_specular.jpg",
+				"assets/textures/brick_normal.png",
+				32
+			)
+		};
+		std::shared_ptr<TextureMaterial> brickMaterial2{
+			std::make_shared<TextureMaterial>(
+				"assets/textures/brick_diffuse.jpg",
+				"assets/textures/brick_specular.jpg",
+				"assets/textures/brick_normal.png",
+				32,
+				15.0f
+			)
+		};
+
+		Model boxModel{ Primitives::GetCube("box", brickMaterial) };
+		Model boxModel2{ Primitives::GetCube("box2", brickMaterial2) };
+		Model boxModel3{ Primitives::GetCube("ramp", brickMaterial) };
+
+		boxModel.Scale = glm::vec3{ 1.0f, 1.0f, 1.0f };
+		boxModel.Position.y = 4.0f;
+
+		boxModel2.Scale = glm::vec3{ 15.0f, 0.25f, 15.0f };
+
+		boxModel3.Scale = glm::vec3{ 1.0f, 1.0f, 5.0f };
+		boxModel3.Position = { 0.0f, -0.25f, 0.0f };
+		boxModel3.Rotation.x = 22.5f;
+
+		m_Scene.Models.push_back(std::move(boxModel));
+		m_Scene.Models.push_back(std::move(boxModel2));
+		m_Scene.Models.push_back(std::move(boxModel3));
+		
 		std::shared_ptr<Texture> overlay{ std::make_shared<Texture>("assets/textures/overlay.png", TextureType::Overlay) };
 		m_Renderer.SetOverlay(overlay);
-
-		LoadScene();
 	}
 
 	void Game::OnUpdate(double deltaTime)
@@ -70,99 +183,37 @@ namespace ultraviolet
 		m_DeltaTime = deltaTime;
 		m_Player.OnGround = false;
 
-		if (m_FirstFrame)
-		{
-			deltaTime = 0.0;
-			m_DeltaTime = 0.0;
-			m_FirstFrame = false;
-		}
-
-		m_Player.Update(deltaTime);
-
 		m_Scene.Camera.Position = m_Player.Position;
 		m_Scene.Camera.Position.y += m_Player.Height;
 
+		PhysicsSystem::Update(deltaTime);
+
+		auto boxPosition{ ::b3Body_GetPosition(*m_Box) };
+		auto boxRotation{ ::b3Body_GetRotation(*m_Box) };
+
+		auto box{ m_Scene.GetModel("box") };
+
+		if (box)
+		{
+			box->Position.x = boxPosition.x;
+			box->Position.y = boxPosition.y;
+			box->Position.z = boxPosition.z;
+
+			glm::quat rotation{ boxRotation.s, boxRotation.v.x, boxRotation.v.y, boxRotation.v.z };	
+			box->RotationQuaternion = rotation;
+		}
+
+		auto playerPosition{ ::b3Body_GetPosition(*m_PlayerBody) };
+		auto playerRotation{ ::b3Body_GetRotation(*m_PlayerBody) };
+
+		m_Player.Position = glm::vec3{ playerPosition.x, playerPosition.y, playerPosition.z };
+
+		//m_Player.UpdateVelocity(deltaTime);
+		//m_Player.ApplyVelocity(deltaTime);
+		//m_Player.ApplyFriction(deltaTime);
+
 		m_Scene.Camera.Update();
 		m_Scene.Update();
-
-		Model* pointLightModel{ m_Scene.GetModel("plmesh") };
-		PointLight* pointLight{ m_Scene.GetPointLight("light") };
-
-		if (pointLightModel && pointLight)
-		{
-			pointLightModel->Position = pointLight->Position;
-			m_PointLightMaterial->Color = pointLight->Color;
-			m_PointLightMaterial->Intensity = pointLight->Intensity;
-			m_PointLightMaterial->Enabled = pointLight->Enabled;
-		}
-
-		Model* pointLightModel2{ m_Scene.GetModel("plmesh2") };
-		PointLight* pointLight2{ m_Scene.GetPointLight("light2") };
-
-		if (pointLightModel2 && pointLight2)
-		{
-			pointLightModel2->Position = pointLight2->Position;
-			m_PointLightMaterial2->Color = pointLight2->Color;
-			m_PointLightMaterial2->Intensity = pointLight2->Intensity;
-			m_PointLightMaterial2->Enabled = pointLight2->Enabled;
-		}
-
-		Model* playerModel{ m_Scene.GetModel("playerModel") };
-
-		if (playerModel)
-		{
-			playerModel->Position = m_Player.Position;
-			playerModel->Position.y += m_Player.Height;
-
-			for (const Model& model : m_Scene.Models)
-			{
-				if (model.ID == playerModel->ID)
-					continue;
-
-				if (playerModel->Intersects(model))
-				{
-					AABB playerBoundingBox{ playerModel->GetWorldAABB() };
-					AABB modelBoundingBox{ model.GetWorldAABB() };
-
-					float x = glm::min(
-						playerBoundingBox.Max.x - modelBoundingBox.Min.x,
-						modelBoundingBox.Max.x - playerBoundingBox.Min.x
-					);
-
-					float y = glm::min(
-						playerBoundingBox.Max.y - modelBoundingBox.Min.y,
-						modelBoundingBox.Max.y - playerBoundingBox.Min.y
-					);
-
-					float z = glm::min(
-						playerBoundingBox.Max.z - modelBoundingBox.Min.z,
-						modelBoundingBox.Max.z - playerBoundingBox.Min.z
-					);
-
-					if (x < y && x < z)
-						m_Player.Position.x += x * glm::sign(m_Player.Position.x - model.Position.x);
-
-					else if (y < z)
-					{
-						if (playerBoundingBox.Min.y < modelBoundingBox.Max.y)
-						{
-							m_Player.Position.y += y;
-							m_Player.Velocity.y = 0.0f;
-							m_Player.OnGround = true;
-						}
-						else
-						{
-							m_Player.Position.y -= y;
-							m_Player.Velocity.y = 0.0f;
-						}
-					}
-					else
-					{
-						m_Player.Position.z += z * glm::sign(m_Player.Position.z - model.Position.z);
-					}
-				}
-			}
-		}
 
 		ProcessInput(deltaTime);
 	}
@@ -193,12 +244,24 @@ namespace ultraviolet
 				SetRelativeMouseMode(!GetRelativeMouseMode());
 				break;
 
-			case Keycode::R:
-				LoadScene();
-				break;
-
 			case Keycode::B:
 				m_ShowMenu = !m_ShowMenu;
+				break;
+
+			case Keycode::F:
+				m_Player.Flying = !m_Player.Flying;
+				break;
+
+			case Keycode::I:
+				::b3Body_ApplyLinearImpulseToCenter(*m_Box, ::b3Vec3{ 0.0f, 25.0f, 0.0f }, true);
+				break;
+
+			case Keycode::O:
+				::b3Body_ApplyAngularImpulse(*m_Box, ::b3Vec3{ 0.0f, 0.0f, 1.0f }, true);
+				break;
+
+			case Keycode::SPACE:
+				::b3Body_ApplyLinearImpulseToCenter(*m_PlayerBody, ::b3Vec3{ 0.0f, 5.0f, 0.0f }, true);
 				break;
 
 			case Keycode::RIGHTBRACKET:
@@ -281,139 +344,28 @@ namespace ultraviolet
 				m_Player.Velocity.y -= m_Player.JumpHeight;
 		}
 
-		if (Input::IsKeyHeld(Scancode::Q) || Input::IsKeyHeld(Scancode::E))
-		{
-			if (Input::IsKeyHeld(Scancode::Q))
-				m_Scene.Camera.Roll = -15.0f;
-
-			if (Input::IsKeyHeld(Scancode::E))
-				m_Scene.Camera.Roll = 15.0f;
-		}
-		else
-			m_Scene.Camera.Roll = 0.0f;
-
 		if (glm::length(movementVector) > 0.0f)
 			movementVector = glm::normalize(movementVector);
 
-		m_Player.Velocity.x += movementVector.x * m_Player.Speed * static_cast<float>(deltaTime);
-		m_Player.Velocity.z += movementVector.z * m_Player.Speed * static_cast<float>(deltaTime);
-	}
+		::b3Vec3 velocity{ ::b3Body_GetLinearVelocity(*m_PlayerBody) };
 
-	void Game::LoadScene()
-	{
-		m_Scene.Clear();
+		velocity.x += movementVector.x * m_Player.Speed * static_cast<float>(deltaTime);
+		velocity.z += movementVector.z * m_Player.Speed * static_cast<float>(deltaTime);
 
-		m_Player.Position = { -5.0f, 0.0f, 0.0f };
-
-		m_Scene.AmbientLight.Color = { 1.0f, 1.0f, 1.0f };
-		m_Scene.AmbientLight.Intensity = 0.2f;
-
-		m_Scene.DirectionalLight.Enabled = true;
-		m_Scene.DirectionalLight.Pitch = -25.0f;
-		m_Scene.DirectionalLight.Yaw = -75.0f;
-		m_Scene.DirectionalLight.Intensity = 1.0f;
-
-		PointLight pointLight{};
-		pointLight.ID = "light";
-		pointLight.Position = glm::vec3{ 1.5f, 0.5f, 0.5f };
-		pointLight.Color = glm::vec3{ 0.0f, 0.5f, 1.0f };
-		pointLight.Intensity = 0.7f;
-
-		m_Scene.PointLights.push_back(std::move(pointLight));
-
-		PointLight pointLight2{};
-		pointLight2.ID = "light2";
-		pointLight2.Position = glm::vec3{ 0.0f, 1.5f, -3.5f };
-		pointLight2.Color = glm::vec3{ 1.0f, 0.0f, 1.0f };
-		pointLight2.Intensity = 1.0f;
-
-		m_Scene.PointLights.push_back(std::move(pointLight2));
-
-		m_Scene.Models.clear();
-
-		Model ground{ Primitives::GetCube(
-			"ground",
-			std::make_shared<TextureMaterial>(
-				"assets/textures/brick_diffuse.jpg",
-				"assets/textures/brick_specular.jpg",
-				"assets/textures/brick_normal.png",
-				100,
-				4.0f,
-				0.5f
-			)
+		float horizontalSpeed{ std::sqrt(
+			velocity.x * velocity.x +
+			velocity.z * velocity.z
 		) };
 
-		ground.Scale.x *= 10.0f;
-		ground.Scale.y = 0.01f;
-		ground.Scale.z *= 10.0f;
+		if (horizontalSpeed > m_Player.MaxSpeed)
+		{
+			float scale{ m_Player.MaxSpeed / horizontalSpeed };
 
-		ground.Position.y -= ground.Scale.y;
+			velocity.x *= scale;
+			velocity.z *= scale;
+		}
 
-		m_Scene.Models.push_back(std::move(ground));
-
-		Model sphere1{ Primitives::GetSphere(
-			"sphere1",
-			32,
-			32,
-			std::make_shared<ColorMaterial>(
-				glm::vec3{ 0.0f, 1.0f, 0.5f },
-				256
-			)
-		) };
-		sphere1.Position = { 0.5f, 0.5f, -1.5f };
-		sphere1.Scale = { 0.5f, 0.5f, 0.5f };
-
-		m_Scene.Models.push_back(std::move(sphere1));
-
-		Model sphere2{ Primitives::GetSphere(
-			"sphere2",
-			32,
-			32,
-			std::make_shared<ColorMaterial>(
-				glm::vec3{ 0.65f, 0.95f, 1.0f },
-				32
-			)
-		) };
-		sphere2.Position = { 4.0f, 2.5f, -2.0f };
-		sphere2.Scale = glm::vec3{ 2.5f };
-
-		m_Scene.Models.push_back(std::move(sphere2));
-
-		Model cube{ Primitives::GetCube("cube", std::make_shared<TextureMaterial>(
-			"assets/textures/wood_diffuse.jpg",
-			"assets/textures/wood_specular.jpg",
-			"assets/textures/wood_normal.jpg",
-			100
-		)) };
-
-		cube.Position = { 5.0f, 3.0f, 5.0f };
-		cube.Scale = glm::vec3{ 3.0f };
-
-		m_Scene.Models.push_back(std::move(cube));
-
-		Model playerModel{ Primitives::GetCube("playerModel", nullptr) };
-		playerModel.Scale.x /= 2.5f;
-		playerModel.Scale.y = 1.8f;
-		playerModel.Scale.z /= 2.5f;
-		playerModel.Visible = false;
-
-		m_Scene.Models.push_back(std::move(playerModel));
-
-		m_PointLightMaterial = std::make_shared<LightMaterial>(m_Scene.GetPointLight("light")->Color);
-		m_PointLightMaterial2 = std::make_shared<LightMaterial>(m_Scene.GetPointLight("light2")->Color);
-
-		Model plmesh{ Primitives::GetSphere("plmesh", 6, 8, m_PointLightMaterial) };
-		plmesh.Scale /= 10.0f;
-		plmesh.Position = pointLight.Position;
-		plmesh.CastsShadow = false;
-
-		Model plmesh2{ Primitives::GetSphere("plmesh2", 6, 8, m_PointLightMaterial2) };
-		plmesh2.Scale /= 10.0f;
-		plmesh2.Position = pointLight2.Position;
-		plmesh2.CastsShadow = false;
-
-		m_Scene.Models.push_back(std::move(plmesh));
-		m_Scene.Models.push_back(std::move(plmesh2));
+		::b3Body_SetLinearVelocity(*m_PlayerBody, velocity);
 	}
 
 	void Game::DebugMenu()
@@ -447,16 +399,6 @@ namespace ultraviolet
 			::ImGui::Spacing();
 
 			m_Renderer.AddToImGui();
-
-			::ImGui::Indent(-16.0f);
-		}
-
-		if (::ImGui::CollapsingHeader("Game"))
-		{
-			::ImGui::Indent(16.0f);
-
-			if (::ImGui::Button("Reload Assets"))
-				LoadScene();
 
 			::ImGui::Indent(-16.0f);
 		}

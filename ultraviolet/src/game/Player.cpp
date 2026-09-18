@@ -5,16 +5,22 @@
 
 namespace ultraviolet
 {
-	void Player::Update(double deltaTime)
+	void Player::UpdateVelocity(double deltaTime)
 	{
 		float dt{ static_cast<float>(deltaTime) };
 
 		if (!Flying)
 			Velocity.y -= Gravity * dt;
+	}
 
-		Position += Velocity * dt;
+	void Player::ApplyVelocity(double deltaTime)
+	{
+		Position += Velocity * static_cast<float>(deltaTime);
+	}
 
-		float friction{ glm::pow(0.000025f, dt) };
+	void Player::ApplyFriction(double deltaTime)
+	{
+		float friction{ glm::pow(0.000025f, static_cast<float>(deltaTime)) };
 
 		Velocity.x *= friction;
 		Velocity.z *= friction;
@@ -38,6 +44,7 @@ namespace ultraviolet
 			::ImGui::DragFloat3("Position ##Player", glm::value_ptr(Position), 0.1f);
 			::ImGui::DragFloat3("Velocity ##Player", glm::value_ptr(Velocity), 0.1f);
 			::ImGui::DragFloat("Speed ##Player", &Speed, 0.1f);
+			::ImGui::DragFloat("MaxSpeed ##Player", &MaxSpeed, 0.1f);
 			::ImGui::DragFloat("Jump Height ##Player", &JumpHeight, 0.1f);
 			::ImGui::DragFloat("Height ##Player", &Height, 0.1f);
 			::ImGui::DragFloat("Gravity ##Player", &Gravity, 0.1f);

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <box3d/box3d.h>
+
 #include "core/GameWindow.h"
 #include "renderer/Renderer.h"
 #include "renderer/camera/ProjectionCamera.h"
@@ -27,16 +29,17 @@ namespace ultraviolet
 		Scene m_Scene;
 
 		bool m_ShowMenu;
-		bool m_FirstFrame;
 		glm::vec4 m_ClearColor;
 		Player m_Player;
-		std::shared_ptr<LightMaterial> m_PointLightMaterial;
-		std::shared_ptr<LightMaterial> m_PointLightMaterial2;
 		std::unique_ptr<Mesh> m_Overlay;
+		std::unique_ptr<::b3BodyId> m_Box;
+		std::unique_ptr<::b3BodyId> m_Ground;
+		std::unique_ptr<::b3BodyId> m_Ramp;
+		std::unique_ptr<::b3BodyId> m_PlayerBody;
+		std::unique_ptr<::b3Capsule> m_PlayerCapsule;
 
 	private:
 		void ProcessInput(double deltaTime);
-		void LoadScene();
 		void DebugMenu();
 	};
 }

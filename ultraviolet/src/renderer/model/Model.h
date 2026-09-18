@@ -1,7 +1,8 @@
 #pragma once
 
+#include <glm/gtc/quaternion.hpp>
+
 #include "../mesh/Mesh.h"
-#include "AABB.h"
 
 namespace ultraviolet
 {
@@ -13,7 +14,7 @@ namespace ultraviolet
 		glm::vec3 Position;
 		glm::vec3 Scale;
 		glm::vec3 Rotation;
-		AABB BoundingBox;
+		glm::quat RotationQuaternion;
 		bool CastsShadow;
 		bool Visible;
 
@@ -23,7 +24,5 @@ namespace ultraviolet
 		glm::mat4 GetModelMatrix() const;
 		void AddToImGui();
 		Mesh* GetMesh(std::string_view id);
-		AABB GetWorldAABB() const;
-		bool Intersects(const Model& other) const;
 	};
 }

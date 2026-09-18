@@ -108,13 +108,13 @@ void main()
 
     float currentDepth = projectionCoordinates.z;
 
-	float bias = max(0.0005 * (1.0 - dot(normal, normalize(-ub_DirectionalLight.Direction.xyz))), 0.0001);  
+	float bias = max(0.0025 * (1.0 - dot(o_Normal, normalize(-ub_DirectionalLight.Direction.xyz))), 0.0025);  
     float shadow = 0.0;
 
 	vec2 texelSize = 1.0 / textureSize(u_DepthMap, 0);
-	for(int x = -2; x <= 2; ++x)
+	for (int x = -2; x <= 2; x++)
 	{
-		for(int y = -2; y <= 2; ++y)
+		for (int y = -2; y <= 2; y++)
 		{
 			float pcfDepth = texture(u_DepthMap, projectionCoordinates.xy + vec2(x, y) * texelSize).r; 
 			shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;        
@@ -151,6 +151,7 @@ void main()
 	}
 
 	Output.rgb += diffuse + specular;
+
 
 	Output.a = 1.0;
 }

@@ -9,7 +9,8 @@ namespace ultraviolet
 	public:
 		glm::vec3 Position;
 		glm::vec3 Velocity;
-		float Speed{ 100.0f };
+		float Speed{ 50.0f };
+		float MaxSpeed{ 5.0f };
 		float JumpHeight{ 12.0f };
 		float Height{ 1.8f };
 		float Gravity{ 25.0f };
@@ -17,7 +18,9 @@ namespace ultraviolet
 		bool Flying;
 
 	public:
-		void Update(double deltaTime);
+		void UpdateVelocity(double deltaTime);
+		void ApplyVelocity(double deltaTime);
+		void ApplyFriction(double deltaTime);
 
 		void AddToImGui();
 	};

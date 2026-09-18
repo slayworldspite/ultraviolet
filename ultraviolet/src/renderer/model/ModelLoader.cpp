@@ -57,7 +57,7 @@ namespace ultraviolet
 			aiProcess_JoinIdenticalVertices |
 			aiProcess_GenSmoothNormals |
 			aiProcess_CalcTangentSpace |
-			aiProcess_OptimizeMeshes |
+			//aiProcess_OptimizeMeshes |
 			aiProcess_OptimizeGraph
 		) };
 

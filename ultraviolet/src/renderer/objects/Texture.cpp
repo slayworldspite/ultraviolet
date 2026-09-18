@@ -1,4 +1,5 @@
 #include <cstdint>
+#include <array>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
@@ -106,8 +107,11 @@ namespace ultraviolet
 
 		::glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		::glTexParameteri(target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		::glTexParameteri(target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		::glTexParameteri(target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		::glTexParameteri(target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+		::glTexParameteri(target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+
+		std::array<float, 4> borderColor{ 1.0f, 0.0f, 0.0f, 1.0f };
+		glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor.data());
 	}
 
 	Texture::~Texture()

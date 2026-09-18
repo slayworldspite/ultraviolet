@@ -1,6 +1,9 @@
 #include <imgui/imgui.h>
+#include <array>
+#include <numeric>
 
 #include "Mesh.h"
+#include "../../utils/Logger.h"
 
 namespace ultraviolet
 {

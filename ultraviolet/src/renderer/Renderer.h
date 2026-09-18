@@ -38,6 +38,8 @@ namespace ultraviolet
 		bool m_WireframeMode;
 		float m_Gamma;
 		int m_ShadowMapResolution;
+		float m_ShadowCameraSize;
+		float m_ShadowCameraDepth;
 
 		int m_ViewportWidth;
 		int m_ViewportHeight;

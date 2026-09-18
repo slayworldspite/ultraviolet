@@ -27,6 +27,8 @@ namespace ultraviolet
 		m_WireframeMode{ false },
 		m_Gamma{ 2.2f },
 		m_ShadowMapResolution{ 4096 },
+		m_ShadowCameraSize{ 30.0f },
+		m_ShadowCameraDepth{ 50.0f },
 		m_ViewportWidth{},
 		m_ViewportHeight{}
 	{
@@ -230,6 +232,8 @@ namespace ultraviolet
 
 		::ImGui::DragFloat("Gamma", &m_Gamma, 0.05f);
 		::ImGui::DragInt("Shadow Map Resolution", &m_ShadowMapResolution, 128);
+		::ImGui::DragFloat("Shadow Camera Size", &m_ShadowCameraSize, 1.0f);
+		::ImGui::DragFloat("Shadow Camera Depth", &m_ShadowCameraDepth, 1.0f);
 
 		if (::ImGui::Button("Remake Shadow Map Framebuffer"))
 		{
@@ -330,13 +334,19 @@ namespace ultraviolet
 
 		const glm::vec3& cameraPosition{ scene.Camera.Position };
 
+		float texelSize{ m_ShadowCameraDepth / m_ShadowMapResolution };
+
+		glm::vec2 snappedCameraPosition{};
+		snappedCameraPosition.x = std::floor(cameraPosition.x / texelSize) * texelSize;
+		snappedCameraPosition.y = std::floor(cameraPosition.z / texelSize) * texelSize;
+
 		glm::mat4 lightProjection{ glm::ortho(
-			-50.0f - cameraPosition.z, 
-			 50.0f - cameraPosition.z, 
-			-50.0f - cameraPosition.x, 
-			 50.0f - cameraPosition.x, 
+			-m_ShadowCameraSize - snappedCameraPosition.x, 
+			 m_ShadowCameraSize - snappedCameraPosition.x,
+			-m_ShadowCameraSize + snappedCameraPosition.y,
+			 m_ShadowCameraSize + snappedCameraPosition.y,
 			 1.0f, 
-			 50.0f
+			 m_ShadowCameraDepth
 		) };
 
 		m_LightSpaceMatrix = lightProjection * lightView;
@@ -347,7 +357,7 @@ namespace ultraviolet
 		m_ShadowMapFramebuffer->Bind();
 
 		::glViewport(0, 0, m_ShadowMapResolution, m_ShadowMapResolution);
-		::glCullFace(GL_FRONT);
+		//::glCullFace(GL_FRONT);
 
 		m_ShadowMapShader->Use();
 
