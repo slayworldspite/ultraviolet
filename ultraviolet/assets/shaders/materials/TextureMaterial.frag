@@ -152,6 +152,5 @@ void main()
 
 	Output.rgb += diffuse + specular;
 
-
 	Output.a = 1.0;
 }
