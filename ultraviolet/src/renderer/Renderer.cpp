@@ -77,7 +77,7 @@ namespace ultraviolet
 		::glEnable(GL_DEPTH_TEST);
 		::glEnable(GL_BLEND);
 		::glEnable(GL_CULL_FACE);
-		::glFrontFace(GL_CW);
+		//::glFrontFace(GL_CW);
 
 		::glClear(
 			GL_COLOR_BUFFER_BIT |
@@ -191,6 +191,12 @@ namespace ultraviolet
 		{
 			if (model.Visible)
 				Draw(model);
+		}
+
+		for (const Entity& entity : scene.Entities)
+		{
+			if (entity.RenderObject.Visible)
+				Draw(entity.RenderObject);
 		}
 	}
 
@@ -376,6 +382,21 @@ namespace ultraviolet
 			}
 		}
 
+		for (const Entity& entity : scene.Entities)
+		{
+			if (!entity.RenderObject.Visible || !entity.RenderObject.CastsShadow)
+				continue;
+
+			for (const Mesh& mesh : entity.RenderObject.Meshes)
+			{
+				m_ShadowMapShader->Set("u_Model", entity.RenderObject.GetModelMatrix());
+
+				mesh.Bind();
+
+				::glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(mesh.GetIndexCount()), GL_UNSIGNED_INT, nullptr);
+			}
+		}
+
 		::glViewport(0, 0, m_ViewportWidth, m_ViewportHeight);
 		::glCullFace(GL_BACK);
 	}
@@ -389,10 +410,12 @@ namespace ultraviolet
 
 		m_PostProcessingShader->Set("u_Framebuffer", framebufferTextureIndex);
 		m_PostProcessingShader->Set("u_Overlay", overlayTextureIndex);
+		m_PostProcessingShader->Set("u_HasOverlay", m_OverlayTexture != nullptr);
 		m_PostProcessingShader->Set("u_Gamma", m_Gamma);
 
 		m_PostProcessFramebuffer->Texture.Bind(framebufferTextureIndex);
-		m_OverlayTexture->Bind(overlayTextureIndex);
+		if (m_OverlayTexture)
+			m_OverlayTexture->Bind(overlayTextureIndex);
 
 		::glDrawArrays(GL_TRIANGLES, 0, 6);
 	}

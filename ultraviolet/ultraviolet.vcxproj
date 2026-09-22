@@ -146,6 +146,9 @@
     <ClCompile Include="src\game\Player.cpp" />
     <ClCompile Include="src\input\Input.cpp" />
     <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\physics\Entity.cpp" />
+    <ClCompile Include="src\physics\EntityLoader.cpp" />
+    <ClCompile Include="src\physics\PhysicsBody.cpp" />
     <ClCompile Include="src\renderer\camera\ProjectionCamera.cpp" />
     <ClCompile Include="src\renderer\lights\AmbientLight.cpp" />
     <ClCompile Include="src\renderer\lights\DirectionalLight.cpp" />
@@ -193,6 +196,10 @@
     <ClInclude Include="src\input\Keycode.h" />
     <ClInclude Include="src\input\MouseButtonFlags.h" />
     <ClInclude Include="src\input\Scancode.h" />
+    <ClInclude Include="src\physics\Entity.h" />
+    <ClInclude Include="src\physics\EntityLoader.h" />
+    <ClInclude Include="src\physics\PhysicsBody.h" />
+    <ClInclude Include="src\physics\PhysicsBodyType.h" />
     <ClInclude Include="src\renderer\camera\ProjectionCamera.h" />
     <ClInclude Include="src\renderer\lights\AmbientLight.h" />
     <ClInclude Include="src\renderer\lights\DirectionalLight.h" />

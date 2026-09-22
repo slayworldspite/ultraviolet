@@ -32,14 +32,13 @@ namespace ultraviolet
 		glm::vec4 m_ClearColor;
 		Player m_Player;
 		std::unique_ptr<Mesh> m_Overlay;
-		std::unique_ptr<::b3BodyId> m_Box;
 		std::unique_ptr<::b3BodyId> m_Ground;
-		std::unique_ptr<::b3BodyId> m_Ramp;
 		std::unique_ptr<::b3BodyId> m_PlayerBody;
 		std::unique_ptr<::b3Capsule> m_PlayerCapsule;
 
 	private:
 		void ProcessInput(double deltaTime);
 		void DebugMenu();
+		void LoadOverlay();
 	};
 }

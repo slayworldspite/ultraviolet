@@ -9,6 +9,6 @@ namespace ultraviolet
 {
 	namespace ModelLoader
 	{
-		std::optional<Model> Load(const std::string& id, const std::filesystem::path& path);
+		std::optional<Model> Load(const std::string& id, const std::filesystem::path& modelPath);
 	}
 }

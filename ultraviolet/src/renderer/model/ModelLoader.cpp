@@ -140,6 +140,4 @@ namespace ultraviolet
 
 		return Model{ id, meshes };
 	}
-
-	
 }

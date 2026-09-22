@@ -3,6 +3,7 @@
 #include <glm/gtc/quaternion.hpp>
 
 #include "../mesh/Mesh.h"
+#include "../../physics/PhysicsBody.h"
 
 namespace ultraviolet
 {

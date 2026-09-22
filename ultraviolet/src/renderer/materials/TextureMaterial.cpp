@@ -86,14 +86,17 @@ namespace ultraviolet
 			::ImGui::DragFloat(("Normal Strength ##" + id).c_str(), &NormalStrength, 0.05f);
 			::ImGui::Checkbox(("Flip Normals ##" + id).c_str(), &FlipNormals);
 
-			auto diffuseSize{ Diffuse->GetSize() };
-			::ImGui::Image((ImTextureID)(intptr_t)Diffuse->GetID(), ImVec2{ static_cast<float>(diffuseSize.first), static_cast<float>(diffuseSize.second) });
+			if (::ImGui::CollapsingHeader(("Textures ##" + id).c_str()))
+			{
+				auto diffuseSize{ Diffuse->GetSize() };
+				::ImGui::Image((ImTextureID)(intptr_t)Diffuse->GetID(), ImVec2{ static_cast<float>(diffuseSize.first), static_cast<float>(diffuseSize.second) });
 
-			auto specularSize{ Specular->GetSize() };
-			::ImGui::Image((ImTextureID)(intptr_t)Specular->GetID(), ImVec2{ static_cast<float>(specularSize.first), static_cast<float>(specularSize.second) });
+				auto specularSize{ Specular->GetSize() };
+				::ImGui::Image((ImTextureID)(intptr_t)Specular->GetID(), ImVec2{ static_cast<float>(specularSize.first), static_cast<float>(specularSize.second) });
 
-			auto normalSize{ Normal->GetSize() };
-			::ImGui::Image((ImTextureID)(intptr_t)Normal->GetID(), ImVec2{ static_cast<float>(normalSize.first), static_cast<float>(normalSize.second) });
+				auto normalSize{ Normal->GetSize() };
+				::ImGui::Image((ImTextureID)(intptr_t)Normal->GetID(), ImVec2{ static_cast<float>(normalSize.first), static_cast<float>(normalSize.second) });
+			}
 		}
 	}
 }

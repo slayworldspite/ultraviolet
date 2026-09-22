@@ -14,6 +14,7 @@
 #include "renderer/model/ModelLoader.h"
 #include "renderer/model/Primitives.h"
 #include "physics/PhysicsSystem.h"
+#include "physics/EntityLoader.h"
 
 namespace ultraviolet
 {
@@ -39,45 +40,22 @@ namespace ultraviolet
 		SetRelativeMouseMode(true);
 
 		m_ClearColor = glm::vec4{ 0.0f, 0.55f, 1.0f, 1.0f };
-
 		m_Renderer.SetClearColor(m_ClearColor);
 
-		std::vector<Vertex> vertices{};
-		vertices.reserve(4);
-
-		Vertex vertex{};
-		vertex.Position = { -1.0f, 0.0f, 1.0f };
-		vertex.TextureCoordinates = { 0.0f, 1.0f };
-		vertices.push_back(vertex);
-
-		vertex.Position = { 1.0f, 0.0f, 1.0f };
-		vertex.TextureCoordinates = { 1.0f, 1.0f };
-		vertices.push_back(vertex);
-
-		vertex.Position = { -1.0f, 0.0f, -1.0f };
-		vertex.TextureCoordinates = { 0.0f, 0.0f };
-		vertices.push_back(vertex);
-
-		vertex.Position = { 1.0f, 0.0f, -1.0f };
-		vertex.TextureCoordinates = { 1.0f, 0.0f };
-		vertices.push_back(vertex);
-
-		m_Player.Flying = true;
-
 		m_Scene.AmbientLight.Color = glm::vec3{ 1.0f };
-		m_Scene.AmbientLight.Intensity = 0.2f;
+		m_Scene.AmbientLight.Intensity = 0.1f;
 
 		m_Scene.DirectionalLight.Color = glm::vec3{ 1.0f };
 		m_Scene.DirectionalLight.Pitch = -22.5f;
 		m_Scene.DirectionalLight.Yaw = 22.5f;
 
-		m_Player.Position.x = -5.0f;
+		LoadOverlay();
 
 		auto worldID{ PhysicsSystem::GetWorldID() };
 
 		// capsule
 		::b3BodyDef capsuleBodyDefinition{ ::b3DefaultBodyDef() };
-		capsuleBodyDefinition.position = { -5.0f, 15.0f, 0.0f };
+		capsuleBodyDefinition.position = { -5.0f, 0.0f, 0.0f };
 		capsuleBodyDefinition.type = ::b3_dynamicBody;
 		capsuleBodyDefinition.motionLocks.angularX = true;
 		capsuleBodyDefinition.motionLocks.angularZ = true;
@@ -106,47 +84,7 @@ namespace ultraviolet
 		::b3ShapeDef groundShapeDefinition{ ::b3DefaultShapeDef() };
 		::b3CreateHullShape(*m_Ground, &groundShapeDefinition, &groundBox.base);
 
-		// box
-		::b3BodyDef bodyDefinition{ ::b3DefaultBodyDef() };
-		bodyDefinition.type = ::b3_dynamicBody;
-		bodyDefinition.position = { 0.0f, 4.0f, 0.0f };
-		bodyDefinition.rotation.v.x = 0.183974f;
-		bodyDefinition.rotation.v.z = 0.5519221f;
-		bodyDefinition.rotation.s = 0.8133483f;
-
-		m_Box = std::make_unique<::b3BodyId>(::b3CreateBody(worldID, &bodyDefinition));
-		
-		::b3BoxHull dynamicBox{ ::b3MakeCubeHull(1.0f) };
-
-		::b3ShapeDef boxShapeDefinition{ ::b3DefaultShapeDef() };
-		boxShapeDefinition.density = 0.15f;
-		boxShapeDefinition.baseMaterial.friction = 0.3f;
-
-		::b3CreateHullShape(*m_Box, &boxShapeDefinition, &dynamicBox.base);
-
-		// ramp
-		::b3BodyDef rampBodyDefinition{ ::b3DefaultBodyDef() };
-		rampBodyDefinition.position = { 0.0f, -0.25f, 0.0f };
-		rampBodyDefinition.rotation.v.x = 0.1950903f;
-		rampBodyDefinition.rotation.s = 0.9807853f;
-
-		m_Ramp = std::make_unique<::b3BodyId>(::b3CreateBody(worldID, &rampBodyDefinition));
-
-		::b3BoxHull rampBox{ ::b3MakeBoxHull(1.0f, 1.0f, 5.0f) };
-
-		::b3ShapeDef rampShapeDefinition{ ::b3DefaultShapeDef() };
-		::b3CreateHullShape(*m_Ramp, &rampShapeDefinition, &rampBox.base);
-
-		// meshes
 		std::shared_ptr<TextureMaterial> brickMaterial{
-			std::make_shared<TextureMaterial>(
-				"assets/textures/brick_diffuse.jpg",
-				"assets/textures/brick_specular.jpg",
-				"assets/textures/brick_normal.png",
-				32
-			)
-		};
-		std::shared_ptr<TextureMaterial> brickMaterial2{
 			std::make_shared<TextureMaterial>(
 				"assets/textures/brick_diffuse.jpg",
 				"assets/textures/brick_specular.jpg",
@@ -156,25 +94,31 @@ namespace ultraviolet
 			)
 		};
 
-		Model boxModel{ Primitives::GetCube("box", brickMaterial) };
-		Model boxModel2{ Primitives::GetCube("box2", brickMaterial2) };
-		Model boxModel3{ Primitives::GetCube("ramp", brickMaterial) };
+		std::shared_ptr<TextureMaterial> teapotMaterial{
+			std::make_shared<TextureMaterial>(
+				"assets/textures/default.png",
+				"assets/textures/default.png",
+				"assets/textures/wood_normal.jpg",
+				32,
+				15.0f,
+				0.15f
+			)
+		};
 
-		boxModel.Scale = glm::vec3{ 1.0f, 1.0f, 1.0f };
-		boxModel.Position.y = 4.0f;
+		Model boxModel2{ Primitives::GetCube("ground", brickMaterial) };
+		auto teapot{ EntityLoader::Load("teapot", PhysicsBodyType::Dynamic, "assets/models/teapot/teapot.obj", "assets/models/teapot/teapotCollision.obj", 0.001f) };
+
+		if (teapot)
+		{
+			for (Mesh& mesh : teapot->RenderObject.Meshes)
+				mesh.Material = teapotMaterial;
+
+			m_Scene.Entities.push_back(std::move(*teapot));
+		}
 
 		boxModel2.Scale = glm::vec3{ 15.0f, 0.25f, 15.0f };
 
-		boxModel3.Scale = glm::vec3{ 1.0f, 1.0f, 5.0f };
-		boxModel3.Position = { 0.0f, -0.25f, 0.0f };
-		boxModel3.Rotation.x = 22.5f;
-
-		m_Scene.Models.push_back(std::move(boxModel));
 		m_Scene.Models.push_back(std::move(boxModel2));
-		m_Scene.Models.push_back(std::move(boxModel3));
-		
-		std::shared_ptr<Texture> overlay{ std::make_shared<Texture>("assets/textures/overlay.png", TextureType::Overlay) };
-		m_Renderer.SetOverlay(overlay);
 	}
 
 	void Game::OnUpdate(double deltaTime)
@@ -188,29 +132,10 @@ namespace ultraviolet
 
 		PhysicsSystem::Update(deltaTime);
 
-		auto boxPosition{ ::b3Body_GetPosition(*m_Box) };
-		auto boxRotation{ ::b3Body_GetRotation(*m_Box) };
-
-		auto box{ m_Scene.GetModel("box") };
-
-		if (box)
-		{
-			box->Position.x = boxPosition.x;
-			box->Position.y = boxPosition.y;
-			box->Position.z = boxPosition.z;
-
-			glm::quat rotation{ boxRotation.s, boxRotation.v.x, boxRotation.v.y, boxRotation.v.z };	
-			box->RotationQuaternion = rotation;
-		}
-
 		auto playerPosition{ ::b3Body_GetPosition(*m_PlayerBody) };
 		auto playerRotation{ ::b3Body_GetRotation(*m_PlayerBody) };
 
 		m_Player.Position = glm::vec3{ playerPosition.x, playerPosition.y, playerPosition.z };
-
-		//m_Player.UpdateVelocity(deltaTime);
-		//m_Player.ApplyVelocity(deltaTime);
-		//m_Player.ApplyFriction(deltaTime);
 
 		m_Scene.Camera.Update();
 		m_Scene.Update();
@@ -250,14 +175,6 @@ namespace ultraviolet
 
 			case Keycode::F:
 				m_Player.Flying = !m_Player.Flying;
-				break;
-
-			case Keycode::I:
-				::b3Body_ApplyLinearImpulseToCenter(*m_Box, ::b3Vec3{ 0.0f, 25.0f, 0.0f }, true);
-				break;
-
-			case Keycode::O:
-				::b3Body_ApplyAngularImpulse(*m_Box, ::b3Vec3{ 0.0f, 0.0f, 1.0f }, true);
 				break;
 
 			case Keycode::SPACE:
@@ -408,5 +325,31 @@ namespace ultraviolet
 		m_Scene.Camera.AddToImGui();
 
 		m_Scene.AddToImGui();
+	}
+
+	void Game::LoadOverlay()
+	{
+		std::vector<Vertex> vertices{};
+		vertices.reserve(4);
+
+		Vertex vertex{};
+		vertex.Position = { -1.0f, 0.0f, 1.0f };
+		vertex.TextureCoordinates = { 0.0f, 1.0f };
+		vertices.push_back(vertex);
+
+		vertex.Position = { 1.0f, 0.0f, 1.0f };
+		vertex.TextureCoordinates = { 1.0f, 1.0f };
+		vertices.push_back(vertex);
+
+		vertex.Position = { -1.0f, 0.0f, -1.0f };
+		vertex.TextureCoordinates = { 0.0f, 0.0f };
+		vertices.push_back(vertex);
+
+		vertex.Position = { 1.0f, 0.0f, -1.0f };
+		vertex.TextureCoordinates = { 1.0f, 0.0f };
+		vertices.push_back(vertex);
+
+		std::shared_ptr<Texture> overlay{ std::make_shared<Texture>("assets/textures/overlay.png", TextureType::Overlay) };
+		m_Renderer.SetOverlay(overlay);
 	}
 }

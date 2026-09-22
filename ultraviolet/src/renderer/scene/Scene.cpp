@@ -29,6 +29,17 @@ namespace ultraviolet
 		return nullptr;
 	}
 
+	Entity* Scene::GetEntity(std::string_view id)
+	{
+		for (Entity& entity : Entities)
+		{
+			if (entity.ID == id)
+				return &entity;
+		}
+		
+		return nullptr;
+	}
+
 	PointLight* Scene::GetPointLight(std::string_view id)
 	{
 		for (PointLight& pointLight : PointLights)
@@ -50,6 +61,9 @@ namespace ultraviolet
 
 		int maxPointLightIndex = static_cast<int>(PointLights.size());
 		m_PointLightsUniformBuffer.SetData(&maxPointLightIndex, sizeof(int), PointLight::GetSizeOfData() * MAX_POINT_LIGHT_COUNT);
+
+		for (Entity& entity : Entities)
+			entity.Update();
 	}
 
 	void Scene::Clear()
@@ -107,6 +121,14 @@ namespace ultraviolet
 
 				for (Model& model : Models)
 					model.AddToImGui();
+			}
+
+			if (::ImGui::CollapsingHeader("Entities"))
+			{
+				::ImGui::Indent(16.0f);
+
+				for (Entity& entity : Entities)
+					entity.AddToImGui();
 			}
 		}
 	}

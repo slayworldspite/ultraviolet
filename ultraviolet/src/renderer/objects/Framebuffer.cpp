@@ -47,6 +47,6 @@ namespace ultraviolet
 	void Framebuffer::AddToImGui()
 	{
 		auto size{ Texture.GetSize() };
-		::ImGui::Image((ImTextureID)(intptr_t)Texture.GetID(), ImVec2{ 256.0f, 144.0f });
+		::ImGui::Image((ImTextureID)(intptr_t)Texture.GetID(), ImVec2{ static_cast<float>(size.first), static_cast<float>(size.second) });
 	}
 }
