@@ -1,3 +1,5 @@
+#include <exception>
+
 #include <box3d/box3d.h>
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -5,6 +7,7 @@
 
 #include "PhysicsBody.h"
 #include "PhysicsSystem.h"
+#include "../utils/Logger.h"
 
 namespace ultraviolet
 {
@@ -101,6 +104,15 @@ namespace ultraviolet
 		int size{ static_cast<int>(vertexPositions.size()) };
 
 		::b3HullData* hullData{ ::b3CreateHull(vertexPositions.data(), size, size) };
+
+		if (!hullData)
+		{
+			Logger::Log("failed to create hull!", Logger::Level::Critical);
+			Logger::Log(id, Logger::Level::Error);
+			Logger::Log("degenerate input: coincident or coplanar points, or insufficient volume", Logger::Level::Error);
+
+			throw std::runtime_error{ "failed to create hull! degenerate input: coincident or coplanar points, or insufficient volume" };
+		}
 
 		::b3ShapeDef boxShapeDefinition{ ::b3DefaultShapeDef() };
 		boxShapeDefinition.density = density;

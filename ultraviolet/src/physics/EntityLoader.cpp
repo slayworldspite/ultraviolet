@@ -10,7 +10,7 @@ namespace ultraviolet
 {
 	std::optional<Entity> EntityLoader::Load(const std::string& id, PhysicsBodyType physicsBodyType, const std::filesystem::path& modelPath, const std::filesystem::path& collisionPath, float density, float friction)
 	{
-		auto renderObject{ ModelLoader::Load(id + "Render Object", modelPath) };
+		auto renderObject{ ModelLoader::Load("Render Object ##" + id, modelPath) };
 
 		if (!renderObject)
 			return {};
@@ -82,7 +82,7 @@ namespace ultraviolet
 			}
 		}
 
-		PhysicsBody physicsBody{ id + "Physics Object", physicsBodyType, vertices, indices, density, friction};
+		PhysicsBody physicsBody{ "Physics Object ##" + id, physicsBodyType, vertices, indices, density, friction};
 
 		return Entity{ id, *renderObject, physicsBody };
 	}

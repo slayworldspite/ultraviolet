@@ -98,14 +98,17 @@ namespace ultraviolet
 			std::make_shared<TextureMaterial>(
 				"assets/textures/default.png",
 				"assets/textures/default.png",
-				"assets/textures/wood_normal.jpg",
+				"assets/textures/default_normal.png",
 				32,
-				15.0f,
-				0.15f
+				5.0f
 			)
 		};
 
 		Model boxModel2{ Primitives::GetCube("ground", brickMaterial) };
+		boxModel2.Scale = glm::vec3{ 15.0f, 0.25f, 15.0f };
+
+		m_Scene.Models.push_back(std::move(boxModel2));
+
 		auto teapot{ EntityLoader::Load("teapot", PhysicsBodyType::Dynamic, "assets/models/teapot/teapot.obj", "assets/models/teapot/teapotCollision.obj", 0.001f) };
 
 		if (teapot)
@@ -116,9 +119,22 @@ namespace ultraviolet
 			m_Scene.Entities.push_back(std::move(*teapot));
 		}
 
-		boxModel2.Scale = glm::vec3{ 15.0f, 0.25f, 15.0f };
+		auto suzanne{
+			EntityLoader::Load(
+				"suzanne",
+				PhysicsBodyType::Dynamic,
+				"assets/models/suzanne/suzanne.obj",
+				"assets/models/suzanne/suzanne_collision.obj"
+			)
+		};
 
-		m_Scene.Models.push_back(std::move(boxModel2));
+		if (suzanne)
+		{
+			for (Mesh& mesh : suzanne->RenderObject.Meshes)
+				mesh.Material = teapotMaterial;
+
+			m_Scene.Entities.push_back(std::move(*suzanne));
+		}
 	}
 
 	void Game::OnUpdate(double deltaTime)
@@ -288,7 +304,7 @@ namespace ultraviolet
 	void Game::DebugMenu()
 	{
 		::ImGui::Text("FPS: %f", 1.0 / m_DeltaTime);
-		::ImGui::Text("Frametime: %f", m_DeltaTime);
+		::ImGui::Text("Frametime: %.2fms", m_DeltaTime * 1000);
 
 		if (::ImGui::CollapsingHeader("Renderer"))
 		{

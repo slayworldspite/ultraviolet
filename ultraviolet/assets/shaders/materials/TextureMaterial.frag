@@ -112,6 +112,7 @@ void main()
     float shadow = 0.0;
 
 	vec2 texelSize = 1.0 / textureSize(u_DepthMap, 0);
+
 	for (int x = -2; x <= 2; x++)
 	{
 		for (int y = -2; y <= 2; y++)
@@ -120,6 +121,7 @@ void main()
 			shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;        
 		}    
 	}
+
 	shadow /= 25.0;
 
 	if (projectionCoordinates.z > 1.0)
