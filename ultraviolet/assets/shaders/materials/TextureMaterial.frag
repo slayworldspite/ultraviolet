@@ -113,21 +113,25 @@ void main()
 
 	vec2 texelSize = 1.0 / textureSize(u_DepthMap, 0);
 
-	for (int x = -2; x <= 2; x++)
+	int radius = 5;
+
+	for (int x = 0 - radius; x <= radius; x++)
 	{
-		for (int y = -2; y <= 2; y++)
+		for (int y = 0 - radius; y <= radius; y++)
 		{
 			float pcfDepth = texture(u_DepthMap, projectionCoordinates.xy + vec2(x, y) * texelSize).r; 
-			shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;        
+			shadow += currentDepth - bias > pcfDepth + 0.015 ? 1.0 : 0.0;    
 		}    
 	}
 
-	shadow /= 25.0;
+	int radiusWidth = 2 * radius + 1;
+	shadow /= radiusWidth * radiusWidth;
 
 	if (projectionCoordinates.z > 1.0)
 		shadow = 0.0;
 
 	Output.rgb = ambient + (1.0 - shadow) * (diffuse + specular);
+//	Output.rgb = vec3(1.0 - shadow == 1.0 ? 1.0 : 0.0);
 
 	diffuse = vec3(0.0);
 	specular = vec3(0.0);

@@ -28,6 +28,7 @@ namespace ultraviolet
 	},
 		m_Renderer{ *this },
 		m_DeltaTime{},
+		m_Fullscreen{ false },
 		m_ShowMenu{ false }
 	{
 		
@@ -109,7 +110,15 @@ namespace ultraviolet
 
 		m_Scene.Models.push_back(std::move(boxModel2));
 
-		auto teapot{ EntityLoader::Load("teapot", PhysicsBodyType::Dynamic, "assets/models/teapot/teapot.obj", "assets/models/teapot/teapotCollision.obj", 0.001f) };
+		auto teapot{ 
+			EntityLoader::Load(
+				"teapot", 
+				PhysicsBodyType::Dynamic, 
+				"assets/models/teapot/teapot.obj", 
+				"assets/models/teapot/teapotCollision.obj", 
+				0.35f
+			) 
+		};
 
 		if (teapot)
 		{
@@ -197,11 +206,10 @@ namespace ultraviolet
 				::b3Body_ApplyLinearImpulseToCenter(*m_PlayerBody, ::b3Vec3{ 0.0f, 5.0f, 0.0f }, true);
 				break;
 
-			case Keycode::RIGHTBRACKET:
-				static bool vsync{ true };
-				vsync = !vsync;
-				m_Renderer.SetVSync(vsync);
-				break;			
+			case Keycode::F11:
+				m_Fullscreen = !m_Fullscreen;
+				SetFullscreen(m_Fullscreen);
+				break;
 		}
 	}
 
@@ -231,7 +239,7 @@ namespace ultraviolet
 
 	void Game::OnResize(int width, int height)
 	{
-		m_Renderer.SetViewport(width, height);
+		m_Renderer.Resize(width, height);
 	}
 
 	void Game::ProcessInput(double deltaTime)
@@ -265,18 +273,6 @@ namespace ultraviolet
 		if (Input::IsKeyHeld(Scancode::D))
 			movementVector += right;
 
-		if (Input::IsKeyHeld(Scancode::SPACE))
-		{
-			if (m_Player.OnGround || m_Player.Flying)
-				m_Player.Velocity.y += m_Player.JumpHeight;
-		}
-
-		if (Input::IsKeyHeld(Scancode::LCTRL))
-		{
-			if (m_Player.Flying)
-				m_Player.Velocity.y -= m_Player.JumpHeight;
-		}
-
 		if (glm::length(movementVector) > 0.0f)
 			movementVector = glm::normalize(movementVector);
 
@@ -305,6 +301,11 @@ namespace ultraviolet
 	{
 		::ImGui::Text("FPS: %f", 1.0 / m_DeltaTime);
 		::ImGui::Text("Frametime: %.2fms", m_DeltaTime * 1000);
+
+		static bool vsync{ true };
+		::ImGui::Checkbox("V-Sync", &vsync);
+
+		m_Renderer.SetVSync(vsync);
 
 		if (::ImGui::CollapsingHeader("Renderer"))
 		{

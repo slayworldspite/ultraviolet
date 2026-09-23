@@ -228,6 +228,12 @@ namespace ultraviolet
 		::SDL_GL_SetSwapInterval(value);
 	}
 
+	void Renderer::Resize(int width, int height)
+	{
+		SetViewport(width, height);
+		InitializeFramebuffers({ width, height });
+	}
+
 	void Renderer::AddToImGui()
 	{
 
@@ -341,10 +347,13 @@ namespace ultraviolet
 		const glm::vec3& cameraPosition{ scene.Camera.Position };
 
 		float texelSize{ m_ShadowCameraDepth / m_ShadowMapResolution };
+		float snapFactor{ 4.0f };
+
+		float snapSize{ texelSize * snapFactor };
 
 		glm::vec2 snappedCameraPosition{};
-		snappedCameraPosition.x = std::floor(cameraPosition.x / texelSize) * texelSize;
-		snappedCameraPosition.y = std::floor(cameraPosition.z / texelSize) * texelSize;
+		snappedCameraPosition.x = std::floor(cameraPosition.x / snapSize) * snapSize;
+		snappedCameraPosition.y = std::floor(cameraPosition.z / snapSize) * snapSize;
 
 		glm::mat4 lightProjection{ glm::ortho(
 			-m_ShadowCameraSize - snappedCameraPosition.x, 

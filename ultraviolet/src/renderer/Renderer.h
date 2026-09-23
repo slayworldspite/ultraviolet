@@ -26,6 +26,7 @@ namespace ultraviolet
 		void SetViewport(int width, int height);
 		void SetWireframeMode(bool value);
 		void SetVSync(bool value) const;
+		void Resize(int width, int height);
 
 		void AddToImGui();
 

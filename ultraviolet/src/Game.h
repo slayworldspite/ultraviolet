@@ -28,6 +28,7 @@ namespace ultraviolet
 		double m_DeltaTime;
 		Scene m_Scene;
 
+		bool m_Fullscreen;
 		bool m_ShowMenu;
 		glm::vec4 m_ClearColor;
 		Player m_Player;

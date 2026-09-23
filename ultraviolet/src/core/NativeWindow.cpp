@@ -73,4 +73,9 @@ namespace ultraviolet
 	{
 		return ::SDL_GetWindowRelativeMouseMode(m_Window);
 	}
+
+	void NativeWindow::SetFullscreen(bool value) const
+	{
+		::SDL_SetWindowFullscreen(m_Window, value);
+	}
 }

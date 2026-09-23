@@ -21,6 +21,7 @@ namespace ultraviolet
 		std::pair<int, int> GetWindowSize() const;
 		void SetRelativeMouseMode(bool value) const;
 		bool GetRelativeMouseMode() const;
+		void SetFullscreen(bool value) const;
 
 	private:
 		::SDL_Window* m_Window;
