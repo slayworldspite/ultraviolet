@@ -3,6 +3,7 @@
 #include <imgui/imgui_impl_sdl3.h>
 
 #include "GameWindow.h"
+#include "../physics/PhysicsSystem.h"
 #include "../utils/Logger.h"
 
 namespace ultraviolet
@@ -15,6 +16,8 @@ namespace ultraviolet
 
 	void GameWindow::Run()
 	{
+		PhysicsSystem::Initialize();
+
 		OnStart();
 
 		Logger::Log("game started!", Logger::Level::Info);

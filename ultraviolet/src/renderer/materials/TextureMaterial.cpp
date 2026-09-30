@@ -1,4 +1,5 @@
 #include <imgui/imgui.h>
+#include <imgui/implot.h>
 
 #include "TextureMaterial.h"
 
@@ -88,14 +89,35 @@ namespace ultraviolet
 
 			if (::ImGui::CollapsingHeader(("Textures ##" + id).c_str()))
 			{
-				auto diffuseSize{ Diffuse->GetSize() };
-				::ImGui::Image((ImTextureID)(intptr_t)Diffuse->GetID(), ImVec2{ static_cast<float>(diffuseSize.first), static_cast<float>(diffuseSize.second) });
+				if (::ImPlot::BeginPlot(("Diffuse Texture ##" + id).c_str()))
+				{
+					::ImPlot::PlotImage(("Diffuse ##" + id).c_str(),
+						(ImTextureID)(intptr_t)Diffuse->GetID(),
+						ImVec2{ 0, 0 }, ImVec2{ 1, 1 }
+					);
 
-				auto specularSize{ Specular->GetSize() };
-				::ImGui::Image((ImTextureID)(intptr_t)Specular->GetID(), ImVec2{ static_cast<float>(specularSize.first), static_cast<float>(specularSize.second) });
+					::ImPlot::EndPlot();
+				}
 
-				auto normalSize{ Normal->GetSize() };
-				::ImGui::Image((ImTextureID)(intptr_t)Normal->GetID(), ImVec2{ static_cast<float>(normalSize.first), static_cast<float>(normalSize.second) });
+				if (::ImPlot::BeginPlot(("Specular Texture ##" + id).c_str()))
+				{
+					::ImPlot::PlotImage(("Specular ##" + id).c_str(),
+						(ImTextureID)(intptr_t)Specular->GetID(),
+						ImVec2{ 0, 0 }, ImVec2{ 1, 1 }
+					);
+
+					::ImPlot::EndPlot();
+				}
+
+				if (::ImPlot::BeginPlot(("Normal Texture ##" + id).c_str()))
+				{
+					::ImPlot::PlotImage(("Normal ##" + id).c_str(),
+						(ImTextureID)(intptr_t)Normal->GetID(),
+						ImVec2{ 0, 0 }, ImVec2{ 1, 1 }
+					);
+
+					::ImPlot::EndPlot();
+				}
 			}
 		}
 	}

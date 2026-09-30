@@ -120,9 +120,6 @@
     <ClCompile Include="src\renderer\materials\TextureMaterial.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="vendor\tracy\TracyClient.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\renderer\materials\LightMaterial.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -132,7 +129,7 @@
     <ClCompile Include="src\renderer\objects\Renderbuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\game\Player.cpp">
+    <ClCompile Include="src\game\characters\Player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\renderer\materials\OverlayMaterial.cpp">
@@ -148,6 +145,24 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\physics\Entity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\imgui\implot.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\imgui\implot_items.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\imgui\implot_demo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\imgui\imgui_demo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\tracy\TracyClient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\characters\Character.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -284,9 +299,6 @@
     <ClInclude Include="src\renderer\materials\TextureMaterial.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="vendor\tracy\tracy\Tracy.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\renderer\materials\LightMaterial.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -296,7 +308,7 @@
     <ClInclude Include="src\renderer\objects\Renderbuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\game\Player.h">
+    <ClInclude Include="src\game\characters\Player.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\renderer\materials\OverlayMaterial.h">
@@ -339,6 +351,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\physics\Entity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\imgui\implot.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\imgui\implot_internal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\tracy\tracy\Tracy.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\characters\Character.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

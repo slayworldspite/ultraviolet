@@ -66,7 +66,9 @@ namespace ultraviolet
 		void CreateContext(const NativeWindow& window);
 		void InitializeImGui() const;
 		void InitializeFramebuffers(const std::pair<int, int>& windowSize);
+		
 		void DrawShadowMap(const Scene& scene);
+		void DrawShadowMap(const Model& model);
 		void PresentFrame() const;
 	};
 }

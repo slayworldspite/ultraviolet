@@ -1,5 +1,6 @@
 #include <glad/glad.h>
 #include <imgui/imgui.h>
+#include <imgui/implot.h>
 
 #include "Framebuffer.h"
 
@@ -44,9 +45,19 @@ namespace ultraviolet
 		::glDeleteFramebuffers(1, &m_ID);
 	}
 
-	void Framebuffer::AddToImGui()
+	void Framebuffer::AddToImGui(const std::string& id)
 	{
-		auto size{ Texture.GetSize() };
-		::ImGui::Image((ImTextureID)(intptr_t)Texture.GetID(), ImVec2{ static_cast<float>(size.first), static_cast<float>(size.second) });
+		if (::ImPlot::BeginPlot(("Framebuffer ##" + id).c_str()))
+		{
+			auto size{ Texture.GetSize() };
+
+			::ImPlot::PlotImage(("Framebuffer Texture ##" + id).c_str(),
+				(ImTextureID)(intptr_t)Texture.GetID(),
+				ImVec2{ 0, 0 }, 
+				ImVec2{ static_cast<float>(size.first), static_cast<float>(size.second) }
+			);
+
+			::ImPlot::EndPlot();
+		}
 	}
 }

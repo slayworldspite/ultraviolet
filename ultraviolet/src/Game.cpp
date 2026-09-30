@@ -1,4 +1,5 @@
 #include <imgui/imgui.h>
+#include <imgui/implot.h>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/string_cast.hpp>
 #include <tracy/tracy/Tracy.hpp>
@@ -36,8 +37,6 @@ namespace ultraviolet
 
 	void Game::OnStart()
 	{
-		PhysicsSystem::Initialize();
-
 		SetRelativeMouseMode(true);
 
 		m_ClearColor = glm::vec4{ 0.0f, 0.55f, 1.0f, 1.0f };
@@ -50,33 +49,15 @@ namespace ultraviolet
 		m_Scene.DirectionalLight.Pitch = -22.5f;
 		m_Scene.DirectionalLight.Yaw = 22.5f;
 
+		m_Player = std::make_unique<Player>();
+
 		LoadOverlay();
 
 		auto worldID{ PhysicsSystem::GetWorldID() };
 
-		// capsule
-		::b3BodyDef capsuleBodyDefinition{ ::b3DefaultBodyDef() };
-		capsuleBodyDefinition.position = { -5.0f, 0.0f, 0.0f };
-		capsuleBodyDefinition.type = ::b3_dynamicBody;
-		capsuleBodyDefinition.motionLocks.angularX = true;
-		capsuleBodyDefinition.motionLocks.angularZ = true;
-
-		m_PlayerBody = std::make_unique<::b3BodyId>(::b3CreateBody(worldID, &capsuleBodyDefinition));
-
-		m_PlayerCapsule = std::make_unique<::b3Capsule>();
-		m_PlayerCapsule->center1 = { 0.0f, 0.5f, 0.0f };
-		m_PlayerCapsule->center2 = { 0.0f, 1.5f, 0.0f };
-		m_PlayerCapsule->radius = 0.4f;
-
-		::b3ShapeDef capsuleShapeDefinition{ ::b3DefaultShapeDef() };
-		capsuleShapeDefinition.density = 1.0f;
-		capsuleShapeDefinition.baseMaterial.friction = 5.0f;
-
-		::b3CreateCapsuleShape(*m_PlayerBody, &capsuleShapeDefinition, m_PlayerCapsule.get());
-
 		// ground
 		::b3BodyDef groundBodyDefinition{ ::b3DefaultBodyDef() };
-		groundBodyDefinition.position = { 0.0f, 0.0f, 0.0f };
+		groundBodyDefinition.position = { 0.0f, -0.25f, 0.0f };
 
 		m_Ground = std::make_unique<::b3BodyId>(::b3CreateBody(worldID, &groundBodyDefinition));
 
@@ -107,26 +88,9 @@ namespace ultraviolet
 
 		Model boxModel2{ Primitives::GetCube("ground", brickMaterial) };
 		boxModel2.Scale = glm::vec3{ 15.0f, 0.25f, 15.0f };
+		boxModel2.Position.y = 0.0f - boxModel2.Scale.y;
 
 		m_Scene.Models.push_back(std::move(boxModel2));
-
-		auto teapot{ 
-			EntityLoader::Load(
-				"teapot", 
-				PhysicsBodyType::Dynamic, 
-				"assets/models/teapot/teapot.obj", 
-				"assets/models/teapot/teapotCollision.obj", 
-				0.35f
-			) 
-		};
-
-		if (teapot)
-		{
-			for (Mesh& mesh : teapot->RenderObject.Meshes)
-				mesh.Material = teapotMaterial;
-
-			m_Scene.Entities.push_back(std::move(*teapot));
-		}
 
 		auto suzanne{
 			EntityLoader::Load(
@@ -144,23 +108,47 @@ namespace ultraviolet
 
 			m_Scene.Entities.push_back(std::move(*suzanne));
 		}
+
+		auto playerModel{ 
+			ModelLoader::Load(
+				"playerModel",
+				"assets/models/player/player.obj"
+			)
+		};
+
+		if (playerModel)
+		{
+			for (Mesh& mesh : playerModel->Meshes)
+				mesh.Material = teapotMaterial;
+
+			playerModel->Visible = false;
+
+			m_Scene.Models.push_back(std::move(*playerModel));
+		}
 	}
 
 	void Game::OnUpdate(double deltaTime)
 	{
 		ZoneScoped;
 		m_DeltaTime = deltaTime;
-		m_Player.OnGround = false;
 
-		m_Scene.Camera.Position = m_Player.Position;
-		m_Scene.Camera.Position.y += m_Player.Height;
+		m_Scene.Camera.Position = m_Player->Position;
+		m_Scene.Camera.Position.y += m_Player->Height;
 
 		PhysicsSystem::Update(deltaTime);
 
-		auto playerPosition{ ::b3Body_GetPosition(*m_PlayerBody) };
-		auto playerRotation{ ::b3Body_GetRotation(*m_PlayerBody) };
+		m_Player->Update(deltaTime);
 
-		m_Player.Position = glm::vec3{ playerPosition.x, playerPosition.y, playerPosition.z };
+		auto playerModel{ m_Scene.GetModel("playerModel") };
+
+		if (playerModel)
+		{
+			playerModel->Position = m_Player->Position;
+			playerModel->Position.y = 0.0f;
+			playerModel->Position.x += 2.0f;
+
+			playerModel->Rotation.y = (0.0f - m_Scene.Camera.Yaw) + 90.0f;
+		}
 
 		m_Scene.Camera.Update();
 		m_Scene.Update();
@@ -198,18 +186,19 @@ namespace ultraviolet
 				m_ShowMenu = !m_ShowMenu;
 				break;
 
-			case Keycode::F:
-				m_Player.Flying = !m_Player.Flying;
-				break;
-
-			case Keycode::SPACE:
-				::b3Body_ApplyLinearImpulseToCenter(*m_PlayerBody, ::b3Vec3{ 0.0f, 5.0f, 0.0f }, true);
-				break;
-
 			case Keycode::F11:
 				m_Fullscreen = !m_Fullscreen;
 				SetFullscreen(m_Fullscreen);
 				break;
+
+			case Keycode::SPACE:
+				if (m_Player->OnGround || m_Player->Flying)
+					m_Player->Velocity.y += m_Player->JumpHeight;
+				break;
+
+			case Keycode::LCTRL:
+				if (m_Player->Flying)
+					m_Player->Velocity.y -= m_Player->JumpHeight;
 		}
 	}
 
@@ -276,31 +265,55 @@ namespace ultraviolet
 		if (glm::length(movementVector) > 0.0f)
 			movementVector = glm::normalize(movementVector);
 
-		::b3Vec3 velocity{ ::b3Body_GetLinearVelocity(*m_PlayerBody) };
-
-		velocity.x += movementVector.x * m_Player.Speed * static_cast<float>(deltaTime);
-		velocity.z += movementVector.z * m_Player.Speed * static_cast<float>(deltaTime);
+		m_Player->Velocity.x += movementVector.x * m_Player->Speed * static_cast<float>(deltaTime);
+		m_Player->Velocity.z += movementVector.z * m_Player->Speed * static_cast<float>(deltaTime);
 
 		float horizontalSpeed{ std::sqrt(
-			velocity.x * velocity.x +
-			velocity.z * velocity.z
+			m_Player->Velocity.x * m_Player->Velocity.x +
+			m_Player->Velocity.z * m_Player->Velocity.z
 		) };
 
-		if (horizontalSpeed > m_Player.MaxSpeed)
+		if (horizontalSpeed > m_Player->MaxSpeed)
 		{
-			float scale{ m_Player.MaxSpeed / horizontalSpeed };
+			float scale{ m_Player->MaxSpeed / horizontalSpeed };
 
-			velocity.x *= scale;
-			velocity.z *= scale;
+			m_Player->Velocity.x *= scale;
+			m_Player->Velocity.z *= scale;
 		}
-
-		::b3Body_SetLinearVelocity(*m_PlayerBody, velocity);
 	}
 
 	void Game::DebugMenu()
 	{
 		::ImGui::Text("FPS: %f", 1.0 / m_DeltaTime);
-		::ImGui::Text("Frametime: %.2fms", m_DeltaTime * 1000);
+		::ImGui::Text("Frame Time: %.2fms", m_DeltaTime * 1000);
+
+		static std::vector<double> frameTimes{};
+		static std::vector<double> frameTimeHistory{};
+		static double time{};
+		static double maxFrameTime{};
+
+		time += m_DeltaTime;
+
+		frameTimes.push_back(time);
+		frameTimeHistory.push_back(m_DeltaTime * 1000);
+
+		maxFrameTime = std::max(maxFrameTime, m_DeltaTime);
+
+		if (ImPlot::BeginPlot("Frame Time Graph", ImVec2(-1, ImGui::GetTextLineHeight() * 30)))
+		{
+			ImPlot::SetupAxes("Time", "Frame Time");
+			ImPlot::SetupAxisLimits(ImAxis_X1, time - 10.0, time, ImGuiCond_Always);
+			ImPlot::SetupAxisLimits(ImAxis_Y1, 0.0, maxFrameTime * 1000 + 2, ImGuiCond_Always);
+
+			ImPlot::PlotLine(
+				"Frame Time",
+				frameTimes.data(),
+				frameTimeHistory.data(),
+				static_cast<int>(frameTimeHistory.size())
+			);
+
+			ImPlot::EndPlot();
+		}
 
 		static bool vsync{ true };
 		::ImGui::Checkbox("V-Sync", &vsync);
@@ -337,7 +350,7 @@ namespace ultraviolet
 			::ImGui::Indent(-16.0f);
 		}
 
-		m_Player.AddToImGui();
+		m_Player->AddToImGui();
 
 		m_Scene.Camera.AddToImGui();
 

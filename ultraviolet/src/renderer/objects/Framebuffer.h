@@ -19,6 +19,6 @@ namespace ultraviolet
 		virtual void Unbind() const override;
 		virtual void Delete() override;
 
-		void AddToImGui();
+		void AddToImGui(const std::string& id);
 	};
 }

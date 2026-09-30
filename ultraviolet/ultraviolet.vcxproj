@@ -110,11 +110,12 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;TRACY_ENABLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp23</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <DebugInformationFormat>None</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -143,7 +144,8 @@
     <ClCompile Include="src\core\GameWindow.cpp" />
     <ClCompile Include="src\core\NativeWindow.cpp" />
     <ClCompile Include="src\Game.cpp" />
-    <ClCompile Include="src\game\Player.cpp" />
+    <ClCompile Include="src\game\characters\Character.cpp" />
+    <ClCompile Include="src\game\characters\Player.cpp" />
     <ClCompile Include="src\input\Input.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\physics\Entity.cpp" />
@@ -178,12 +180,16 @@
     <ClCompile Include="src\utils\Logger.cpp" />
     <ClCompile Include="vendor\glad\glad.c" />
     <ClCompile Include="vendor\imgui\imgui.cpp" />
+    <ClCompile Include="vendor\imgui\imgui_demo.cpp" />
     <ClCompile Include="vendor\imgui\imgui_draw.cpp" />
     <ClCompile Include="vendor\imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="vendor\imgui\imgui_impl_sdl3.cpp" />
     <ClCompile Include="vendor\imgui\imgui_stdlib.cpp" />
     <ClCompile Include="vendor\imgui\imgui_tables.cpp" />
     <ClCompile Include="vendor\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="vendor\imgui\implot.cpp" />
+    <ClCompile Include="vendor\imgui\implot_demo.cpp" />
+    <ClCompile Include="vendor\imgui\implot_items.cpp" />
     <ClCompile Include="vendor\tracy\TracyClient.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -191,7 +197,8 @@
     <ClInclude Include="src\core\NativeWindow.h" />
     <ClInclude Include="src\core\NativeWindowSettings.h" />
     <ClInclude Include="src\Game.h" />
-    <ClInclude Include="src\game\Player.h" />
+    <ClInclude Include="src\game\characters\Character.h" />
+    <ClInclude Include="src\game\characters\Player.h" />
     <ClInclude Include="src\input\Input.h" />
     <ClInclude Include="src\input\Keycode.h" />
     <ClInclude Include="src\input\MouseButtonFlags.h" />
@@ -245,6 +252,8 @@
     <ClInclude Include="vendor\imgui\imgui_impl_sdl3.h" />
     <ClInclude Include="vendor\imgui\imgui_internal.h" />
     <ClInclude Include="vendor\imgui\imgui_stdlib.h" />
+    <ClInclude Include="vendor\imgui\implot.h" />
+    <ClInclude Include="vendor\imgui\implot_internal.h" />
     <ClInclude Include="vendor\imgui\imstb_rectpack.h" />
     <ClInclude Include="vendor\imgui\imstb_textedit.h" />
     <ClInclude Include="vendor\imgui\imstb_truetype.h" />

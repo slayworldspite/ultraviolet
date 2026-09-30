@@ -6,17 +6,14 @@
 
 static bool s_IsInitialized{ false };
 static ::b3WorldId s_WorldID{};
-static float s_TimeStep{};
 
 namespace ultraviolet
 {
-	void PhysicsSystem::Initialize(float timeStep)
+	void PhysicsSystem::Initialize()
 	{
 		::b3WorldDef worldDefinition{ ::b3DefaultWorldDef() };
 
 		s_WorldID = ::b3CreateWorld(&worldDefinition);
-
-		s_TimeStep = timeStep;
 
 		s_IsInitialized = true;
 	}

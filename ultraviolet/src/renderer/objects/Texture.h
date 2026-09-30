@@ -1,6 +1,7 @@
 #pragma once
 
 #include <filesystem>
+#include <string_view>
 
 #include "GLObject.h"
 #include "TextureType.h"

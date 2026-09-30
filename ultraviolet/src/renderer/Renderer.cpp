@@ -4,6 +4,7 @@
 #include <SDL3/SDL.h>
 #include <glad/glad.h>
 #include <imgui/imgui.h>
+#include <imgui/implot.h>
 #include <imgui/imgui_impl_sdl3.h>
 #include <imgui/imgui_impl_opengl3.h>
 #include <glm/gtc/matrix_transform.hpp>
@@ -62,6 +63,7 @@ namespace ultraviolet
 	{
 		::ImGui_ImplOpenGL3_Shutdown();
 		::ImGui_ImplSDL3_Shutdown();
+		::ImPlot::DestroyContext();
 		::ImGui::DestroyContext();
 	}
 
@@ -257,9 +259,9 @@ namespace ultraviolet
 			::ImGui::Indent(16.0f);
 
 			::ImGui::Text("Main");
-			m_PostProcessFramebuffer->AddToImGui();
+			m_PostProcessFramebuffer->AddToImGui("Main");
 			::ImGui::Text("Shadow Map");
-			m_ShadowMapFramebuffer->AddToImGui();
+			m_ShadowMapFramebuffer->AddToImGui("Shadow Map");
 			::ImGui::Text("Overlay");
 			::ImGui::Image((ImTextureID)(intptr_t)m_OverlayTexture->GetID(), ImVec2{ 256.0f, 144.0f });
 		}
@@ -293,6 +295,8 @@ namespace ultraviolet
 	{
 		::IMGUI_CHECKVERSION();
 		::ImGui::CreateContext();
+		
+		::ImPlot::CreateContext();
 
 		::ImGuiIO& io{ ::ImGui::GetIO() };
 		io.ConfigFlags |=
@@ -347,7 +351,7 @@ namespace ultraviolet
 		const glm::vec3& cameraPosition{ scene.Camera.Position };
 
 		float texelSize{ m_ShadowCameraDepth / m_ShadowMapResolution };
-		float snapFactor{ 4.0f };
+		float snapFactor{ 32.0f };
 
 		float snapSize{ texelSize * snapFactor };
 
@@ -378,7 +382,7 @@ namespace ultraviolet
 
 		for (const Model& model : scene.Models)
 		{
-			if (!model.Visible || !model.CastsShadow)
+			if (!model.CastsShadow)
 				continue;
 
 			for (const Mesh& mesh : model.Meshes)

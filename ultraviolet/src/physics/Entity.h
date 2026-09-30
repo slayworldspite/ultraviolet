@@ -12,6 +12,7 @@ namespace ultraviolet
 		Model RenderObject;
 		PhysicsBody PhysicsObject;
 
+	public:
 		Entity(std::string_view id, Model& renderObject, PhysicsBody& physicsObject);
 
 		void Update();

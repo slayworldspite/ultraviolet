@@ -6,7 +6,7 @@
 #include "renderer/Renderer.h"
 #include "renderer/camera/ProjectionCamera.h"
 #include "renderer/materials/LightMaterial.h"
-#include "game/Player.h"
+#include "game/characters/Player.h"
 
 namespace ultraviolet
 {
@@ -31,11 +31,9 @@ namespace ultraviolet
 		bool m_Fullscreen;
 		bool m_ShowMenu;
 		glm::vec4 m_ClearColor;
-		Player m_Player;
+		std::unique_ptr<Player> m_Player;
 		std::unique_ptr<Mesh> m_Overlay;
 		std::unique_ptr<::b3BodyId> m_Ground;
-		std::unique_ptr<::b3BodyId> m_PlayerBody;
-		std::unique_ptr<::b3Capsule> m_PlayerCapsule;
 
 	private:
 		void ProcessInput(double deltaTime);
