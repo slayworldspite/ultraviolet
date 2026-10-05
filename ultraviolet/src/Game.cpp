@@ -30,7 +30,8 @@ namespace ultraviolet
 		m_Renderer{ *this },
 		m_DeltaTime{},
 		m_Fullscreen{ false },
-		m_ShowMenu{ false }
+		m_ShowMenu{ false },
+		m_FreeCam{ false }
 	{
 		
 	}
@@ -121,7 +122,7 @@ namespace ultraviolet
 			for (Mesh& mesh : playerModel->Meshes)
 				mesh.Material = teapotMaterial;
 
-			playerModel->Visible = false;
+			//playerModel->Visible = false;
 
 			m_Scene.Models.push_back(std::move(*playerModel));
 		}
@@ -130,14 +131,22 @@ namespace ultraviolet
 	void Game::OnUpdate(double deltaTime)
 	{
 		ZoneScoped;
-		m_DeltaTime = deltaTime;
 
-		m_Scene.Camera.Position = m_Player->Position;
-		m_Scene.Camera.Position.y += m_Player->Height;
+		deltaTime = std::min(deltaTime, 0.05);
+
+		m_DeltaTime = deltaTime;
 
 		PhysicsSystem::Update(deltaTime);
 
-		m_Player->Update(deltaTime);
+		ProjectionCamera& camera{ m_Scene.Camera };
+
+		m_Player->Update(deltaTime, camera.GetFront(), camera.GetRight());
+
+		if (!m_FreeCam)
+		{
+			camera.Position = m_Player->Position;
+			camera.Position.y += m_Player->Height;
+		}
 
 		auto playerModel{ m_Scene.GetModel("playerModel") };
 
@@ -145,12 +154,12 @@ namespace ultraviolet
 		{
 			playerModel->Position = m_Player->Position;
 			playerModel->Position.y = 0.0f;
-			playerModel->Position.x += 2.0f;
 
-			playerModel->Rotation.y = (0.0f - m_Scene.Camera.Yaw) + 90.0f;
+			if (!m_FreeCam)
+				playerModel->Rotation.y = (0.0f - camera.Yaw) + 90.0f;
 		}
 
-		m_Scene.Camera.Update();
+		camera.Update();
 		m_Scene.Update();
 
 		ProcessInput(deltaTime);
@@ -191,14 +200,9 @@ namespace ultraviolet
 				SetFullscreen(m_Fullscreen);
 				break;
 
-			case Keycode::SPACE:
-				if (m_Player->OnGround || m_Player->Flying)
-					m_Player->Velocity.y += m_Player->JumpHeight;
+			case Keycode::N:
+				m_FreeCam = !m_FreeCam;
 				break;
-
-			case Keycode::LCTRL:
-				if (m_Player->Flying)
-					m_Player->Velocity.y -= m_Player->JumpHeight;
 		}
 	}
 
@@ -236,49 +240,36 @@ namespace ultraviolet
 		if (::ImGui::GetIO().WantCaptureKeyboard)
 			return;
 
-		glm::vec3 forward{
-			glm::cos(glm::radians(m_Scene.Camera.Yaw)),
-			0.0f,
-			glm::sin(glm::radians(m_Scene.Camera.Yaw))
-		};
+		float fDeltaTime{ static_cast<float>(deltaTime) };
 
-		glm::vec3 right{
-			-glm::sin(glm::radians(m_Scene.Camera.Yaw)),
-			0.0f,
-			glm::cos(glm::radians(m_Scene.Camera.Yaw))
-		};
-
-		glm::vec3 movementVector{};
+		glm::vec3 throttle{};
 
 		if (Input::IsKeyHeld(Scancode::W))
-			movementVector += forward;
+			throttle.x += 1.0f;
 
 		if (Input::IsKeyHeld(Scancode::S))
-			movementVector -= forward;
+			throttle.x -= 1.0f;
 
 		if (Input::IsKeyHeld(Scancode::A))
-			movementVector -= right;
+			throttle.y -= 1.0f;
 
 		if (Input::IsKeyHeld(Scancode::D))
-			movementVector += right;
+			throttle.y += 1.0f;
 
-		if (glm::length(movementVector) > 0.0f)
-			movementVector = glm::normalize(movementVector);
-
-		m_Player->Velocity.x += movementVector.x * m_Player->Speed * static_cast<float>(deltaTime);
-		m_Player->Velocity.z += movementVector.z * m_Player->Speed * static_cast<float>(deltaTime);
-
-		float horizontalSpeed{ std::sqrt(
-			m_Player->Velocity.x * m_Player->Velocity.x +
-			m_Player->Velocity.z * m_Player->Velocity.z
-		) };
-
-		if (horizontalSpeed > m_Player->MaxSpeed)
+		if (m_FreeCam)
 		{
-			float scale{ m_Player->MaxSpeed / horizontalSpeed };
+			glm::vec3 forward{ m_Scene.Camera.GetFront() };
+			glm::vec3 right{ m_Scene.Camera.GetRight() };
 
-			m_Player->Velocity.x *= scale;
-			m_Player->Velocity.z *= scale;
+			if (Input::IsKeyHeld(Scancode::SPACE))
+				m_Scene.Camera.Position.y += 1.0f * fDeltaTime;
+
+			if (Input::IsKeyHeld(Scancode::LCTRL))
+				m_Scene.Camera.Position.y -= 1.0f * fDeltaTime;
+		}
+		else
+		{
+			m_Player->Throttle = throttle * static_cast<float>(deltaTime);
 		}
 	}
 

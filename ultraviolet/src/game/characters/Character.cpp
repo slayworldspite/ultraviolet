@@ -23,10 +23,12 @@ namespace ultraviolet
 	Character::Character(std::string_view id, glm::vec3 position, float height, float radius) :
 		ID{ id },
 		Position{ position },
-		Velocity{ 0.0f },
+		Throttle{ 0.0f },
 		Height{ height },
 		OnGround{ true },
 		Flying{ false },
+		Running{ false},
+		m_Velocity{ 0.0f },
 		m_Mover{}
 	{
 		m_Mover.center1 = { 0.0f + position.x, 0.5f + position.y, 0.0f + position.z };
@@ -34,44 +36,76 @@ namespace ultraviolet
 		m_Mover.radius = radius;
 	}
 
-	void Character::Update(double deltaTime)
+	void Character::Update(double deltaTime, const glm::vec3& forward, const glm::vec3& right)
 	{
+		float fDeltaTime{ static_cast<float>(deltaTime) };
+
 		::b3Pos origin{ ::b3Pos_zero };
 
-		if (!OnGround && !Flying)
-			Velocity.y -= Gravity * static_cast<float>(deltaTime);
+		float speed{ ::b3Length(m_Velocity) };
 
-		if (OnGround && !Flying)
+		if (speed < MinSpeed)
 		{
-			glm::vec2 horizontalVelocity{ Velocity.x, Velocity.z };
-
-			float speed{ glm::length(horizontalVelocity) };
-
-			if (speed > 0.0f)
+			m_Velocity.x = 0.0f;
+			m_Velocity.z = 0.0f;
+		}
+		else
+		{
+			if (OnGround || Flying)
 			{
-				float newSpeed{ std::max(0.0f, speed - Friction * static_cast<float>(deltaTime)) };
+				if (speed > 0.0f)
+				{
+					float control{ speed < StopSpeed ? StopSpeed : speed };
 
-				horizontalVelocity *= newSpeed / speed;
+					float drop{ control * Friction * fDeltaTime };
+					float newSpeed{ std::max(0.0f, speed - drop) };
 
-				Velocity.x = horizontalVelocity.x;
-				Velocity.z = horizontalVelocity.y;
+					float ratio{ newSpeed / speed };
+
+					m_Velocity.x *= ratio;
+					m_Velocity.z *= ratio;
+				}
 			}
 		}
 
-		if (Flying)
+		float maxSpeed{ Running ? MaxSpeed * 1.5f : MaxSpeed };
+
+		::b3Vec3 b3Forward{ forward.x, forward.y, forward.z };
+		::b3Vec3 b3Right{ right.x, right.y, right.z };
+
+		::b3Vec3 desiredVelocity{ maxSpeed * Throttle.x * b3Forward + maxSpeed * Throttle.y * b3Right };
+
+		float desiredSpeed;
+		::b3Vec3 desiredDirection{ ::b3GetLengthAndNormalize(&desiredSpeed, desiredVelocity) };
+
+		if (desiredSpeed > maxSpeed)
 		{
-			float speed{ glm::length(Velocity) };
-
-			if (speed > 0.0f)
-			{
-				float newSpeed{ std::max(0.0f, speed - Friction * static_cast<float>(deltaTime)) };
-
-				Velocity *= newSpeed / speed;
-			}
+			desiredVelocity *= maxSpeed / desiredSpeed;
+			desiredSpeed = maxSpeed;
 		}
 
-		::b3Vec3 velocity{ Velocity.x, Velocity.y, Velocity.z };
-		::b3Vec3 translation{ ::b3MulSV(static_cast<float>(deltaTime), velocity) };
+		if (OnGround)
+			m_Velocity.y = 0.0f;
+
+		float currentSpeed{ ::b3Dot(m_Velocity, desiredDirection) };
+		float addSpeed{ desiredSpeed - currentSpeed };
+
+		if (addSpeed > 0.0f)
+		{
+			float acceleration{ Acceleration * maxSpeed * fDeltaTime };
+
+			if (acceleration > addSpeed)
+			{
+				acceleration = addSpeed;
+			}
+
+			m_Velocity += acceleration * desiredDirection;
+		}
+
+		if (!Flying)
+			m_Velocity.y -= Gravity * fDeltaTime;
+
+		::b3Vec3 translation{ ::b3MulSV(fDeltaTime, m_Velocity) };
 
 		float fraction{ ::b3World_CastMover(
 			PhysicsSystem::GetWorldID(),
@@ -100,9 +134,7 @@ namespace ultraviolet
 		m_Mover.center1 = ::b3Add(m_Mover.center1, result.delta);
 		m_Mover.center2 = ::b3Add(m_Mover.center2, result.delta);
 
-		::b3Vec3 clippedVector = ::b3ClipVector(velocity, context.Planes.data(), static_cast<int>(context.Count));
-
-		Velocity = { clippedVector.x, clippedVector.y, clippedVector.z };
+		m_Velocity = ::b3ClipVector(m_Velocity, context.Planes.data(), static_cast<int>(context.Count));
 
 		Position = { m_Mover.center1.x, m_Mover.center1.y, m_Mover.center1.z };
 	}
@@ -134,11 +166,13 @@ namespace ultraviolet
 	void Character::AddToImGui()
 	{
 		::ImGui::DragFloat3(("Position ##" + ID).c_str(), glm::value_ptr(Position), 0.1f);
-		::ImGui::DragFloat3(("Velocity ##" + ID).c_str(), glm::value_ptr(Velocity), 0.1f);
+		::ImGui::DragFloat3(("Velocity ##" + ID).c_str(), &m_Velocity.x, 0.1f);
 		::ImGui::Text("Height: %.2fm", Height);
 		::ImGui::Checkbox(("Flying ##" + ID).c_str(), &Flying);
-		::ImGui::DragFloat(("Speed ##" + ID).c_str(), &Speed, 0.1f);
+		::ImGui::DragFloat(("Acceleration ##" + ID).c_str(), &Acceleration, 0.1f);
+		::ImGui::DragFloat(("Minimum Speed ##" + ID).c_str(), &MinSpeed, 0.1f);
 		::ImGui::DragFloat(("Maximum Speed ##" + ID).c_str(), &MaxSpeed, 0.1f);
+		::ImGui::DragFloat(("Stop Speed ##" + ID).c_str(), &StopSpeed, 0.1f);
 		::ImGui::DragFloat(("Jump Height ##" + ID).c_str(), &JumpHeight, 0.1f);
 		::ImGui::DragFloat(("Gravity ##" + ID).c_str(), &Gravity, 0.01f);
 		::ImGui::DragFloat(("Friction ##" + ID).c_str(), &Friction, 0.5f);

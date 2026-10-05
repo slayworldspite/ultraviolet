@@ -107,8 +107,6 @@ void main()
     float closestDepth = texture(u_DepthMap, projectionCoordinates.xy).r; 
 
     float currentDepth = projectionCoordinates.z;
-
-	float bias = max(0.0025 * (1.0 - dot(o_Normal, normalize(-ub_DirectionalLight.Direction.xyz))), 0.005);  
     float shadow = 0.0;
 
 	vec2 texelSize = 1.0 / textureSize(u_DepthMap, 0);
@@ -120,7 +118,7 @@ void main()
 		for (int y = 0 - radius; y <= radius; y++)
 		{
 			float pcfDepth = texture(u_DepthMap, projectionCoordinates.xy + vec2(x, y) * texelSize).r; 
-			shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;    
+			shadow += currentDepth > pcfDepth ? 1.0 : 0.0;    
 		}    
 	}
 

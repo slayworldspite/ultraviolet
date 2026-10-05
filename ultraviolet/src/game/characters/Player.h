@@ -12,8 +12,6 @@ namespace ultraviolet
 	public:
 		Player();
 
-		void Update(double deltaTime) override;
-
 		void AddToImGui();
 	};
 }

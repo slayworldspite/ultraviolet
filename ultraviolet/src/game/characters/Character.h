@@ -11,24 +11,28 @@ namespace ultraviolet
 	public:
 		std::string ID;
 		glm::vec3 Position;
-		glm::vec3 Velocity;
+		glm::vec2 Throttle;
 		float Height;
 		bool OnGround;
 		bool Flying;
-		float Speed{ 150.0f };
+		bool Running;
+		float Acceleration{ 30.0f };
+		float MinSpeed{ 0.01f };
 		float MaxSpeed{ 7.0f };
+		float StopSpeed{ 1.0f };
 		float JumpHeight{ 5.0f };
-		float Gravity{ 9.81f };
-		float Friction{ 25.0f };
+		float Gravity{ 15.0f };
+		float Friction{ 4.0f };
 
 		Character(std::string_view id, glm::vec3 position = { 0.0f, 0.0f, 0.0f }, float height = 1.8f, float radius = 0.35f);
 		virtual ~Character() = default;
 
-		virtual void Update(double deltaTime);
+		virtual void Update(double deltaTime, const glm::vec3& forward, const glm::vec3& right);
 
 		void AddToImGui();
 
 	private:
+		::b3Vec3 m_Velocity;
 		::b3Capsule m_Mover;
 
 	private:

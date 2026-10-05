@@ -1,4 +1,4 @@
-#include <glm/gtc/matrix_transform.hpp>
+	#include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <imgui/imgui.h>
 
@@ -69,13 +69,14 @@ namespace ultraviolet
 		m_UniformBuffer->SetData(&data, sizeof(data));
 	}
 
-	void ProjectionCamera::Move(const glm::vec3& vector)
+	glm::vec3 ProjectionCamera::GetFront() const
 	{
-		glm::vec3 right = glm::normalize(glm::cross(m_Front, c_WorldUp));
+		return m_Front;
+	}
 
-		Position += right * vector.x;
-		Position.y += vector.y;
-		Position += m_Front * vector.z;
+	glm::vec3 ProjectionCamera::GetRight() const
+	{
+		return glm::normalize(glm::cross(m_Front, c_WorldUp));
 	}
 
 	void ProjectionCamera::AddToImGui()

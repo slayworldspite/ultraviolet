@@ -30,6 +30,7 @@ namespace ultraviolet
 
 		bool m_Fullscreen;
 		bool m_ShowMenu;
+		bool m_FreeCam;
 		glm::vec4 m_ClearColor;
 		std::unique_ptr<Player> m_Player;
 		std::unique_ptr<Mesh> m_Overlay;

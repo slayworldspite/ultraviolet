@@ -62,19 +62,19 @@ namespace ultraviolet
 		vertex.Normal = { 0.0f, 0.0f, 1.0f };
 		vertex.Tangent = { 1.0f, 0.0f, 0.0f };
 
-		vertex.Position = { -1.0f, -1.0f, 1.0f };
+		vertex.Position = { -0.5f, -0.5f, 0.5f };
 		vertex.TextureCoordinates = { 0.0f, 0.0f };
 		vertices.push_back(vertex);
 
-		vertex.Position = { 1.0f, -1.0f, 1.0f };
+		vertex.Position = { 0.5f, -0.5f, 0.5f };
 		vertex.TextureCoordinates = { 1.0f, 0.0f };
 		vertices.push_back(vertex);
 
-		vertex.Position = { -1.0f, 1.0f, 1.0f };
+		vertex.Position = { -0.5f, 0.5f, 0.5f };
 		vertex.TextureCoordinates = { 0.0f, 1.0f };
 		vertices.push_back(vertex);
 
-		vertex.Position = { 1.0f, 1.0f, 1.0f };
+		vertex.Position = { 0.5f, 0.5f, 0.5f };
 		vertex.TextureCoordinates = { 1.0f, 1.0f };
 		vertices.push_back(vertex);
 
@@ -83,19 +83,19 @@ namespace ultraviolet
 		vertex.Normal = { 0.0f, 0.0f, -1.0f };
 		vertex.Tangent = { -1.0f, 0.0f, 0.0f };
 
-		vertex.Position = { 1.0f, -1.0f, -1.0f };
+		vertex.Position = { 0.5f, -0.5f, -0.5f };
 		vertex.TextureCoordinates = { 0.0f, 0.0f };
 		vertices.push_back(vertex);
 
-		vertex.Position = { -1.0f, -1.0f, -1.0f };
+		vertex.Position = { -0.5f, -0.5f, -0.5f };
 		vertex.TextureCoordinates = { 1.0f, 0.0f };
 		vertices.push_back(vertex);
 
-		vertex.Position = { 1.0f, 1.0f, -1.0f };
+		vertex.Position = { 0.5f, 0.5f, -0.5f };
 		vertex.TextureCoordinates = { 0.0f, 1.0f };
 		vertices.push_back(vertex);
 
-		vertex.Position = { -1.0f, 1.0f, -1.0f };
+		vertex.Position = { -0.5f, 0.5f, -0.5f };
 		vertex.TextureCoordinates = { 1.0f, 1.0f };
 		vertices.push_back(vertex);
 
@@ -104,19 +104,19 @@ namespace ultraviolet
 		vertex.Normal = { -1.0f, 0.0f, 0.0f };
 		vertex.Tangent = { 0.0f, 0.0f, 1.0f };
 
-		vertex.Position = { -1.0f, -1.0f, -1.0f };
+		vertex.Position = { -0.5f, -0.5f, -0.5f };
 		vertex.TextureCoordinates = { 0.0f, 0.0f };
 		vertices.push_back(vertex);
 
-		vertex.Position = { -1.0f, -1.0f, 1.0f };
+		vertex.Position = { -0.5f, -0.5f, 0.5f };
 		vertex.TextureCoordinates = { 1.0f, 0.0f };
 		vertices.push_back(vertex);
 
-		vertex.Position = { -1.0f, 1.0f, -1.0f };
+		vertex.Position = { -0.5f, 0.5f, -0.5f };
 		vertex.TextureCoordinates = { 0.0f, 1.0f };
 		vertices.push_back(vertex);
 
-		vertex.Position = { -1.0f, 1.0f, 1.0f };
+		vertex.Position = { -0.5f, 0.5f, 0.5f };
 		vertex.TextureCoordinates = { 1.0f, 1.0f };
 		vertices.push_back(vertex);
 
@@ -125,19 +125,19 @@ namespace ultraviolet
 		vertex.Normal = { 1.0f, 0.0f, 0.0f };
 		vertex.Tangent = { 0.0f, 0.0f, -1.0f };
 
-		vertex.Position = { 1.0f, -1.0f, 1.0f };
+		vertex.Position = { 0.5f, -0.5f, 0.5f };
 		vertex.TextureCoordinates = { 0.0f, 0.0f };
 		vertices.push_back(vertex);
 
-		vertex.Position = { 1.0f, -1.0f, -1.0f };
+		vertex.Position = { 0.5f, -0.5f, -0.5f };
 		vertex.TextureCoordinates = { 1.0f, 0.0f };
 		vertices.push_back(vertex);
 
-		vertex.Position = { 1.0f, 1.0f, 1.0f };
+		vertex.Position = { 0.5f, 0.5f, 0.5f };
 		vertex.TextureCoordinates = { 0.0f, 1.0f };
 		vertices.push_back(vertex);
 
-		vertex.Position = { 1.0f, 1.0f, -1.0f };
+		vertex.Position = { 0.5f, 0.5f, -0.5f };
 		vertex.TextureCoordinates = { 1.0f, 1.0f };
 		vertices.push_back(vertex);
 
@@ -146,19 +146,19 @@ namespace ultraviolet
 		vertex.Normal = { 0.0f, 1.0f, 0.0f };
 		vertex.Tangent = { 1.0f, 0.0f, 0.0f };
 
-		vertex.Position = { -1.0f, 1.0f, 1.0f };
+		vertex.Position = { -0.5f, 0.5f, 0.5f };
 		vertex.TextureCoordinates = { 0.0f, 0.0f };
 		vertices.push_back(vertex);
 
-		vertex.Position = { 1.0f, 1.0f, 1.0f };
+		vertex.Position = { 0.5f, 0.5f, 0.5f };
 		vertex.TextureCoordinates = { 1.0f, 0.0f };
 		vertices.push_back(vertex);
 
-		vertex.Position = { -1.0f, 1.0f, -1.0f };
+		vertex.Position = { -0.5f, 0.5f, -0.5f };
 		vertex.TextureCoordinates = { 0.0f, 1.0f };
 		vertices.push_back(vertex);
 
-		vertex.Position = { 1.0f, 1.0f, -1.0f };
+		vertex.Position = { 0.5f, 0.5f, -0.5f };
 		vertex.TextureCoordinates = { 1.0f, 1.0f };
 		vertices.push_back(vertex);
 
@@ -167,19 +167,19 @@ namespace ultraviolet
 		vertex.Normal = { 0.0f, -1.0f, 0.0f };
 		vertex.Tangent = { 1.0f, 0.0f, 0.0f };
 
-		vertex.Position = { -1.0f, -1.0f, -1.0f };
+		vertex.Position = { -0.5f, -0.5f, -0.5f };
 		vertex.TextureCoordinates = { 0.0f, 0.0f };
 		vertices.push_back(vertex);
 
-		vertex.Position = { 1.0f, -1.0f, -1.0f };
+		vertex.Position = { 0.5f, -0.5f, -0.5f };
 		vertex.TextureCoordinates = { 1.0f, 0.0f };
 		vertices.push_back(vertex);
 
-		vertex.Position = { -1.0f, -1.0f, 1.0f };
+		vertex.Position = { -0.5f, -0.5f, 0.5f };
 		vertex.TextureCoordinates = { 0.0f, 1.0f };
 		vertices.push_back(vertex);
 
-		vertex.Position = { 1.0f, -1.0f, 1.0f };
+		vertex.Position = { 0.5f, -0.5f, 0.5f };
 		vertex.TextureCoordinates = { 1.0f, 1.0f };
 		vertices.push_back(vertex);
 

@@ -12,11 +12,6 @@ namespace ultraviolet
 
 	}
 
-	void Player::Update(double deltaTime)
-	{
-		Character::Update(deltaTime);
-	}
-
 	void Player::AddToImGui()
 	{
 		if (::ImGui::CollapsingHeader("Player"))
