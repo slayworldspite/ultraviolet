@@ -32,7 +32,7 @@ namespace ultraviolet
 		m_DeltaTime{},
 		m_Fullscreen{ false },
 		m_ShowMenu{ false },
-		m_FreeCam{ false }
+		m_FreeCam{ true }
 	{
 		
 	}
