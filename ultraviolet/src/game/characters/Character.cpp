@@ -112,7 +112,7 @@ namespace ultraviolet
 			origin,
 			&m_Mover,
 			translation,
-			::b3QueryFilter{},
+			::b3DefaultQueryFilter(),	
 			nullptr,
 			nullptr
 			)

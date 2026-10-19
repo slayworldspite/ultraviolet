@@ -3,6 +3,7 @@
 #include <string_view>
 #include <fstream>
 #include <filesystem>
+#include <source_location>
 
 namespace ultraviolet
 {

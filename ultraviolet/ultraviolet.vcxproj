@@ -146,6 +146,8 @@
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\game\characters\Character.cpp" />
     <ClCompile Include="src\game\characters\Player.cpp" />
+    <ClCompile Include="src\game\levels\DemoScene.cpp" />
+    <ClCompile Include="src\game\levels\Level.cpp" />
     <ClCompile Include="src\input\Input.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\physics\Entity.cpp" />
@@ -199,6 +201,9 @@
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\game\characters\Character.h" />
     <ClInclude Include="src\game\characters\Player.h" />
+    <ClInclude Include="src\game\levels\DemoScene.h" />
+    <ClInclude Include="src\game\levels\Level.h" />
+    <ClInclude Include="src\game\levels\Levels.h" />
     <ClInclude Include="src\input\Input.h" />
     <ClInclude Include="src\input\Keycode.h" />
     <ClInclude Include="src\input\MouseButtonFlags.h" />
@@ -231,6 +236,9 @@
     <ClInclude Include="src\renderer\objects\UniformBuffer.h" />
     <ClInclude Include="src\physics\PhysicsSystem.h" />
     <ClInclude Include="src\renderer\Renderer.h" />
+    <ClInclude Include="src\renderer\scene\descriptions\EntityDescription.h" />
+    <ClInclude Include="src\renderer\scene\descriptions\ModelDescription.h" />
+    <ClInclude Include="src\renderer\scene\descriptions\PointLightDescription.h" />
     <ClInclude Include="src\renderer\scene\Scene.h" />
     <ClInclude Include="src\renderer\Shader.h" />
     <ClInclude Include="src\renderer\mesh\Vertex.h" />

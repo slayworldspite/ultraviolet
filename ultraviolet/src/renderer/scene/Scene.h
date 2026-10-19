@@ -1,11 +1,16 @@
 #pragma once
 
+#include <filesystem>
+
 #include "../model/Model.h"
 #include "../../physics/Entity.h"
 #include "../lights/AmbientLight.h"
 #include "../lights/DirectionalLight.h"
 #include "../lights/PointLight.h"
 #include "../camera/ProjectionCamera.h"
+#include "descriptions/ModelDescription.h"
+#include "descriptions/EntityDescription.h"
+#include "descriptions/PointLightDescription.h"
 
 namespace ultraviolet
 {
@@ -22,6 +27,9 @@ namespace ultraviolet
 	public:
 		Scene();
 
+		void AddModel(const ModelDescription& description);
+		void AddEntity(const EntityDescription& description);
+		void AddPointLight(const PointLightDescription& description);
 		Model* GetModel(std::string_view id);
 		Entity* GetEntity(std::string_view id);
 		PointLight* GetPointLight(std::string_view id);

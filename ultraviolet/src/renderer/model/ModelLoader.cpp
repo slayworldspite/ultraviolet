@@ -42,7 +42,7 @@ namespace ultraviolet
 		return {};
 	}
 
-	std::optional<Model> ModelLoader::Load(const std::string& id, const std::filesystem::path& path)
+	std::optional<Model> ModelLoader::Load(std::string_view id, const std::filesystem::path& path)
 	{
 		Logger::Log("loading " + path.string(), Logger::Level::Info);
 

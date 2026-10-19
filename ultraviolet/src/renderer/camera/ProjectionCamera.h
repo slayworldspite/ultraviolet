@@ -22,7 +22,9 @@ namespace ultraviolet
 		void Update();
 		void Apply(std::pair<int, int> size);
 		glm::vec3 GetFront() const;
+		glm::vec3 GetForward() const;
 		glm::vec3 GetRight() const;
+		glm::vec3 GetWorldUp() const;
 		void AddToImGui();
 		void AddToImGui(const std::string& id);
 

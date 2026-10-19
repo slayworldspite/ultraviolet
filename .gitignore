@@ -364,3 +364,6 @@ FodyWeavers.xsd
 
 # imgui
 *.ini
+
+# keep obj models
+!ultraviolet/assets/**/*.obj

@@ -37,9 +37,12 @@ namespace ultraviolet
 	{
 		glm::vec3 direction{};
 
-		direction.x = cos(glm::radians(Yaw)) * cos(glm::radians(Pitch));
-		direction.y = sin(glm::radians(Pitch));
-		direction.z = sin(glm::radians(Yaw)) * cos(glm::radians(Pitch));
+		float yaw{ glm::radians(Yaw) };
+		float pitch{ glm::radians(Pitch) };
+
+		direction.x = cos(yaw) * cos(pitch);
+		direction.y = sin(pitch);
+		direction.z = sin(yaw) * cos(pitch);
 
 		m_Front = glm::normalize(direction);
 	}
@@ -74,9 +77,21 @@ namespace ultraviolet
 		return m_Front;
 	}
 
+	glm::vec3 ProjectionCamera::GetForward() const
+	{
+		glm::vec3 forward{ m_Front };
+		forward.y = 0;
+		return glm::normalize(forward);
+	}
+
 	glm::vec3 ProjectionCamera::GetRight() const
 	{
 		return glm::normalize(glm::cross(m_Front, c_WorldUp));
+	}
+
+	glm::vec3 ProjectionCamera::GetWorldUp() const
+	{
+		return c_WorldUp;
 	}
 
 	void ProjectionCamera::AddToImGui()

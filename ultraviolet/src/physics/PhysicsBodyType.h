@@ -4,7 +4,8 @@ namespace ultraviolet
 {
 	enum class PhysicsBodyType
 	{
-		Static,
-		Dynamic
+		StaticMesh,
+		StaticConvexHull,
+		DynamicConvexHull
 	};
 }

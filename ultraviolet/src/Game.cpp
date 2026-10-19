@@ -16,6 +16,7 @@
 #include "renderer/model/Primitives.h"
 #include "physics/PhysicsSystem.h"
 #include "physics/EntityLoader.h"
+#include "game/levels/Levels.h"
 
 namespace ultraviolet
 {
@@ -52,80 +53,9 @@ namespace ultraviolet
 
 		m_Player = std::make_unique<Player>();
 
+		DemoScene{}.Load(m_Scene);
+
 		LoadOverlay();
-
-		auto worldID{ PhysicsSystem::GetWorldID() };
-
-		// ground
-		::b3BodyDef groundBodyDefinition{ ::b3DefaultBodyDef() };
-		groundBodyDefinition.position = { 0.0f, -0.25f, 0.0f };
-
-		m_Ground = std::make_unique<::b3BodyId>(::b3CreateBody(worldID, &groundBodyDefinition));
-
-		::b3BoxHull groundBox{ ::b3MakeBoxHull(15.0f, 0.25f, 15.0f) };
-
-		::b3ShapeDef groundShapeDefinition{ ::b3DefaultShapeDef() };
-		::b3CreateHullShape(*m_Ground, &groundShapeDefinition, &groundBox.base);
-
-		std::shared_ptr<TextureMaterial> brickMaterial{
-			std::make_shared<TextureMaterial>(
-				"assets/textures/brick_diffuse.jpg",
-				"assets/textures/brick_specular.jpg",
-				"assets/textures/brick_normal.png",
-				32,
-				15.0f
-			)
-		};
-
-		std::shared_ptr<TextureMaterial> teapotMaterial{
-			std::make_shared<TextureMaterial>(
-				"assets/textures/default.png",
-				"assets/textures/default.png",
-				"assets/textures/default_normal.png",
-				32,
-				5.0f
-			)
-		};
-
-		Model boxModel2{ Primitives::GetCube("ground", brickMaterial) };
-		boxModel2.Scale = glm::vec3{ 15.0f, 0.25f, 15.0f };
-		boxModel2.Position.y = 0.0f - boxModel2.Scale.y;
-
-		m_Scene.Models.push_back(std::move(boxModel2));
-
-		auto suzanne{
-			EntityLoader::Load(
-				"suzanne",
-				PhysicsBodyType::Dynamic,
-				"assets/models/suzanne/suzanne.obj",
-				"assets/models/suzanne/suzanne_collision.obj"
-			)
-		};
-
-		if (suzanne)
-		{
-			for (Mesh& mesh : suzanne->RenderObject.Meshes)
-				mesh.Material = teapotMaterial;
-
-			m_Scene.Entities.push_back(std::move(*suzanne));
-		}
-
-		auto playerModel{ 
-			ModelLoader::Load(
-				"playerModel",
-				"assets/models/player/player.obj"
-			)
-		};
-
-		if (playerModel)
-		{
-			for (Mesh& mesh : playerModel->Meshes)
-				mesh.Material = teapotMaterial;
-
-			//playerModel->Visible = false;
-
-			m_Scene.Models.push_back(std::move(*playerModel));
-		}
 	}
 
 	void Game::OnUpdate(double deltaTime)
@@ -258,14 +188,16 @@ namespace ultraviolet
 
 		if (m_FreeCam)
 		{
-			glm::vec3 forward{ m_Scene.Camera.GetFront() };
-			glm::vec3 right{ m_Scene.Camera.GetRight() };
+			ProjectionCamera& camera{ m_Scene.Camera };
+
+			glm::vec3 forward{ camera.GetForward() };
+			glm::vec3 right{ glm::normalize(glm::cross(camera.GetForward(), camera.GetWorldUp())) };
 
 			if (Input::IsKeyHeld(Scancode::SPACE))
-				m_Scene.Camera.Position.y += 1.0f * fDeltaTime;
+				camera.Position.y += 1.0f * fDeltaTime;
 
 			if (Input::IsKeyHeld(Scancode::LCTRL))
-				m_Scene.Camera.Position.y -= 1.0f * fDeltaTime;
+				camera.Position.y -= 1.0f * fDeltaTime;
 		}
 		else
 		{

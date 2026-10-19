@@ -34,7 +34,6 @@ namespace ultraviolet
 		glm::vec4 m_ClearColor;
 		std::unique_ptr<Player> m_Player;
 		std::unique_ptr<Mesh> m_Overlay;
-		std::unique_ptr<::b3BodyId> m_Ground;
 
 	private:
 		void ProcessInput(double deltaTime);
