@@ -1,5 +1,5 @@
 #include "DemoScene.h"
-#include "../../renderer/materials/ColorMaterial.h"
+#include "../../renderer/materials/TextureMaterial.h"
 
 namespace ultraviolet
 {
