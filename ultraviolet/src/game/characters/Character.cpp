@@ -36,9 +36,9 @@ namespace ultraviolet
 		m_Mover.radius = radius;
 	}
 
-	void Character::Update(double deltaTime, const glm::vec3& forward, const glm::vec3& right)
+	void Character::Update(double deltaTime)
 	{
-		float fDeltaTime{ static_cast<float>(deltaTime) };
+		/*float fDeltaTime{static_cast<float>(deltaTime)};
 
 		::b3Pos origin{ ::b3Pos_zero };
 
@@ -136,7 +136,7 @@ namespace ultraviolet
 
 		m_Velocity = ::b3ClipVector(m_Velocity, context.Planes.data(), static_cast<int>(context.Count));
 
-		Position = { m_Mover.center1.x, m_Mover.center1.y, m_Mover.center1.z };
+		Position = { m_Mover.center1.x, m_Mover.center1.y, m_Mover.center1.z };*/
 	}
 
 	bool Character::PlaneResultCallback(::b3ShapeId shapeID, const ::b3PlaneResult* plane, int planeCount, void* context)

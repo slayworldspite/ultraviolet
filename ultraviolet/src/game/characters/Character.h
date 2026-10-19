@@ -27,7 +27,7 @@ namespace ultraviolet
 		Character(std::string_view id, glm::vec3 position = { 0.0f, 0.0f, 0.0f }, float height = 1.8f, float radius = 0.35f);
 		virtual ~Character() = default;
 
-		virtual void Update(double deltaTime, const glm::vec3& forward, const glm::vec3& right);
+		virtual void Update(double deltaTime);
 
 		void AddToImGui();
 
