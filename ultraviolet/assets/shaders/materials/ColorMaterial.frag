@@ -60,11 +60,6 @@ uniform sampler2D u_DepthMap;
 
 void main()
 {
-	vec3 normal = normalize(o_Normal);
-
-	if (!gl_FrontFacing)
-		normal = normal;
-
 	vec3 viewDirection = normalize(o_CameraPosition - o_FragmentPosition);
 
 	vec3 diffuse = vec3(0.0);
@@ -76,41 +71,42 @@ void main()
 	{
 		vec3 lightDirection = normalize(-ub_DirectionalLight.Direction.xyz);
 
-		float diffuseStrength = max(dot(normal, lightDirection), 0.0);
+		float diffuseStrength = max(dot(o_Normal, lightDirection), 0.0);
 		diffuse += u_ColorMaterial.Color * ub_DirectionalLight.Color.rgb * diffuseStrength * ub_DirectionalLight.Intensity;
 
-		vec3 reflectionDirection = reflect(-lightDirection, normal);
+		vec3 reflectionDirection = reflect(-lightDirection, o_Normal);
 
 		vec3 halfwayDirection = normalize(lightDirection + viewDirection);
-		float specularStrength = pow(max(dot(normal, halfwayDirection), 0.0), u_ColorMaterial.Specular);
+		float specularStrength = pow(max(dot(o_Normal, halfwayDirection), 0.0), u_ColorMaterial.Specular);
 		specular += specularStrength * ub_DirectionalLight.Color.rgb * 0.25 * ub_DirectionalLight.Intensity;
-	}
+	
+		vec3 projectionCoordinates = o_FragmentPositionLightSpace.xyz / o_FragmentPositionLightSpace.w;
+		projectionCoordinates = projectionCoordinates * 0.5 + 0.5;
 
-	vec3 projectionCoordinates = o_FragmentPositionLightSpace.xyz / o_FragmentPositionLightSpace.w;
-    projectionCoordinates = projectionCoordinates * 0.5 + 0.5;
+		float currentDepth = projectionCoordinates.z;
+		float shadow = 0.0;
 
-    float closestDepth = texture(u_DepthMap, projectionCoordinates.xy).r; 
+		vec2 texelSize = 1.0 / textureSize(u_DepthMap, 0);
 
-    float currentDepth = projectionCoordinates.z;
+		int radius = 2;
 
-	float bias = max(0.0005 * (1.0 - dot(normal, normalize(-ub_DirectionalLight.Direction.xyz))), 0.0001);  
-    float shadow = 0.0;
-
-	vec2 texelSize = 1.0 / textureSize(u_DepthMap, 0);
-	for(int x = -2; x <= 2; ++x)
-	{
-		for(int y = -2; y <= 2; ++y)
+		for (int x = 0 - radius; x <= radius; x++)
 		{
-			float pcfDepth = texture(u_DepthMap, projectionCoordinates.xy + vec2(x, y) * texelSize).r; 
-			shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;        
-		}    
+			for (int y = 0 - radius; y <= radius; y++)
+			{
+				float pcfDepth = texture(u_DepthMap, projectionCoordinates.xy + vec2(x, y) * texelSize).r; 
+				shadow += currentDepth > pcfDepth ? 1.0 : 0.0;    
+			}    
+		}
+
+		int radiusWidth = 2 * radius + 1;
+		shadow /= radiusWidth * radiusWidth;
+
+		if (projectionCoordinates.z > 1.0)
+			shadow = 0.0;
+
+		Output.rgb = ambient + (1.0 - shadow) * (diffuse + specular);
 	}
-	shadow /= 25.0;
-
-	if (projectionCoordinates.z > 1.0)
-		shadow = 0.0;
-
-	Output.rgb = ambient + (1.0 - shadow) * (diffuse + specular);
 
 	diffuse = vec3(0.0);
 	specular = vec3(0.0);
@@ -125,15 +121,17 @@ void main()
 
 		vec3 lightDirection = normalize(ub_PointLights[i].Position.xyz - o_FragmentPosition);
 
-		float diffuseStrength = max(dot(normal, lightDirection), 0.0);
-		diffuse += u_ColorMaterial.Color * ub_PointLights[i].Color.rgb * diffuseStrength * ub_PointLights[i].Intensity * attenuation;
+		float diffuseStrength = max(dot(o_Normal, lightDirection), 0.0);
+		diffuse += ub_PointLights[i].Color.rgb * diffuseStrength * ub_PointLights[i].Intensity * attenuation * u_ColorMaterial.Color;
+
+		vec3 reflectionDirection = reflect(-lightDirection, o_Normal);
 
 		vec3 halfwayDirection = normalize(lightDirection + viewDirection);
-		float specularStrength = pow(max(dot(normal, halfwayDirection), 0.0), u_ColorMaterial.Specular);
+		float specularStrength = pow(max(dot(o_Normal, halfwayDirection), 0.0), u_ColorMaterial.Specular);
 		specular += specularStrength * ub_PointLights[i].Color.rgb * 0.25 * ub_PointLights[i].Intensity * attenuation;
 	}
 
 	Output.rgb += diffuse + specular;
-	
+
 	Output.a = 1.0;
 }
