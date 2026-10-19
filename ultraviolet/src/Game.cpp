@@ -63,24 +63,7 @@ namespace ultraviolet
 
 		ProjectionCamera& camera{ m_Scene.Camera };
 
-		m_Player->Update(deltaTime, camera.GetFront(), camera.GetRight());
-
-		if (!m_FreeCam)
-		{
-			camera.Position = m_Player->Position;
-			camera.Position.y += m_Player->Height;
-		}
-
-		auto playerModel{ m_Scene.GetModel("playerModel") };
-
-		if (playerModel)
-		{
-			playerModel->Position = m_Player->Position;
-			playerModel->Position.y = 0.0f;
-
-			if (!m_FreeCam)
-				playerModel->Rotation.y = (0.0f - camera.Yaw) + 90.0f;
-		}
+		m_Player->Update(deltaTime);
 
 		camera.Update();
 		m_Scene.Update();
