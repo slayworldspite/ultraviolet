@@ -11,7 +11,12 @@ namespace ultraviolet
 
 	void DemoScene::Load(Scene& scene)
 	{
-		std::shared_ptr<ColorMaterial> material{ std::make_shared<ColorMaterial>(glm::vec3{1.0f, 0.0f, 1.0f}, 64) };
+		scene.AmbientLight.Color = glm::vec3{ 1.0f };
+		scene.AmbientLight.Intensity = 0.1f;
+		
+		scene.DirectionalLight.Color = glm::vec3{ 1.0f };
+		scene.DirectionalLight.Pitch = -65.0f;
+		scene.DirectionalLight.Yaw = -125.0f;
 
 		std::vector<EntityDescription> entities{};
 		

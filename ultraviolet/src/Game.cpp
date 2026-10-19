@@ -44,13 +44,6 @@ namespace ultraviolet
 		m_ClearColor = glm::vec4{ 0.0f, 0.55f, 1.0f, 1.0f };
 		m_Renderer.SetClearColor(m_ClearColor);
 
-		m_Scene.AmbientLight.Color = glm::vec3{ 1.0f };
-		m_Scene.AmbientLight.Intensity = 0.1f;
-
-		m_Scene.DirectionalLight.Color = glm::vec3{ 1.0f };
-		m_Scene.DirectionalLight.Pitch = -22.5f;
-		m_Scene.DirectionalLight.Yaw = 22.5f;
-
 		m_Player = std::make_unique<Player>();
 
 		DemoScene{}.Load(m_Scene);
