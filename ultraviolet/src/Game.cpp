@@ -146,6 +146,7 @@ namespace ultraviolet
 		if (::ImGui::GetIO().WantCaptureKeyboard)
 			return;
 
+		static float speed{ 3.5f };
 		float fDeltaTime{ static_cast<float>(deltaTime) };
 
 		glm::vec3 throttle{};
@@ -157,10 +158,10 @@ namespace ultraviolet
 			throttle.x -= 1.0f;
 
 		if (Input::IsKeyHeld(Scancode::A))
-			throttle.y -= 1.0f;
+			throttle.z -= 1.0f;
 
 		if (Input::IsKeyHeld(Scancode::D))
-			throttle.y += 1.0f;
+			throttle.z += 1.0f;
 
 		if (m_FreeCam)
 		{
@@ -170,10 +171,16 @@ namespace ultraviolet
 			glm::vec3 right{ glm::normalize(glm::cross(camera.GetForward(), camera.GetWorldUp())) };
 
 			if (Input::IsKeyHeld(Scancode::SPACE))
-				camera.Position.y += 1.0f * fDeltaTime;
+				camera.Position.y += speed * fDeltaTime;
 
 			if (Input::IsKeyHeld(Scancode::LCTRL))
-				camera.Position.y -= 1.0f * fDeltaTime;
+				camera.Position.y -= speed * fDeltaTime;
+
+			glm::vec3 movement{};
+			movement += throttle.x * forward;
+			movement += throttle.z * right;
+
+			camera.Position += movement * fDeltaTime * speed;
 		}
 		else
 		{
