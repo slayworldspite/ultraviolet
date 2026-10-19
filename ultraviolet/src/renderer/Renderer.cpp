@@ -376,7 +376,7 @@ namespace ultraviolet
 		m_ShadowMapFramebuffer->Bind();
 
 		::glViewport(0, 0, m_ShadowMapResolution, m_ShadowMapResolution);
-		//::glCullFace(GL_FRONT);
+		::glCullFace(GL_FRONT);
 
 		m_ShadowMapShader->Use();
 
