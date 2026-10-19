@@ -360,8 +360,8 @@ namespace ultraviolet
 		snappedCameraPosition.y = std::floor(cameraPosition.z / snapSize) * snapSize;
 
 		glm::mat4 lightProjection{ glm::ortho(
-			-m_ShadowCameraSize - snappedCameraPosition.x, 
-			 m_ShadowCameraSize - snappedCameraPosition.x,
+			-m_ShadowCameraSize + snappedCameraPosition.x, 
+			 m_ShadowCameraSize + snappedCameraPosition.x,
 			-m_ShadowCameraSize + snappedCameraPosition.y,
 			 m_ShadowCameraSize + snappedCameraPosition.y,
 			 1.0f, 
