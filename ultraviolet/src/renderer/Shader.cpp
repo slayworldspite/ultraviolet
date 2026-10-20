@@ -81,6 +81,11 @@ namespace ultraviolet
 		::glDeleteShader(fragmentShader);
 	}
 
+	uint32_t Shader::GetID() const
+	{
+		return m_ID;
+	}
+
 	std::string Shader::ReadFile(const std::filesystem::path& path)
 	{
 		std::ifstream file{ path };
