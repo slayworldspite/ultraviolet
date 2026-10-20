@@ -183,6 +183,13 @@ namespace ultraviolet
 		}
 	}
 
+	void Renderer::Draw(const Entity& entity) const
+	{
+		ZoneScoped;
+
+		Draw(entity.RenderObject);
+	}
+
 	void Renderer::Draw(const Scene& scene)
 	{
 		DrawShadowMap(scene);
@@ -336,6 +343,8 @@ namespace ultraviolet
 
 	void Renderer::DrawShadowMap(const Scene& scene)
 	{
+		ZoneScoped;
+
 		const DirectionalLight& light{ scene.DirectionalLight };
 
 		glm::vec3 lightDirection{};

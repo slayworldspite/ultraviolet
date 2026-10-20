@@ -21,6 +21,7 @@ namespace ultraviolet
 		void Draw(const Mesh& mesh) const;
 		void Draw(const Mesh& mesh, const glm::mat4& model) const;
 		void Draw(const Model& model) const;
+		void Draw(const Entity& entity) const;
 		void Draw(const Scene& scene);
 		void SetOverlay(std::shared_ptr<Texture> overlay);
 		void SetViewport(int width, int height);
