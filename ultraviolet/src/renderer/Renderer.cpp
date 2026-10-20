@@ -192,6 +192,8 @@ namespace ultraviolet
 
 	void Renderer::Draw(const Scene& scene)
 	{
+		ZoneScoped;
+
 		DrawShadowMap(scene);
 		
 		m_ScreenFramebuffer->Bind();
