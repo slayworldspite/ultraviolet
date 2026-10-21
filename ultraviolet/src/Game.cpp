@@ -47,8 +47,6 @@ namespace ultraviolet
 		m_Player = std::make_unique<Player>();
 
 		DemoScene{}.Load(m_Scene);
-
-		LoadOverlay();
 	}
 
 	void Game::OnUpdate(double deltaTime)
@@ -77,7 +75,6 @@ namespace ultraviolet
 		m_Renderer.BeginFrame();
 
 		m_Scene.Camera.Apply(GetWindowSize());
-		m_Renderer.Draw(m_Scene);
 
 		if (m_ShowMenu)
 			DebugMenu();
@@ -261,31 +258,5 @@ namespace ultraviolet
 		m_Scene.Camera.AddToImGui();
 
 		m_Scene.AddToImGui();
-	}
-
-	void Game::LoadOverlay()
-	{
-		std::vector<Vertex> vertices{};
-		vertices.reserve(4);
-
-		Vertex vertex{};
-		vertex.Position = { -1.0f, 0.0f, 1.0f };
-		vertex.TextureCoordinates = { 0.0f, 1.0f };
-		vertices.push_back(vertex);
-
-		vertex.Position = { 1.0f, 0.0f, 1.0f };
-		vertex.TextureCoordinates = { 1.0f, 1.0f };
-		vertices.push_back(vertex);
-
-		vertex.Position = { -1.0f, 0.0f, -1.0f };
-		vertex.TextureCoordinates = { 0.0f, 0.0f };
-		vertices.push_back(vertex);
-
-		vertex.Position = { 1.0f, 0.0f, -1.0f };
-		vertex.TextureCoordinates = { 1.0f, 0.0f };
-		vertices.push_back(vertex);
-
-		std::shared_ptr<Texture> overlay{ std::make_shared<Texture>("assets/textures/overlay.png", TextureType::Overlay) };
-		m_Renderer.SetOverlay(overlay);
 	}
 }

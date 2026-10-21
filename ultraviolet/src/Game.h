@@ -33,11 +33,9 @@ namespace ultraviolet
 		bool m_FreeCam;
 		glm::vec4 m_ClearColor;
 		std::unique_ptr<Player> m_Player;
-		std::unique_ptr<Mesh> m_Overlay;
 
 	private:
 		void ProcessInput(double deltaTime);
 		void DebugMenu();
-		void LoadOverlay();
 	};
 }
