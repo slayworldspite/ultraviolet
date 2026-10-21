@@ -76,6 +76,8 @@ namespace ultraviolet
 
 		m_Scene.Camera.Apply(GetWindowSize());
 
+		m_Renderer.Submit(m_Scene);
+
 		if (m_ShowMenu)
 			DebugMenu();
 
