@@ -23,6 +23,7 @@ namespace ultraviolet
 		void Submit(const Model& model);
 		void Submit(const Entity& entity);
 		void Submit(const Scene& scene);
+		void Execute();
 
 		void SetClearColor(const glm::vec4& color);
 		void SetViewport(int width, int height);

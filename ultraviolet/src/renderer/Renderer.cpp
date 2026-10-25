@@ -86,16 +86,6 @@ namespace ultraviolet
 	{
 		ZoneScoped;
 
-		m_RenderQueue.Sort();
-		const std::vector<DrawItem>& drawItems{ m_RenderQueue.Get() };
-
-		for (const DrawItem& drawItem : drawItems)
-		{
-			Draw(drawItem);
-		}
-
-		m_RenderQueue.Clear();
-
 		::ImGui::Render();
 		::ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
@@ -141,6 +131,19 @@ namespace ultraviolet
 
 		for (const Entity& entity : scene.Entities)
 			Submit(entity);
+	}
+
+	void Renderer::Execute()
+	{
+		m_RenderQueue.Sort();
+		const std::vector<DrawItem>& drawItems{ m_RenderQueue.Get() };
+
+		for (const DrawItem& drawItem : drawItems)
+		{
+			Draw(drawItem);
+		}
+
+		m_RenderQueue.Clear();
 	}
 
 	void Renderer::SetClearColor(const glm::vec4& color)
