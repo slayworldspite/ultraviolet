@@ -222,8 +222,11 @@ namespace ultraviolet
 
 	void Renderer::Draw(const DrawItem& drawItem) const
 	{
-		if (drawItem.Mesh->Material)
-			drawItem.Mesh->Material->Apply();
+		if (std::shared_ptr<Material> material{ drawItem.Mesh->Material })
+		{
+			material->Apply();
+			material->Shader->Set("u_Model", drawItem.Transform);
+		}
 
 		if (drawItem.Mesh)
 		{
