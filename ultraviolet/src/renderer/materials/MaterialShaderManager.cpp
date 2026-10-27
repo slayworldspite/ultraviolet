@@ -14,9 +14,9 @@ namespace ultraviolet
 
 		std::string directory{ "assets/shaders/materials/" };
 
-		s_Shaders.emplace(MaterialType::Color, std::make_shared<Shader>(directory + "DefaultShader.vert", directory + "ColorMaterial.frag"));
-		s_Shaders.emplace(MaterialType::Texture, std::make_shared<Shader>(directory + "DefaultShader.vert", directory + "TextureMaterial.frag"));
-		s_Shaders.emplace(MaterialType::Light, std::make_shared<Shader>(directory + "DefaultShader.vert", directory + "LightMaterial.frag"));
+		s_Shaders.emplace(MaterialType::Color, std::make_shared<Shader>(directory + "DefaultShader.vert", directory + "ColorMaterialDiffuse.frag"));
+		s_Shaders.emplace(MaterialType::Texture, std::make_shared<Shader>(directory + "DefaultShader.vert", directory + "TextureMaterialDiffuse.frag"));
+		s_Shaders.emplace(MaterialType::Light, std::make_shared<Shader>(directory + "DefaultShader.vert", directory + "LightMaterialDiffuse.frag"));
 
 		s_IsInitialized = true;
 
