@@ -10,7 +10,6 @@
 #include "utils/Logger.h"
 #include "renderer/materials/ColorMaterial.h"
 #include "renderer/materials/TextureMaterial.h"
-#include "renderer/materials/OverlayMaterial.h"
 #include "renderer/materials/MaterialShaderManager.h"
 #include "renderer/model/ModelLoader.h"
 #include "renderer/model/Primitives.h"

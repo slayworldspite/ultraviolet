@@ -162,7 +162,6 @@
     <ClCompile Include="src\renderer\materials\LightMaterial.cpp" />
     <ClCompile Include="src\renderer\materials\Material.cpp" />
     <ClCompile Include="src\renderer\materials\MaterialShaderManager.cpp" />
-    <ClCompile Include="src\renderer\materials\OverlayMaterial.cpp" />
     <ClCompile Include="src\renderer\materials\TextureMaterial.cpp" />
     <ClCompile Include="src\renderer\model\Model.cpp" />
     <ClCompile Include="src\renderer\model\ModelLoader.cpp" />
@@ -224,7 +223,6 @@
     <ClInclude Include="src\renderer\materials\Material.h" />
     <ClInclude Include="src\renderer\materials\MaterialShaderManager.h" />
     <ClInclude Include="src\renderer\materials\MaterialType.h" />
-    <ClInclude Include="src\renderer\materials\OverlayMaterial.h" />
     <ClInclude Include="src\renderer\materials\TextureMaterial.h" />
     <ClInclude Include="src\renderer\model\Primitives.h" />
     <ClInclude Include="src\renderer\objects\ElementBuffer.h" />
