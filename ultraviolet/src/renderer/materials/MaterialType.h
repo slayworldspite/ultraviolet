@@ -7,6 +7,6 @@ namespace ultraviolet
 		Color,
 		Texture,
 		Light,
-		Overlay
+		Count
 	};
 }

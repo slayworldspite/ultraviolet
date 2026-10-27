@@ -6,7 +6,7 @@
 namespace ultraviolet
 {
 	bool s_IsInitialized{ false };
-	std::unordered_map<MaterialType, std::shared_ptr<Shader>> s_Shaders{};
+	std::unordered_map<MaterialType, Shader> s_Shaders{};
 
 	void MaterialShaderManager::Initialize()
 	{
@@ -15,36 +15,34 @@ namespace ultraviolet
 		std::filesystem::path directory{ "assets/shaders/materials" };
 		std::filesystem::path defaultShaderPath{ directory / "DefaultShader.vert" };
 
-		s_Shaders.emplace(MaterialType::Color, std::make_shared<Shader>(defaultShaderPath, directory / "ColorMaterialDiffuse.frag"));
-		s_Shaders.emplace(MaterialType::Texture, std::make_shared<Shader>(defaultShaderPath, directory / "TextureMaterialDiffuse.frag"));
-		s_Shaders.emplace(MaterialType::Light, std::make_shared<Shader>(defaultShaderPath, directory / "LightMaterialDiffuse.frag"));
+		s_Shaders.emplace(MaterialType::Color, Shader{ defaultShaderPath, directory / "ColorMaterialDiffuse.frag" });
+		s_Shaders.emplace(MaterialType::Texture, Shader{ defaultShaderPath, directory / "TextureMaterialDiffuse.frag" });
+		s_Shaders.emplace(MaterialType::Light, Shader{ defaultShaderPath, directory / "LightMaterialDiffuse.frag" });
 
 		s_IsInitialized = true;
 
 		Logger::Log("material shaders initialized!", Logger::Level::Info);
 	}
 
-	std::shared_ptr<Shader> MaterialShaderManager::Get(MaterialType type)
+	Shader* MaterialShaderManager::Get(MaterialType type)
 	{
 		assert(s_IsInitialized);
 
-		return s_Shaders.at(type);
+		return &s_Shaders.at(type);
 	}
 
 	void MaterialShaderManager::Reload(MaterialType type)
 	{
 		assert(s_IsInitialized);
 
-		s_Shaders.at(type)->Load();
+		s_Shaders.at(type).Load();
 	}
 
 	void MaterialShaderManager::ReloadAll()
 	{
 		assert(s_IsInitialized);
 
-		s_Shaders.at(MaterialType::Color)->Load();
-		s_Shaders.at(MaterialType::Texture)->Load();
-		s_Shaders.at(MaterialType::Light)->Load();
-		s_Shaders.at(MaterialType::Overlay)->Load();
+		for (size_t i{}; i < static_cast<size_t>(MaterialType::Count); i++)
+			Reload(static_cast<MaterialType>(i));
 	}
 }

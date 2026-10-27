@@ -2,6 +2,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "ColorMaterial.h"
+#include "MaterialShaderManager.h"
 
 namespace ultraviolet
 {
@@ -23,10 +24,12 @@ namespace ultraviolet
 
 	void ColorMaterial::Apply() const
 	{
-		Shader->Use();
+		Shader* shader{ MaterialShaderManager::Get(Type) };
+
+		shader->Use();
 		
-		Shader->Set("u_ColorMaterial.Color", Color);
-		Shader->Set("u_ColorMaterial.Specular", Specular);
+		shader->Set("u_ColorMaterial.Color", Color);
+		shader->Set("u_ColorMaterial.Specular", Specular);
 	}
 
 	void ColorMaterial::Free()

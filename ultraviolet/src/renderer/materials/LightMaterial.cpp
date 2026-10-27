@@ -1,4 +1,5 @@
 #include "LightMaterial.h"
+#include "MaterialShaderManager.h"
 
 namespace ultraviolet
 {
@@ -22,9 +23,11 @@ namespace ultraviolet
 
 	void LightMaterial::Apply() const
 	{
-		Shader->Set("u_LightMaterial.Color", Color);
-		Shader->Set("u_LightMaterial.Intensity", Intensity);
-		Shader->Set("u_LightMaterial.Enabled", Enabled);
+		Shader* shader{ MaterialShaderManager::Get(Type) };
+
+		shader->Set("u_LightMaterial.Color", Color);
+		shader->Set("u_LightMaterial.Intensity", Intensity);
+		shader->Set("u_LightMaterial.Enabled", Enabled);
 	}
 
 	void LightMaterial::Free()

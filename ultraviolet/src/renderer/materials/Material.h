@@ -8,7 +8,7 @@ namespace ultraviolet
 	class Material
 	{
 	public:
-		std::shared_ptr<Shader> Shader;
+		MaterialType Type;
 
 	public:
 		Material(MaterialType type);

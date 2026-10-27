@@ -225,7 +225,7 @@ namespace ultraviolet
 		if (std::shared_ptr<Material> material{ drawItem.Mesh->Material })
 		{
 			material->Apply();
-			material->Shader->Set("u_Model", drawItem.Transform);
+			MaterialShaderManager::Get(material->Type)->Set("u_Model", drawItem.Transform);
 		}
 
 		if (drawItem.Mesh)

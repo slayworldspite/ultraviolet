@@ -2,6 +2,7 @@
 #include <imgui/implot.h>
 
 #include "TextureMaterial.h"
+#include "MaterialShaderManager.h"
 
 namespace ultraviolet
 {
@@ -51,13 +52,15 @@ namespace ultraviolet
 
 	void TextureMaterial::Apply() const
 	{
-		Shader->Set("u_TextureMaterial.Diffuse", 0);
-		Shader->Set("u_TextureMaterial.Specular", 1);
-		Shader->Set("u_TextureMaterial.Normal", 2);
-		Shader->Set("u_TextureMaterial.Shininess", Shininess);
-		Shader->Set("u_TextureMaterial.TextureScale", TextureScale);
-		Shader->Set("u_TextureMaterial.NormalStrength", NormalStrength);
-		Shader->Set("u_TextureMaterial.FlipNormals", FlipNormals);
+		Shader* shader{ MaterialShaderManager::Get(Type) };
+
+		shader->Set("u_TextureMaterial.Diffuse", 0);
+		shader->Set("u_TextureMaterial.Specular", 1);
+		shader->Set("u_TextureMaterial.Normal", 2);
+		shader->Set("u_TextureMaterial.Shininess", Shininess);
+		shader->Set("u_TextureMaterial.TextureScale", TextureScale);
+		shader->Set("u_TextureMaterial.NormalStrength", NormalStrength);
+		shader->Set("u_TextureMaterial.FlipNormals", FlipNormals);
 
 		if (Diffuse)
 			Diffuse->Bind(0);
