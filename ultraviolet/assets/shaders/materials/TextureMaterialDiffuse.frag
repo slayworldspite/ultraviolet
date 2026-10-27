@@ -19,5 +19,9 @@
 
 	void main()
 	{	
-		Output = texture(u_TextureMaterial.Diffuse, o_TextureCoordinates * u_TextureMaterial.TextureScale);
+		vec4 diffuse = texture(u_TextureMaterial.Diffuse, o_TextureCoordinates * u_TextureMaterial.TextureScale);
+		if (diffuse.a < 0.1)
+			discard;
+
+		Output = diffuse;
 	}
