@@ -7,6 +7,7 @@ namespace ultraviolet
 		Diffuse,
 		Specular,
 		Normal,
-		Position
+		Position,
+		Count
 	};
 }
