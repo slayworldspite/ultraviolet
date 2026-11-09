@@ -13,36 +13,36 @@ namespace ultraviolet
 		Logger::Log("initialzing material shaders...", Logger::Level::Info);
 
 		std::filesystem::path directory{ "assets/shaders/materials" };
-		std::filesystem::path defaultShaderPath{ directory / "DefaultShader.vert" };
+		std::filesystem::path defaultVertexShaderPath{ directory / "DefaultShader.vert" };
 
-		s_Shaders.emplace(MaterialType::Color, Shader{ defaultShaderPath, directory / "ColorMaterialDiffuse.frag" });
-		s_Shaders.emplace(MaterialType::Texture, Shader{ defaultShaderPath, directory / "TextureMaterialDiffuse.frag" });
-		s_Shaders.emplace(MaterialType::Light, Shader{ defaultShaderPath, directory / "LightMaterialDiffuse.frag" });
+		s_Shaders.emplace(MaterialType::Color, Shader{ defaultVertexShaderPath, directory / "ColorMaterial.frag" });
+		s_Shaders.emplace(MaterialType::Texture, Shader{ defaultVertexShaderPath, directory / "TextureMaterial.frag" });
+		s_Shaders.emplace(MaterialType::Light, Shader{ defaultVertexShaderPath, directory / "LightMaterial.frag" });
 
 		s_IsInitialized = true;
 
 		Logger::Log("material shaders initialized!", Logger::Level::Info);
 	}
 
-	Shader* MaterialShaderManager::Get(MaterialType type)
+	Shader* MaterialShaderManager::Get(MaterialType materialType)
 	{
 		assert(s_IsInitialized);
 
-		return &s_Shaders.at(type);
+		return &s_Shaders.at(materialType);
 	}
 
-	void MaterialShaderManager::Reload(MaterialType type)
+	void MaterialShaderManager::Reload()
 	{
 		assert(s_IsInitialized);
 
-		s_Shaders.at(type).Load();
+		for (size_t materialIndex{}; materialIndex < static_cast<size_t>(MaterialType::Count); materialIndex++)
+			Reload(static_cast<MaterialType>(materialIndex));
 	}
 
-	void MaterialShaderManager::ReloadAll()
+	void MaterialShaderManager::Reload(MaterialType materialType)
 	{
 		assert(s_IsInitialized);
 
-		for (size_t i{}; i < static_cast<size_t>(MaterialType::Count); i++)
-			Reload(static_cast<MaterialType>(i));
+		s_Shaders.at(materialType).Load();
 	}
 }

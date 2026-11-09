@@ -5,7 +5,7 @@
 #include "../core/NativeWindow.h"
 #include "scene/Scene.h"
 #include "camera/ProjectionCamera.h"
-#include "objects/Renderbuffer.h"
+#include "objects/Framebuffer.h"
 #include "RenderQueue.h"
 
 namespace ultraviolet
@@ -36,17 +36,17 @@ namespace ultraviolet
 	private:
 		::SDL_Window* m_Window;
 		void* m_GLContext;
-
+		std::unique_ptr<Framebuffer> m_GBuffer;
 		RenderQueue m_RenderQueue;
-
 		bool m_WireframeMode;
+		glm::vec4 m_ClearColor;
 		float m_Gamma;
-
 		int m_ViewportWidth;
 		int m_ViewportHeight;
 
 	private:
 		void CreateContext(const NativeWindow& window);
+		void CreateGBuffer();
 		void InitializeImGui() const;
 		void Draw(const DrawItem& drawItem) const;
 	};

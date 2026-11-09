@@ -5,6 +5,7 @@
 
 #include "GLObject.h"
 #include "TextureType.h"
+#include "TextureSettings.h"
 
 namespace ultraviolet
 {
@@ -14,8 +15,12 @@ namespace ultraviolet
 		TextureType Type;
 
 		Texture(const std::filesystem::path& path, TextureType type);
-		// framebuffer texture constructor
-		Texture(int width, int height, int internalFormat, int format, int type, bool multisampled = false); 
+		Texture(const TextureSettings& settings);
+
+		Texture(const Texture&) = delete;
+		Texture& operator=(const Texture&) = delete;
+		Texture(Texture&& other) noexcept;
+
 		virtual ~Texture() override;
 
 		std::pair<int, int> GetSize() const;
@@ -28,6 +33,5 @@ namespace ultraviolet
 
 	private:
 		std::pair<int, int> m_Size;
-		bool m_Multisampled;
 	};
 }

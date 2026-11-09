@@ -241,7 +241,7 @@ namespace ultraviolet
 			}
 
 			if (::ImGui::Button("Reload All Material Shaders"))
-				MaterialShaderManager::ReloadAll();
+				MaterialShaderManager::Reload();
 
 			::ImGui::ColorPicker4("Sky Color", glm::value_ptr(m_ClearColor));
 

@@ -25,7 +25,9 @@ namespace
 namespace ultraviolet
 {
 	Renderer::Renderer(const NativeWindow& window) :
+		m_RenderQueue{},
 		m_WireframeMode{ false },
+		m_ClearColor{},
 		m_Gamma{ 2.2f },
 		m_ViewportWidth{},
 		m_ViewportHeight{}
@@ -33,9 +35,6 @@ namespace ultraviolet
 		Logger::Log("initializing renderer...", Logger::Level::Info);
 
 		CreateContext(window);
-
-		Logger::Log("renderer initialized!", Logger::Level::Info);
-
 		Logger::Log(std::format("opengl v{}", reinterpret_cast<const char*>(::glGetString(GL_VERSION))), Logger::Level::Info);
 
 		::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -47,11 +46,11 @@ namespace ultraviolet
 		MaterialShaderManager::Initialize();
 
 		auto windowSize{ window.GetWindowSize() };
+		SetViewport(windowSize.first, windowSize.second);
 
-		m_ViewportWidth = windowSize.first;
-		m_ViewportHeight = windowSize.second;
+		CreateGBuffer();
 
-		::glViewport(0, 0, m_ViewportWidth, m_ViewportHeight);
+		Logger::Log("renderer initialized!", Logger::Level::Info);
 	}
 
 	Renderer::~Renderer()
@@ -69,6 +68,15 @@ namespace ultraviolet
 		::glEnable(GL_DEPTH_TEST);
 		::glEnable(GL_BLEND);
 		::glEnable(GL_CULL_FACE);
+
+		m_GBuffer->Bind();
+
+		::glClear(
+			GL_COLOR_BUFFER_BIT |
+			GL_DEPTH_BUFFER_BIT
+		);
+
+		m_GBuffer->Unbind();
 
 		::glClear(
 			GL_COLOR_BUFFER_BIT |
@@ -138,6 +146,8 @@ namespace ultraviolet
 		m_RenderQueue.Sort();
 		const std::vector<DrawItem>& drawItems{ m_RenderQueue.Get() };
 
+		m_GBuffer->Bind();
+
 		for (const DrawItem& drawItem : drawItems)
 		{
 			Draw(drawItem);
@@ -148,7 +158,7 @@ namespace ultraviolet
 
 	void Renderer::SetClearColor(const glm::vec4& color)
 	{
-		::glClearColor(color.r, color.g, color.b, color.a);
+		m_ClearColor = color;
 	}
 
 	void Renderer::SetViewport(int width, int height)
@@ -171,6 +181,7 @@ namespace ultraviolet
 
 	void Renderer::Resize(int width, int height)
 	{
+		CreateGBuffer();
 		SetViewport(width, height);
 	}
 
@@ -201,6 +212,38 @@ namespace ultraviolet
 			Logger::Log("failed to initialize opengl!", Logger::Level::Critical);
 			exit(-1);
 		}
+	}
+
+	void Renderer::CreateGBuffer()
+	{
+		TextureSettings textureSettings{
+			.Width = m_ViewportWidth,
+			.Height = m_ViewportHeight,
+			.InternalFormat = TextureInternalFormat::Rgba32f,
+			.Format = TextureFormat::Rgba,
+			.MinFiltering = TextureFilter::Linear,
+			.MagFiltering = TextureFilter::Linear,
+			.Wrap = TextureWrap::ClampToBorder,
+			.BorderColor = { 0.0f, 0.0f, 0.0f, 0.0f }
+		};
+
+		m_GBuffer = std::make_unique<Framebuffer>(textureSettings, 4);
+
+		TextureSettings depthTextureSettings = textureSettings;
+		depthTextureSettings.InternalFormat = TextureInternalFormat::DepthComponent;
+		depthTextureSettings.Format = TextureFormat::DepthComponent;
+
+		m_GBuffer->AddTexture(depthTextureSettings, FramebufferAttachment::Depth);
+
+		std::array<GLenum, 4> attachments{};
+
+		for (size_t i{}; i < attachments.size(); i++)
+		{
+			attachments[i] = static_cast<GLenum>(static_cast<size_t>(GL_COLOR_ATTACHMENT0) + i);
+		}
+
+		m_GBuffer->Bind();
+		::glDrawBuffers(static_cast<GLsizei>(attachments.size()), attachments.data());
 	}
 
 	void Renderer::InitializeImGui() const

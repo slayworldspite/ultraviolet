@@ -6,6 +6,7 @@
 #include <glad/glad.h>
 #include <imgui/imgui.h>
 #include <imgui/implot.h>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "Texture.h"
 #include "../../utils/Logger.h"
@@ -14,8 +15,7 @@ namespace ultraviolet
 {
 	Texture::Texture(const std::filesystem::path& path, TextureType type) :
 		GLObject{},
-		Type{ type },
-		m_Multisampled{ false }
+		Type{ type }
 	{
 			Logger::Log("loading " + path.string(), Logger::Level::Info);
 
@@ -51,7 +51,7 @@ namespace ultraviolet
 					break;
 
 				case 3:
-					if (type == TextureType::Diffuse || type == TextureType::Overlay)
+					if (type == TextureType::Diffuse)
 					{
 						internalFormat = GL_SRGB;
 						imageFormat = GL_RGB;
@@ -64,7 +64,7 @@ namespace ultraviolet
 					break;
 
 				case 4:
-					if (type == TextureType::Diffuse || type == TextureType::Overlay)
+					if (type == TextureType::Diffuse)
 					{
 						internalFormat = GL_SRGB_ALPHA;
 						imageFormat = GL_RGBA;
@@ -90,30 +90,34 @@ namespace ultraviolet
 		Unbind();
 	}
 
-	Texture::Texture(int width, int height, int internalFormat, int format, int type, bool multisampled) :
+	Texture::Texture(const TextureSettings& settings) :
 		GLObject{},
-		m_Multisampled{ multisampled }
+		Type{ TextureType::Framebuffer }
 	{
-		m_Size.first = width;
-		m_Size.second = height;
+		m_Size.first = settings.Width;
+		m_Size.second = settings.Height;
 
 		::glGenTextures(1, &m_ID);
 		Bind();
 
-		int target{ multisampled ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D };
+		::glTexImage2D(GL_TEXTURE_2D, 0, static_cast<GLint>(settings.InternalFormat), settings.Width, settings.Height, 0, static_cast<GLenum>(settings.Format), GL_FLOAT, nullptr);
 
-		if (m_Multisampled)
-			::glTexImage2DMultisample(target, 4, internalFormat, width, height, GL_TRUE);
-		else
-			::glTexImage2D(target, 0, internalFormat, width, height, 0, format, type, nullptr);
+		::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, static_cast<GLint>(settings.MinFiltering));
+		::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, static_cast<GLint>(settings.MagFiltering));
+		::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, static_cast<GLint>(settings.Wrap));
+		::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, static_cast<GLint>(settings.Wrap));
+		
+		if (settings.Wrap == TextureWrap::ClampToBorder)
+			::glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, glm::value_ptr(settings.BorderColor));
+	}
 
-		::glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		::glTexParameteri(target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		::glTexParameteri(target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-		::glTexParameteri(target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+	Texture::Texture(Texture&& other) noexcept
+	{
+		m_ID = other.m_ID;
+		Type = other.Type;
+		m_Size = other.m_Size;
 
-		std::array<float, 4> borderColor{ 1.0f, 0.0f, 0.0f, 1.0f };
-		glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor.data());
+		other.m_ID = 0;
 	}
 
 	Texture::~Texture()
@@ -130,40 +134,28 @@ namespace ultraviolet
 	{
 		::glActiveTexture(static_cast<GLenum>(GL_TEXTURE0 + static_cast<int>(index)));
 
-		if (m_Multisampled)
-			::glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, m_ID);
-		else
-			::glBindTexture(GL_TEXTURE_2D, m_ID);
+		::glBindTexture(GL_TEXTURE_2D, m_ID);
 	}
 
 	void Texture::Bind() const
 	{
 		::glActiveTexture(GL_TEXTURE0);
 
-		if (m_Multisampled)
-			::glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, m_ID);
-		else
-			::glBindTexture(GL_TEXTURE_2D, m_ID);
+		::glBindTexture(GL_TEXTURE_2D, m_ID);
 	}
 
 	void Texture::Unbind(size_t index) const
 	{
 		::glActiveTexture(static_cast<GLenum>(GL_TEXTURE0 + index));
 
-		if (m_Multisampled)
-			::glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
-		else
-			::glBindTexture(GL_TEXTURE_2D, 0);
+		::glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
 	void Texture::Unbind() const
 	{
 		::glActiveTexture(GL_TEXTURE0);
 
-		if (m_Multisampled)
-			::glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
-		else
-			::glBindTexture(GL_TEXTURE_2D, 0);
+		::glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
 	void Texture::Delete()

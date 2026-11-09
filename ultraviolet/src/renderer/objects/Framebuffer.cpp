@@ -3,31 +3,70 @@
 #include <imgui/implot.h>
 
 #include "Framebuffer.h"
+#include "../../utils/Logger.h"
 
 namespace ultraviolet
 {
-	Framebuffer::Framebuffer(int width, int height, int internalFormat, int format, int type, int attachment, bool multisampled) :
+	Framebuffer::Framebuffer(const TextureSettings& textureSettings, FramebufferAttachment attachment) :
 		GLObject{},
-		Texture{ width, height, internalFormat, format, type, multisampled }
-	{
+		Textures{}
+	{	
 		::glGenFramebuffers(1, &m_ID);
-		Bind();
 
-		Texture.Bind();
+		AddTexture(textureSettings, attachment);
+	}
 
-		if (multisampled)
-			::glFramebufferTexture2D(GL_FRAMEBUFFER, attachment, GL_TEXTURE_2D_MULTISAMPLE, Texture.GetID(), 0);
-		else
-			::glFramebufferTexture2D(GL_FRAMEBUFFER, attachment, GL_TEXTURE_2D, Texture.GetID(), 0);
+	Framebuffer::Framebuffer(const TextureSettings& textureSettings, size_t textureCount) :
+		GLObject{},
+		Textures{}
+	{
+		assert(textureCount >= 1 && "textureCount isn't valid!");
 
-		Texture.Unbind();
-		Unbind();
+		::glGenFramebuffers(1, &m_ID);
+
+		Textures.reserve(textureCount);
+
+		for (size_t i{}; i < textureCount; i++)
+		{
+			AddTexture(textureSettings, static_cast<FramebufferAttachment>(static_cast<size_t>(FramebufferAttachment::Color) + i));
+		}
+	}
+
+	Framebuffer::Framebuffer(const std::vector<TextureSettings>& textureSettings) :
+		GLObject{},
+		Textures{}
+	{		
+		::glGenFramebuffers(1, &m_ID);
+
+		Textures.reserve(textureSettings.size());
+
+		for (size_t i{}; i < textureSettings.size(); i++)
+		{
+			AddTexture(textureSettings[i], static_cast<FramebufferAttachment>(static_cast<size_t>(FramebufferAttachment::Color) + i));
+		}
 	}
 
 	Framebuffer::~Framebuffer()
 	{
-		Texture.Delete();
+		for (size_t i{}; i < Textures.size(); i++)
+			Textures[i].Delete();
+
 		Delete();
+	}
+
+	void Framebuffer::AddTexture(const TextureSettings& textureSettings, FramebufferAttachment attachment)
+	{
+		Bind();
+
+		size_t index{ Textures.size() };
+
+		Textures.emplace_back(textureSettings);
+
+		Textures[index].Bind();
+		::glFramebufferTexture2D(GL_FRAMEBUFFER, static_cast<GLenum>(attachment), GL_TEXTURE_2D, Textures[index].GetID(), 0);
+		Textures[index].Unbind();
+
+		Unbind();
 	}
 
 	void Framebuffer::Bind() const
@@ -45,19 +84,24 @@ namespace ultraviolet
 		::glDeleteFramebuffers(1, &m_ID);
 	}
 
-	void Framebuffer::AddToImGui(const std::string& id)
+	void Framebuffer::AddToImGui()
 	{
-		if (::ImPlot::BeginPlot(("Framebuffer ##" + id).c_str()))
+		for (size_t i{}; i < Textures.size(); i++)
 		{
-			auto size{ Texture.GetSize() };
+			auto id{ Textures[i].GetID() };
 
-			::ImPlot::PlotImage(("Framebuffer Texture ##" + id).c_str(),
-				(ImTextureID)(intptr_t)Texture.GetID(),
-				ImVec2{ 0, 0 }, 
-				ImVec2{ static_cast<float>(size.first), static_cast<float>(size.second) }
-			);
+			if (::ImPlot::BeginPlot(("Framebuffer ##" + std::to_string(id)).c_str()))
+			{
+				auto size{ Textures[i].GetSize()};
 
-			::ImPlot::EndPlot();
+				::ImPlot::PlotImage(("Framebuffer Texture ##" + std::to_string(id)).c_str(),
+					(ImTextureID)(intptr_t)id,
+					ImVec2{ 0, 0 },
+					ImVec2{ static_cast<float>(size.first), static_cast<float>(size.second) }
+				);
+
+				::ImPlot::EndPlot();
+			}
 		}
 	}
 }
