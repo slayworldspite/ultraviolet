@@ -49,6 +49,8 @@ namespace ultraviolet
 		SetViewport(windowSize.first, windowSize.second);
 
 		CreateGBuffer();
+		CreateScreenQuad();
+		InitializeDeferredShader();
 
 		Logger::Log("renderer initialized!", Logger::Level::Info);
 	}
@@ -69,14 +71,7 @@ namespace ultraviolet
 		::glEnable(GL_BLEND);
 		::glEnable(GL_CULL_FACE);
 
-		m_GBuffer->Bind();
-
-		::glClear(
-			GL_COLOR_BUFFER_BIT |
-			GL_DEPTH_BUFFER_BIT
-		);
-
-		m_GBuffer->Unbind();
+		m_GBuffer->Clear();
 
 		::glClear(
 			GL_COLOR_BUFFER_BIT |
@@ -153,7 +148,11 @@ namespace ultraviolet
 			Draw(drawItem);
 		}
 
+		m_GBuffer->Unbind();
+
 		m_RenderQueue.Clear();
+
+		PresentFrame();
 	}
 
 	void Renderer::SetClearColor(const glm::vec4& color)
@@ -188,6 +187,11 @@ namespace ultraviolet
 	void Renderer::AddToImGui()
 	{
 		::ImGui::DragFloat("Gamma", &m_Gamma, 0.05f);
+		
+		if (::ImGui::Button("Reload Deferred Shader"))
+			InitializeDeferredShader();
+
+		m_GBuffer->AddToImGui();
 	}
 
 	void Renderer::CreateContext(const NativeWindow& window)
@@ -246,6 +250,43 @@ namespace ultraviolet
 		::glDrawBuffers(static_cast<GLsizei>(attachments.size()), attachments.data());
 	}
 
+	void Renderer::CreateScreenQuad()
+	{
+		std::vector<Vertex> vertices{};
+		vertices.reserve(4);
+
+		vertices.push_back(Vertex{
+			.Position{ -1, -1, 0 },
+			.TextureCoordinates{ 0, 0 }
+		});
+
+		vertices.push_back(Vertex{
+			.Position{ 1, -1, 0 },
+			.TextureCoordinates { 1, 0 }
+		});
+
+		vertices.push_back(Vertex{
+			.Position{ -1, 1, 0 },
+			.TextureCoordinates { 0, 1 }
+		});
+
+		vertices.push_back(Vertex{
+			.Position{ 1, 1, 0 },
+			.TextureCoordinates { 1, 1 }
+		});
+
+		std::vector<uint32_t> indices{ 0, 1, 2, 1, 3, 2 };
+
+		m_ScreenQuad = std::make_unique<Mesh>("screen_quad", vertices, indices);
+	}
+
+	void Renderer::InitializeDeferredShader()
+	{
+		static const std::filesystem::path directory{ "assets/shaders" };
+
+		m_DeferredShader = std::make_unique<Shader>(directory / "Shading.vert", directory / "Shading.frag");
+	}
+
 	void Renderer::InitializeImGui() const
 	{
 		::IMGUI_CHECKVERSION();
@@ -275,7 +316,36 @@ namespace ultraviolet
 		{
 			drawItem.Mesh->Bind();
 
-			::glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(drawItem.Mesh->GetIndexCount()), GL_UNSIGNED_INT, nullptr);
+			DrawElements(drawItem.Mesh->GetIndexCount());
 		}
+	}
+
+	void Renderer::DrawElements(size_t indexCount) const
+	{
+		::glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(indexCount), GL_UNSIGNED_INT, nullptr);
+	}
+
+	void Renderer::PresentFrame() const
+	{
+		if (m_WireframeMode)
+			::glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+		::glDisable(GL_DEPTH_TEST);
+
+		m_DeferredShader->Use();
+
+		m_DeferredShader->Set("u_Diffuse", 0);
+		m_DeferredShader->Set("u_SpecularShininess", 1);
+		m_DeferredShader->Set("u_Normal", 2);
+		m_DeferredShader->Set("u_Position", 3);
+
+		for (size_t i{}; i < m_GBuffer->Textures.size(); i++)
+		{
+			m_GBuffer->Textures[i].Bind(i);
+		}
+
+		m_ScreenQuad->Bind();
+
+		DrawElements(m_ScreenQuad->GetIndexCount());
 	}
 }

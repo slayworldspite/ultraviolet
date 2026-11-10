@@ -37,6 +37,8 @@ namespace ultraviolet
 		::SDL_Window* m_Window;
 		void* m_GLContext;
 		std::unique_ptr<Framebuffer> m_GBuffer;
+		std::unique_ptr<Mesh> m_ScreenQuad;
+		std::unique_ptr<Shader> m_DeferredShader;
 		RenderQueue m_RenderQueue;
 		bool m_WireframeMode;
 		glm::vec4 m_ClearColor;
@@ -47,7 +49,11 @@ namespace ultraviolet
 	private:
 		void CreateContext(const NativeWindow& window);
 		void CreateGBuffer();
+		void CreateScreenQuad();
+		void InitializeDeferredShader();
 		void InitializeImGui() const;
 		void Draw(const DrawItem& drawItem) const;
+		void DrawElements(size_t indexCount) const;
+		void PresentFrame() const;
 	};
 }

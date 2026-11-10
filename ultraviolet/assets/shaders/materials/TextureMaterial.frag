@@ -30,7 +30,7 @@
 		if (diffuse.a < 0.1)
 			discard;
 
-		vec3 specular = texture(u_TextureMaterial.Specular, textureCoordinates).rgb;
+		float specular = texture(u_TextureMaterial.Specular, textureCoordinates).r;
 
 		vec3 normal = texture(u_TextureMaterial.Normal, textureCoordinates).rgb;
 
@@ -44,8 +44,7 @@
 		normal = normalize(o_TBN * normal);
 
 		g_Diffuse = diffuse;
-		g_SpecularShininess.rgb = specular;
-		g_SpecularShininess.a = u_TextureMaterial.Shininess;
+		g_SpecularShininess = vec4(specular.r, float(u_TextureMaterial.Shininess), 0.0, 1.0);
 		g_Normal = vec4(normal, 1.0);
 		g_Position = vec4(o_FragmentPosition, 1.0);
 	}

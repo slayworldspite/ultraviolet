@@ -19,6 +19,7 @@ namespace ultraviolet
 		virtual ~Framebuffer() override;
 
 		void AddTexture(const TextureSettings& textureSettings, FramebufferAttachment attachment);
+		void Clear();
 
 		virtual void Bind() const override;
 		virtual void Unbind() const override;
