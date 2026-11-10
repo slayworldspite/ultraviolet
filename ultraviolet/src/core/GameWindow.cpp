@@ -30,7 +30,8 @@ namespace ultraviolet
 			::SDL_Event event;
 			while (::SDL_PollEvent(&event))
 			{
-				::ImGui_ImplSDL3_ProcessEvent(&event);
+				if (!::SDL_GetWindowRelativeMouseMode(GetNativeHandle()))
+					::ImGui_ImplSDL3_ProcessEvent(&event);
 
 				switch (event.type)
 				{
