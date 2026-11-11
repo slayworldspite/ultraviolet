@@ -50,7 +50,9 @@ namespace ultraviolet
 
 		CreateGBuffer();
 		CreateScreenQuad();
-		InitializeDeferredShader();
+		
+		InitializeRenderPasses();
+		InitializePostProcessingShader();
 
 		Logger::Log("renderer initialized!", Logger::Level::Info);
 	}
@@ -180,16 +182,22 @@ namespace ultraviolet
 
 	void Renderer::Resize(int width, int height)
 	{
-		CreateGBuffer();
 		SetViewport(width, height);
+	
+		CreateGBuffer();
+		InitializeRenderPasses();
 	}
 
 	void Renderer::AddToImGui()
 	{
 		::ImGui::DragFloat("Gamma", &m_Gamma, 0.05f);
+		::ImGui::Checkbox("Wireframe", &m_WireframeMode);
 		
 		if (::ImGui::Button("Reload Deferred Shader"))
-			InitializeDeferredShader();
+			m_DeferredPass->Shader.Load();
+		
+		if (::ImGui::Button("Reload Post Processing Shader"))
+			m_PostProcessingShader->Load();
 
 		m_GBuffer->AddToImGui();
 	}
@@ -237,7 +245,7 @@ namespace ultraviolet
 		depthTextureSettings.InternalFormat = TextureInternalFormat::DepthComponent;
 		depthTextureSettings.Format = TextureFormat::DepthComponent;
 
-		m_GBuffer->AddTexture(depthTextureSettings, FramebufferAttachment::Depth);
+		m_GBuffer->AddBuffer(depthTextureSettings, FramebufferAttachment::Depth);
 
 		std::array<GLenum, 4> attachments{};
 
@@ -280,11 +288,14 @@ namespace ultraviolet
 		m_ScreenQuad = std::make_unique<Mesh>("screen_quad", vertices, indices);
 	}
 
-	void Renderer::InitializeDeferredShader()
+	void Renderer::InitializeRenderPasses()
 	{
-		static const std::filesystem::path directory{ "assets/shaders" };
+		m_DeferredPass = std::make_unique<DeferredPass>(m_ViewportWidth, m_ViewportHeight);
+	}
 
-		m_DeferredShader = std::make_unique<Shader>(directory / "Shading.vert", directory / "Shading.frag");
+	void Renderer::InitializePostProcessingShader()
+	{
+		m_PostProcessingShader = std::make_unique<Shader>("assets/shaders/passes/Pass.vert", "assets/shaders/passes/PostProcessing.frag");
 	}
 
 	void Renderer::InitializeImGui() const
@@ -316,13 +327,8 @@ namespace ultraviolet
 		{
 			drawItem.Mesh->Bind();
 
-			DrawElements(drawItem.Mesh->GetIndexCount());
+			::glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(drawItem.Mesh->GetIndexCount()), GL_UNSIGNED_INT, nullptr);
 		}
-	}
-
-	void Renderer::DrawElements(size_t indexCount) const
-	{
-		::glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(indexCount), GL_UNSIGNED_INT, nullptr);
 	}
 
 	void Renderer::PresentFrame() const
@@ -330,22 +336,39 @@ namespace ultraviolet
 		if (m_WireframeMode)
 			::glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-		::glDisable(GL_DEPTH_TEST);
+		RenderPassInfo deferredPassInfo{};
 
-		m_DeferredShader->Use();
-
-		m_DeferredShader->Set("u_Diffuse", 0);
-		m_DeferredShader->Set("u_SpecularShininess", 1);
-		m_DeferredShader->Set("u_Normal", 2);
-		m_DeferredShader->Set("u_Position", 3);
-
-		for (size_t i{}; i < m_GBuffer->Textures.size(); i++)
+		for (size_t i{}; i < m_GBuffer->Buffers.size(); i++)
 		{
-			m_GBuffer->Textures[i].Bind(i);
+			if (i == m_GBuffer->Buffers.size() - 1)
+				deferredPassInfo.DepthAttachment = RenderTarget{
+					.Texture{ &m_GBuffer->Buffers[i] }, 
+					.Attachment{ i } 
+				};
+
+			RenderTarget target{
+				.Texture{ &m_GBuffer->Buffers[i] },
+				.Attachment{ i }
+			};
+
+			deferredPassInfo.ColorAttachments.push_back(target);
 		}
 
+		m_DeferredPass->Execute(deferredPassInfo);
+
+		BindBackbuffer();
+
+		m_PostProcessingShader->Use();
+		m_PostProcessingShader->Set("u_Framebuffer", 0);
+
+		m_DeferredPass->Output.Buffers[0].Bind();
 		m_ScreenQuad->Bind();
 
-		DrawElements(m_ScreenQuad->GetIndexCount());
+		::glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(m_ScreenQuad->GetIndexCount()), GL_UNSIGNED_INT, nullptr);
+	}
+
+	void Renderer::BindBackbuffer() const
+	{
+		::glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 }

@@ -9,7 +9,7 @@ namespace ultraviolet
 	class Framebuffer : public GLObject
 	{
 	public:
-		std::vector<Texture> Textures;
+		std::vector<Texture> Buffers;
 
 	public:
 		Framebuffer(const TextureSettings& textureSettings, FramebufferAttachment attachment);
@@ -18,7 +18,7 @@ namespace ultraviolet
 
 		virtual ~Framebuffer() override;
 
-		void AddTexture(const TextureSettings& textureSettings, FramebufferAttachment attachment);
+		void AddBuffer(const TextureSettings& textureSettings, FramebufferAttachment attachment);
 		void Clear();
 
 		virtual void Bind() const override;

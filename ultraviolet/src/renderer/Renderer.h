@@ -7,6 +7,7 @@
 #include "camera/ProjectionCamera.h"
 #include "objects/Framebuffer.h"
 #include "RenderQueue.h"
+#include "DeferredPass.h"
 
 namespace ultraviolet
 {
@@ -38,7 +39,8 @@ namespace ultraviolet
 		void* m_GLContext;
 		std::unique_ptr<Framebuffer> m_GBuffer;
 		std::unique_ptr<Mesh> m_ScreenQuad;
-		std::unique_ptr<Shader> m_DeferredShader;
+		std::unique_ptr<DeferredPass> m_DeferredPass;
+		std::unique_ptr<Shader> m_PostProcessingShader;
 		RenderQueue m_RenderQueue;
 		bool m_WireframeMode;
 		glm::vec4 m_ClearColor;
@@ -50,10 +52,12 @@ namespace ultraviolet
 		void CreateContext(const NativeWindow& window);
 		void CreateGBuffer();
 		void CreateScreenQuad();
-		void InitializeDeferredShader();
+		void InitializeRenderPasses();
+		void InitializePostProcessingShader();
 		void InitializeImGui() const;
 		void Draw(const DrawItem& drawItem) const;
 		void DrawElements(size_t indexCount) const;
 		void PresentFrame() const;
+		void BindBackbuffer() const;
 	};
 }
