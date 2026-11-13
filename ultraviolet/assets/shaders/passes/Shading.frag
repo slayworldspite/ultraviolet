@@ -53,7 +53,7 @@
 		vec3 ambient = diffuse * ub_AmbientLight.Color * ub_AmbientLight.Intensity;
 
 		Output.a = 1.0;
-		Output.rgb += ambient;
+		Output.rgb = ambient;
 
 		if (ub_DirectionalLight.Enabled)
 		{
@@ -61,8 +61,6 @@
 
 			float diffuseStrength = max(dot(normal, lightDirection), 0.0);
 			Output.rgb += diffuse * ub_DirectionalLight.Color.rgb * diffuseStrength * ub_DirectionalLight.Intensity;
-
-			vec3 reflectionDirection = reflect(-lightDirection, normal);
 
 			vec3 halfwayDirection = normalize(lightDirection + viewDirection);
 			float specularStrength = pow(max(dot(normal, halfwayDirection), 0.0), shininess) * specular;
