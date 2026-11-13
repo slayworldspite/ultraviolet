@@ -40,9 +40,6 @@ namespace ultraviolet
 	{
 		SetRelativeMouseMode(true);
 
-		m_ClearColor = glm::vec4{ 0.0f, 0.55f, 1.0f, 1.0f };
-		m_Renderer.SetClearColor(m_ClearColor);
-
 		m_Player = std::make_unique<Player>();
 
 		DemoScene{}.Load(m_Scene);
@@ -228,27 +225,6 @@ namespace ultraviolet
 		if (::ImGui::CollapsingHeader("Renderer"))
 		{
 			::ImGui::Indent(16.0f);
-
-			static bool wireframeMode{ false };
-			static bool lastWireframeMode{ wireframeMode };
-
-			::ImGui::Checkbox("Wireframe Mode", &wireframeMode);
-
-			if (wireframeMode != lastWireframeMode)
-			{
-				lastWireframeMode = wireframeMode;
-				m_Renderer.SetWireframeMode(wireframeMode);
-			}
-
-			if (::ImGui::Button("Reload All Material Shaders"))
-				MaterialShaderManager::Reload();
-
-			::ImGui::ColorPicker4("Sky Color", glm::value_ptr(m_ClearColor));
-
-			if (::ImGui::Button("Set Sky Color"))
-				m_Renderer.SetClearColor(m_ClearColor);
-
-			::ImGui::Spacing();
 
 			m_Renderer.AddToImGui();
 

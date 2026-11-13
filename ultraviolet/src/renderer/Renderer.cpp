@@ -27,7 +27,6 @@ namespace ultraviolet
 	Renderer::Renderer(const NativeWindow& window) :
 		m_RenderQueue{},
 		m_WireframeMode{ false },
-		m_ClearColor{},
 		m_Gamma{ 2.2f },
 		m_ViewportWidth{},
 		m_ViewportHeight{}
@@ -155,11 +154,6 @@ namespace ultraviolet
 		m_RenderQueue.Clear();
 
 		PresentFrame();
-	}
-
-	void Renderer::SetClearColor(const glm::vec4& color)
-	{
-		m_ClearColor = color;
 	}
 
 	void Renderer::SetViewport(int width, int height)

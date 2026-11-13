@@ -26,7 +26,6 @@ namespace ultraviolet
 		void Submit(const Scene& scene);
 		void Execute();
 
-		void SetClearColor(const glm::vec4& color);
 		void SetViewport(int width, int height);
 		void SetWireframeMode(bool value);
 		void SetVSync(bool value) const;
@@ -43,7 +42,6 @@ namespace ultraviolet
 		std::unique_ptr<Shader> m_PostProcessingShader;
 		RenderQueue m_RenderQueue;
 		bool m_WireframeMode;
-		glm::vec4 m_ClearColor;
 		float m_Gamma;
 		int m_ViewportWidth;
 		int m_ViewportHeight;
