@@ -28,6 +28,7 @@ namespace ultraviolet
 		m_RenderQueue{},
 		m_WireframeMode{ false },
 		m_Gamma{ 2.2f },
+		m_EnableFXAA{ true },
 		m_ViewportWidth{},
 		m_ViewportHeight{}
 	{
@@ -354,6 +355,9 @@ namespace ultraviolet
 
 		m_PostProcessingShader->Use();
 		m_PostProcessingShader->Set("u_Framebuffer", 0);
+		m_PostProcessingShader->Set("u_Gamma", m_Gamma);
+		m_PostProcessingShader->Set("u_Resolution", glm::vec2{ m_ViewportWidth, m_ViewportHeight });
+		m_PostProcessingShader->Set("u_EnableFXAA", m_EnableFXAA);
 
 		m_DeferredPass->Output.Buffers[0].Bind();
 		m_ScreenQuad->Bind();

@@ -43,6 +43,7 @@ namespace ultraviolet
 		RenderQueue m_RenderQueue;
 		bool m_WireframeMode;
 		float m_Gamma;
+		bool m_EnableFXAA;
 		int m_ViewportWidth;
 		int m_ViewportHeight;
 
