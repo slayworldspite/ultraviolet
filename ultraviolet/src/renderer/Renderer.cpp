@@ -225,7 +225,7 @@ namespace ultraviolet
 		TextureSettings textureSettings{
 			.Width = m_ViewportWidth,
 			.Height = m_ViewportHeight,
-			.InternalFormat = TextureInternalFormat::Rgba32f,
+			.InternalFormat = TextureInternalFormat::Rgba16f,
 			.Format = TextureFormat::Rgba,
 			.MinFiltering = TextureFilter::Linear,
 			.MagFiltering = TextureFilter::Linear,
