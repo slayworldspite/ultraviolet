@@ -1,5 +1,5 @@
 #include "DemoScene.h"
-#include "../../renderer/materials/TextureMaterial.h"
+#include "../../renderer/materials/ColorMaterial.h"
 
 namespace ultraviolet
 {
@@ -18,15 +18,19 @@ namespace ultraviolet
 		scene.DirectionalLight.Pitch = -65.0f;
 		scene.DirectionalLight.Yaw = -125.0f;
 
+		scene.Camera.Position.z -= 2.0f;
+		scene.Camera.Position.y += 2.0f;
+		scene.Camera.Yaw = 90.0f;
+
 		static const std::filesystem::path assets{ "assets" };
 		static const std::filesystem::path textures{ assets / "textures" };
 
-		std::shared_ptr<TextureMaterial> material{ std::make_shared<TextureMaterial>(textures / "brick/diffuse.jpg", textures / "brick/rough.jpg", textures / "brick/normal.png", 32) };
+		std::shared_ptr<ColorMaterial> material{ std::make_shared<ColorMaterial>(glm::vec3{ 0.35f, 0.60f, 1.0f }, 32) };
 
 		std::vector<EntityDescription> entities{};
 		
 		entities.push_back(EntityDescription{
-			.ID = "floor",
+			.ID = "ground",
 			.Type = PhysicsBodyType::StaticMesh,
 			.ModelPath = assets / "scenes/demoscene/map.obj",
 			.CollisionModelPath = assets / "scenes/demoscene/map.obj",
