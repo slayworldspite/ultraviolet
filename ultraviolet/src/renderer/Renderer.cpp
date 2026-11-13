@@ -199,7 +199,7 @@ namespace ultraviolet
 			m_PostProcessingShader->Load();
 
 		if (::ImGui::CollapsingHeader("G Buffer"))
-		m_GBuffer->AddToImGui();
+			m_GBuffer->AddToImGui();
 	}
 
 	void Renderer::CreateContext(const NativeWindow& window)
