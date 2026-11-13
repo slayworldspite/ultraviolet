@@ -186,14 +186,19 @@ namespace ultraviolet
 	void Renderer::AddToImGui()
 	{
 		::ImGui::DragFloat("Gamma", &m_Gamma, 0.05f);
-		::ImGui::Checkbox("Wireframe", &m_WireframeMode);
+		::ImGui::Checkbox("Wireframe Mode", &m_WireframeMode);
+		::ImGui::Checkbox("FXAA", &m_EnableFXAA);
 		
+		if (::ImGui::Button("Reload Material Shaders"))
+			MaterialShaderManager::Reload();
+
 		if (::ImGui::Button("Reload Deferred Shader"))
 			m_DeferredPass->Shader.Load();
 		
 		if (::ImGui::Button("Reload Post Processing Shader"))
 			m_PostProcessingShader->Load();
 
+		if (::ImGui::CollapsingHeader("G Buffer"))
 		m_GBuffer->AddToImGui();
 	}
 
