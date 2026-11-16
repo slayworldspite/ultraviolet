@@ -66,7 +66,7 @@ namespace ultraviolet
 	{
 		if (this != &other)
 		{
-			glDeleteBuffers(1, &m_ID);
+			::glDeleteVertexArrays(1, &other.m_ID);
 
 			m_ID = other.m_ID;
 			other.m_ID = 0;
