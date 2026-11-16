@@ -7,7 +7,7 @@
 #include "camera/ProjectionCamera.h"
 #include "objects/Framebuffer.h"
 #include "RenderQueue.h"
-#include "DeferredPass.h"
+#include "passes/DeferredPass.h"
 
 namespace ultraviolet
 {

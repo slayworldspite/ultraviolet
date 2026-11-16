@@ -1,6 +1,6 @@
 #pragma once
 
-#include "objects/Texture.h"
+#include "../objects/Texture.h"
 
 namespace ultraviolet
 {

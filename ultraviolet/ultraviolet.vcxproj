@@ -154,9 +154,9 @@
     <ClCompile Include="src\physics\EntityLoader.cpp" />
     <ClCompile Include="src\physics\PhysicsBody.cpp" />
     <ClCompile Include="src\renderer\camera\ProjectionCamera.cpp" />
-    <ClCompile Include="src\renderer\DeferredPass.cpp" />
+    <ClCompile Include="src\renderer\passes\DeferredPass.cpp" />
     <ClCompile Include="src\renderer\DrawItem.cpp" />
-    <ClCompile Include="src\renderer\IRenderPass.cpp" />
+    <ClCompile Include="src\renderer\passes\IRenderPass.cpp" />
     <ClCompile Include="src\renderer\lights\AmbientLight.cpp" />
     <ClCompile Include="src\renderer\lights\DirectionalLight.cpp" />
     <ClCompile Include="src\renderer\lights\PointLight.cpp" />
@@ -215,9 +215,9 @@
     <ClInclude Include="src\physics\PhysicsBody.h" />
     <ClInclude Include="src\physics\PhysicsBodyType.h" />
     <ClInclude Include="src\renderer\camera\ProjectionCamera.h" />
-    <ClInclude Include="src\renderer\DeferredPass.h" />
+    <ClInclude Include="src\renderer\passes\DeferredPass.h" />
     <ClInclude Include="src\renderer\DrawItem.h" />
-    <ClInclude Include="src\renderer\IRenderPass.h" />
+    <ClInclude Include="src\renderer\passes\IRenderPass.h" />
     <ClInclude Include="src\renderer\lights\AmbientLight.h" />
     <ClInclude Include="src\renderer\lights\DirectionalLight.h" />
     <ClInclude Include="src\renderer\lights\PointLight.h" />
@@ -246,9 +246,9 @@
     <ClInclude Include="src\renderer\objects\UniformBuffer.h" />
     <ClInclude Include="src\physics\PhysicsSystem.h" />
     <ClInclude Include="src\renderer\Renderer.h" />
-    <ClInclude Include="src\renderer\RenderPassInfo.h" />
+    <ClInclude Include="src\renderer\passes\RenderPassInfo.h" />
     <ClInclude Include="src\renderer\RenderQueue.h" />
-    <ClInclude Include="src\renderer\RenderTarget.h" />
+    <ClInclude Include="src\renderer\passes\RenderTarget.h" />
     <ClInclude Include="src\renderer\scene\descriptions\EntityDescription.h" />
     <ClInclude Include="src\renderer\scene\descriptions\ModelDescription.h" />
     <ClInclude Include="src\renderer\scene\descriptions\PointLightDescription.h" />

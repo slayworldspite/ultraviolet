@@ -171,10 +171,10 @@
     <ClCompile Include="src\renderer\DrawItem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\renderer\IRenderPass.cpp">
+    <ClCompile Include="src\renderer\passes\IRenderPass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\renderer\DeferredPass.cpp">
+    <ClCompile Include="src\renderer\passes\DeferredPass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -416,16 +416,16 @@
     <ClInclude Include="src\renderer\objects\TextureFormat.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\renderer\IRenderPass.h">
+    <ClInclude Include="src\renderer\passes\IRenderPass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\renderer\RenderTarget.h">
+    <ClInclude Include="src\renderer\passes\RenderTarget.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\renderer\RenderPassInfo.h">
+    <ClInclude Include="src\renderer\passes\RenderPassInfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\renderer\DeferredPass.h">
+    <ClInclude Include="src\renderer\passes\DeferredPass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

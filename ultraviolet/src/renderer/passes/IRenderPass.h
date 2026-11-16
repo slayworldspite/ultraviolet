@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Shader.h"
-#include "objects/Framebuffer.h"
+#include "../Shader.h"
+#include "../objects/Framebuffer.h"
 #include "RenderPassInfo.h"
-#include "mesh/Mesh.h"
+#include "../mesh/Mesh.h"
 
 namespace ultraviolet
 {
