@@ -42,7 +42,7 @@ namespace ultraviolet
 			::ImGui::ColorPicker3("Color ##directional", glm::value_ptr(Color));
 			::ImGui::DragFloat("Yaw ##directional", &Yaw, 0.1f);
 			::ImGui::DragFloat("Pitch ##directional", &Pitch, 0.1f);
-			::ImGui::DragFloat("Intensity ##directional", &Intensity, 0.1f, 0.0f, 1.0f);
+			::ImGui::DragFloat("Intensity ##directional", &Intensity, 0.1f, 0.0f, 10.0f);
 		}
 	}
 
