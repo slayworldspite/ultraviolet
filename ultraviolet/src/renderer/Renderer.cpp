@@ -1,5 +1,6 @@
 #include <format>
 #include <random>
+#include <array>
 
 #include <SDL3/SDL.h>
 #include <glad/glad.h>
