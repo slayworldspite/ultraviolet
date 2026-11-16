@@ -341,10 +341,14 @@ namespace ultraviolet
 		for (size_t i{}; i < m_GBuffer->Buffers.size(); i++)
 		{
 			if (i == m_GBuffer->Buffers.size() - 1)
+			{
 				deferredPassInfo.DepthAttachment = RenderTarget{
-					.Texture{ &m_GBuffer->Buffers[i] }, 
-					.Attachment{ i } 
+					.Texture{ &m_GBuffer->Buffers[i] },
+					.Attachment{ i }
 				};
+
+				continue;
+			}
 
 			RenderTarget target{
 				.Texture{ &m_GBuffer->Buffers[i] },
