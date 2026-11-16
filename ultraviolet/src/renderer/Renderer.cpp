@@ -180,6 +180,7 @@ namespace ultraviolet
 		SetViewport(width, height);
 	
 		CreateGBuffer();
+		CreateScreenQuad();
 		InitializeRenderPasses();
 	}
 
