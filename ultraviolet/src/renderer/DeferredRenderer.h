@@ -11,11 +11,11 @@
 
 namespace ultraviolet
 {
-	class Renderer
+	class DeferredRenderer
 	{
 	public:
-		Renderer(const NativeWindow& window);
-		~Renderer();
+		DeferredRenderer(const NativeWindow& window);
+		~DeferredRenderer();
 
 		void BeginFrame() const;
 		void EndFrame();

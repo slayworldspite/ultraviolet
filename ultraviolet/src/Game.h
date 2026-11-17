@@ -3,7 +3,7 @@
 #include <box3d/box3d.h>
 
 #include "core/GameWindow.h"
-#include "renderer/Renderer.h"
+#include "renderer/DeferredRenderer.h"
 #include "renderer/camera/ProjectionCamera.h"
 #include "renderer/materials/LightMaterial.h"
 #include "game/characters/Player.h"
@@ -24,7 +24,7 @@ namespace ultraviolet
 		void OnResize(int width, int height) override;
 
 	private:
-		Renderer m_Renderer;
+		DeferredRenderer m_Renderer;
 		double m_DeltaTime;
 		Scene m_Scene;
 

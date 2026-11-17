@@ -11,7 +11,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <tracy/tracy/Tracy.hpp>
 
-#include "Renderer.h"
+#include "DeferredRenderer.h"
 #include "materials/MaterialShaderManager.h"
 #include "../utils/Logger.h"
 #include "RenderContext.h"
@@ -26,7 +26,7 @@ namespace
 
 namespace ultraviolet
 {
-	Renderer::Renderer(const NativeWindow& window) :
+	DeferredRenderer::DeferredRenderer(const NativeWindow& window) :
 		m_RenderQueue{},
 		m_WireframeMode{ false },
 		m_Gamma{ 2.2f },
@@ -60,7 +60,7 @@ namespace ultraviolet
 		Logger::Log("renderer initialized!", Logger::Level::Info);
 	}
 
-	Renderer::~Renderer()
+	DeferredRenderer::~DeferredRenderer()
 	{
 		::ImGui_ImplOpenGL3_Shutdown();
 		::ImGui_ImplSDL3_Shutdown();
@@ -68,7 +68,7 @@ namespace ultraviolet
 		::ImGui::DestroyContext();
 	}
 
-	void Renderer::BeginFrame() const
+	void DeferredRenderer::BeginFrame() const
 	{
 		ZoneScoped;
 
@@ -90,7 +90,7 @@ namespace ultraviolet
 		::ImGui::NewFrame();
 	}
 
-	void Renderer::EndFrame()
+	void DeferredRenderer::EndFrame()
 	{
 		ZoneScoped;
 
@@ -105,7 +105,7 @@ namespace ultraviolet
 		FrameMark;
 	}
 
-	void Renderer::Submit(const Mesh& mesh, const glm::mat4& transform)
+	void DeferredRenderer::Submit(const Mesh& mesh, const glm::mat4& transform)
 	{
 		DrawItem drawItem{
 			.Mesh = &mesh,
@@ -117,7 +117,7 @@ namespace ultraviolet
 		m_RenderQueue.Submit(drawItem);
 	}
 
-	void Renderer::Submit(const Model& model)
+	void DeferredRenderer::Submit(const Model& model)
 	{
 		const glm::mat4& transform{ model.GetModelMatrix() };
 
@@ -125,12 +125,12 @@ namespace ultraviolet
 			Submit(mesh, transform);
 	}
 
-	void Renderer::Submit(const Entity& entity)
+	void DeferredRenderer::Submit(const Entity& entity)
 	{
 		Submit(entity.RenderObject);
 	}
 
-	void Renderer::Submit(const Scene& scene)
+	void DeferredRenderer::Submit(const Scene& scene)
 	{
 		for (const Model& model : scene.Models)
 			Submit(model);
@@ -139,7 +139,7 @@ namespace ultraviolet
 			Submit(entity);
 	}
 
-	void Renderer::Execute()
+	void DeferredRenderer::Execute()
 	{
 		ZoneScoped;
 
@@ -160,7 +160,7 @@ namespace ultraviolet
 		PresentFrame();
 	}
 
-	void Renderer::SetViewport(int width, int height)
+	void DeferredRenderer::SetViewport(int width, int height)
 	{
 		::glViewport(0, 0, width, height);
 
@@ -168,17 +168,17 @@ namespace ultraviolet
 		m_ViewportHeight = height;
 	}
 
-	void Renderer::SetWireframeMode(bool value)
+	void DeferredRenderer::SetWireframeMode(bool value)
 	{
 		m_WireframeMode = value;
 	}
 
-	void Renderer::SetVSync(bool value) const
+	void DeferredRenderer::SetVSync(bool value) const
 	{
 		::SDL_GL_SetSwapInterval(value);
 	}
 
-	void Renderer::Resize(int width, int height)
+	void DeferredRenderer::Resize(int width, int height)
 	{
 		SetViewport(width, height);
 	
@@ -187,7 +187,7 @@ namespace ultraviolet
 		InitializeRenderPasses();
 	}
 
-	void Renderer::AddToImGui()
+	void DeferredRenderer::AddToImGui()
 	{
 		::ImGui::DragFloat("Gamma", &m_Gamma, 0.05f);
 		::ImGui::Checkbox("Wireframe Mode", &m_WireframeMode);
@@ -206,7 +206,7 @@ namespace ultraviolet
 			m_GBuffer->AddToImGui();
 	}
 
-	void Renderer::CreateGBuffer()
+	void DeferredRenderer::CreateGBuffer()
 	{
 		TextureSettings textureSettings{
 			.Width = m_ViewportWidth,
@@ -238,7 +238,7 @@ namespace ultraviolet
 		::glDrawBuffers(static_cast<GLsizei>(attachments.size()), attachments.data());
 	}
 
-	void Renderer::CreateScreenQuad()
+	void DeferredRenderer::CreateScreenQuad()
 	{
 		std::vector<Vertex> vertices{};
 		vertices.reserve(4);
@@ -268,17 +268,17 @@ namespace ultraviolet
 		m_ScreenQuad = std::make_unique<Mesh>("screen_quad", vertices, indices);
 	}
 
-	void Renderer::InitializeRenderPasses()
+	void DeferredRenderer::InitializeRenderPasses()
 	{
 		m_DeferredPass = std::make_unique<DeferredPass>(m_ViewportWidth, m_ViewportHeight);
 	}
 
-	void Renderer::InitializePostProcessingShader()
+	void DeferredRenderer::InitializePostProcessingShader()
 	{
 		m_PostProcessingShader = std::make_unique<Shader>("assets/shaders/passes/Pass.vert", "assets/shaders/passes/PostProcessing.frag");
 	}
 
-	void Renderer::InitializeImGui() const
+	void DeferredRenderer::InitializeImGui() const
 	{
 		::IMGUI_CHECKVERSION();
 		::ImGui::CreateContext();
@@ -295,7 +295,7 @@ namespace ultraviolet
 		::ImGui_ImplOpenGL3_Init();
 	}
 
-	void Renderer::Draw(const DrawItem& drawItem) const
+	void DeferredRenderer::Draw(const DrawItem& drawItem) const
 	{
 		ZoneScoped;
 
@@ -313,7 +313,7 @@ namespace ultraviolet
 		}
 	}
 
-	void Renderer::PresentFrame() const
+	void DeferredRenderer::PresentFrame() const
 	{
 		ZoneScoped;
 
@@ -358,7 +358,7 @@ namespace ultraviolet
 		::glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(m_ScreenQuad->GetIndexCount()), GL_UNSIGNED_INT, nullptr);
 	}
 
-	void Renderer::BindBackbuffer() const
+	void DeferredRenderer::BindBackbuffer() const
 	{
 		::glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
