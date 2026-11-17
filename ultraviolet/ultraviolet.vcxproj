@@ -183,6 +183,7 @@
     <ClCompile Include="src\renderer\Shader.cpp" />
     <ClCompile Include="src\renderer\objects\VertexArray.cpp" />
     <ClCompile Include="src\renderer\objects\VertexBuffer.cpp" />
+    <ClCompile Include="src\renderer\SplashScreenRenderer.cpp" />
     <ClCompile Include="src\utils\Logger.cpp" />
     <ClCompile Include="vendor\glad\glad.c" />
     <ClCompile Include="vendor\imgui\imgui.cpp" />
@@ -261,6 +262,7 @@
     <ClInclude Include="src\renderer\mesh\Vertex.h" />
     <ClInclude Include="src\renderer\objects\VertexArray.h" />
     <ClInclude Include="src\renderer\objects\VertexBuffer.h" />
+    <ClInclude Include="src\renderer\SplashScreenRenderer.h" />
     <ClInclude Include="src\utils\Logger.h" />
     <ClInclude Include="vendor\box3d\base.h" />
     <ClInclude Include="vendor\box3d\box3d.h" />

@@ -1,3 +1,6 @@
+#include <chrono>
+#include <thread>
+
 #include <imgui/imgui.h>
 #include <imgui/implot.h>
 #include <glm/gtc/type_ptr.hpp>
@@ -27,17 +30,27 @@ namespace ultraviolet
 				.Height{ 720 }
 			}
 	},
+		m_SplashScreenRenderer{
+			*this,
+			"assets/textures/splashscreen/ultraviolet.png"
+		},
 		m_Renderer{ *this },
 		m_DeltaTime{},
 		m_Fullscreen{ false },
 		m_ShowMenu{ false },
 		m_FreeCam{ true }
 	{
-		
+
 	}
 
 	void Game::OnStart()
 	{
+		m_SplashScreenRenderer.BeginFrame();
+		m_SplashScreenRenderer.Execute();
+		m_SplashScreenRenderer.EndFrame();
+
+		std::this_thread::sleep_for(std::chrono::seconds(1));
+
 		SetRelativeMouseMode(true);
 
 		m_Player = std::make_unique<Player>();

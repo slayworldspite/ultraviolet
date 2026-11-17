@@ -4,6 +4,7 @@
 
 #include "core/GameWindow.h"
 #include "renderer/DeferredRenderer.h"
+#include "renderer/SplashScreenRenderer.h"
 #include "renderer/camera/ProjectionCamera.h"
 #include "renderer/materials/LightMaterial.h"
 #include "game/characters/Player.h"
@@ -24,6 +25,7 @@ namespace ultraviolet
 		void OnResize(int width, int height) override;
 
 	private:
+		SplashScreenRenderer m_SplashScreenRenderer;
 		DeferredRenderer m_Renderer;
 		double m_DeltaTime;
 		Scene m_Scene;

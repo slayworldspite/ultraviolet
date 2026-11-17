@@ -16,7 +16,7 @@ namespace ultraviolet
 	{
 	public:
 		DeferredRenderer(const NativeWindow& window);
-		virtual ~DeferredRenderer() = default;
+		virtual ~DeferredRenderer() override;
 
 		virtual void BeginFrame() const override;
 		virtual void EndFrame() const override;
@@ -35,7 +35,6 @@ namespace ultraviolet
 		void AddToImGui();
 
 	private:
-		::SDL_Window* m_Window;
 		std::unique_ptr<Framebuffer> m_GBuffer;
 		std::unique_ptr<Mesh> m_ScreenQuad;
 		std::unique_ptr<DeferredPass> m_DeferredPass;
@@ -51,7 +50,7 @@ namespace ultraviolet
 		void CreateGBuffer();
 		void InitializeRenderPasses();
 		void InitializePostProcessingShader();
-		void InitializeImGui() const;
+		void InitializeImGui();
 		void Draw(const DrawItem& drawItem) const;
 		void PresentFrame() const;
 	};

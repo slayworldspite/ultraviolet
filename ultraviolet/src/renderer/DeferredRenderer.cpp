@@ -27,6 +27,7 @@ namespace
 namespace ultraviolet
 {
 	DeferredRenderer::DeferredRenderer(const NativeWindow& window) :
+		IRenderer{ window },
 		m_RenderQueue{},
 		m_WireframeMode{ false },
 		m_Gamma{ 2.2f },
@@ -37,8 +38,6 @@ namespace ultraviolet
 		Logger::Log("initializing renderer...", Logger::Level::Info);
 
 		assert(RenderContext::IsInitialized() && "render context isn't initialized!");
-
-		m_Window = window.GetNativeHandle();
 
 		::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -97,7 +96,7 @@ namespace ultraviolet
 		::ImGui::Render();
 		::ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-		::SDL_GL_SwapWindow(m_Window);
+		SwapWindow();
 
 		::ImGui::UpdatePlatformWindows();
 		::ImGui::RenderPlatformWindowsDefault();
@@ -248,7 +247,7 @@ namespace ultraviolet
 		m_PostProcessingShader = std::make_unique<Shader>("assets/shaders/passes/Pass.vert", "assets/shaders/passes/PostProcessing.frag");
 	}
 
-	void DeferredRenderer::InitializeImGui() const
+	void DeferredRenderer::InitializeImGui()
 	{
 		::IMGUI_CHECKVERSION();
 		::ImGui::CreateContext();
@@ -261,7 +260,7 @@ namespace ultraviolet
 			::ImGuiConfigFlags_ViewportsEnable |
 			::ImGuiConfigFlags_NavEnableKeyboard;
 
-		::ImGui_ImplSDL3_InitForOpenGL(m_Window, RenderContext::GetContext());
+		::ImGui_ImplSDL3_InitForOpenGL(GetNativeHandle(), RenderContext::GetContext());
 		::ImGui_ImplOpenGL3_Init();
 	}
 
