@@ -100,8 +100,6 @@ namespace ultraviolet
 		::ImGui::UpdatePlatformWindows();
 		::ImGui::RenderPlatformWindowsDefault();
 
-		::SDL_GL_MakeCurrent(m_Window, static_cast<SDL_GLContext>(m_GLContext));
-
 		FrameMark;
 	}
 
