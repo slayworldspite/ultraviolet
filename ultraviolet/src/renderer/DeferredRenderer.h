@@ -2,6 +2,7 @@
 
 #include <glm/glm.hpp>
 
+#include "IRenderer.h"
 #include "../core/NativeWindow.h"
 #include "scene/Scene.h"
 #include "camera/ProjectionCamera.h"
@@ -11,20 +12,20 @@
 
 namespace ultraviolet
 {
-	class DeferredRenderer
+	class DeferredRenderer : public IRenderer
 	{
 	public:
 		DeferredRenderer(const NativeWindow& window);
 		~DeferredRenderer();
 
-		void BeginFrame() const;
-		void EndFrame();
+		virtual void BeginFrame() const override;
+		virtual void EndFrame() const override;
 
 		void Submit(const Mesh& mesh, const glm::mat4& transform = glm::zero<glm::mat4>());
 		void Submit(const Model& model);
 		void Submit(const Entity& entity);
 		void Submit(const Scene& scene);
-		void Execute();
+		virtual void Execute() override;
 
 		void SetViewport(int width, int height);
 		void SetWireframeMode(bool value);

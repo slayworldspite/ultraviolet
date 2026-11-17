@@ -154,6 +154,7 @@
     <ClCompile Include="src\physics\EntityLoader.cpp" />
     <ClCompile Include="src\physics\PhysicsBody.cpp" />
     <ClCompile Include="src\renderer\camera\ProjectionCamera.cpp" />
+    <ClCompile Include="src\renderer\IRenderer.cpp" />
     <ClCompile Include="src\renderer\passes\DeferredPass.cpp" />
     <ClCompile Include="src\renderer\DrawItem.cpp" />
     <ClCompile Include="src\renderer\passes\IRenderPass.cpp" />
@@ -216,6 +217,7 @@
     <ClInclude Include="src\physics\PhysicsBody.h" />
     <ClInclude Include="src\physics\PhysicsBodyType.h" />
     <ClInclude Include="src\renderer\camera\ProjectionCamera.h" />
+    <ClInclude Include="src\renderer\IRenderer.h" />
     <ClInclude Include="src\renderer\passes\DeferredPass.h" />
     <ClInclude Include="src\renderer\DrawItem.h" />
     <ClInclude Include="src\renderer\passes\IRenderPass.h" />

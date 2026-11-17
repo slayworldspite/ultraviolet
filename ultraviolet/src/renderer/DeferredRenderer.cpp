@@ -90,7 +90,7 @@ namespace ultraviolet
 		::ImGui::NewFrame();
 	}
 
-	void DeferredRenderer::EndFrame()
+	void DeferredRenderer::EndFrame() const
 	{
 		ZoneScoped;
 
