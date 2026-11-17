@@ -14,8 +14,8 @@ namespace ultraviolet
 		virtual void Execute() = 0;
 
 	protected:
-		void BindBackbuffer();
-		void DrawElements(size_t indexCount);
+		void BindBackbuffer() const;
+		void DrawElements(size_t indexCount) const;
 		static Mesh CreateScreenQuad();
 	};
 }

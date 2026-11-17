@@ -4,17 +4,17 @@
 
 namespace ultraviolet
 {
-	void IRenderer::BindBackbuffer()
+	void IRenderer::BindBackbuffer() const
 	{
 		::glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	void IRenderer::DrawElements(size_t indexCount)
+	void IRenderer::DrawElements(size_t indexCount) const
 	{
 		::glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(indexCount), GL_UNSIGNED_INT, nullptr);
 	}
 
-	static Mesh CreateScreenQuad()
+	Mesh IRenderer::CreateScreenQuad()
 	{
 		std::vector<Vertex> vertices{};
 		vertices.reserve(4);
