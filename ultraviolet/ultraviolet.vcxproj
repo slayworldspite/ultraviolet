@@ -175,6 +175,7 @@
     <ClCompile Include="src\renderer\objects\Texture.cpp" />
     <ClCompile Include="src\renderer\objects\UniformBuffer.cpp" />
     <ClCompile Include="src\physics\PhysicsSystem.cpp" />
+    <ClCompile Include="src\renderer\RenderContext.cpp" />
     <ClCompile Include="src\renderer\Renderer.cpp" />
     <ClCompile Include="src\renderer\RenderQueue.cpp" />
     <ClCompile Include="src\renderer\scene\Scene.cpp" />
@@ -245,6 +246,7 @@
     <ClInclude Include="src\renderer\objects\TextureWrap.h" />
     <ClInclude Include="src\renderer\objects\UniformBuffer.h" />
     <ClInclude Include="src\physics\PhysicsSystem.h" />
+    <ClInclude Include="src\renderer\RenderContext.h" />
     <ClInclude Include="src\renderer\Renderer.h" />
     <ClInclude Include="src\renderer\passes\RenderPassInfo.h" />
     <ClInclude Include="src\renderer\RenderQueue.h" />

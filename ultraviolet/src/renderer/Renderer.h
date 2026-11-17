@@ -35,7 +35,6 @@ namespace ultraviolet
 
 	private:
 		::SDL_Window* m_Window;
-		void* m_GLContext;
 		std::unique_ptr<Framebuffer> m_GBuffer;
 		std::unique_ptr<Mesh> m_ScreenQuad;
 		std::unique_ptr<DeferredPass> m_DeferredPass;
@@ -48,7 +47,6 @@ namespace ultraviolet
 		int m_ViewportHeight;
 
 	private:
-		void CreateContext(const NativeWindow& window);
 		void CreateGBuffer();
 		void CreateScreenQuad();
 		void InitializeRenderPasses();

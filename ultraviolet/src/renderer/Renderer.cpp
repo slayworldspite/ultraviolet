@@ -14,6 +14,7 @@
 #include "Renderer.h"
 #include "materials/MaterialShaderManager.h"
 #include "../utils/Logger.h"
+#include "RenderContext.h"
 
 namespace
 {
@@ -35,8 +36,9 @@ namespace ultraviolet
 	{
 		Logger::Log("initializing renderer...", Logger::Level::Info);
 
-		CreateContext(window);
-		Logger::Log(std::format("opengl v{}", reinterpret_cast<const char*>(::glGetString(GL_VERSION))), Logger::Level::Info);
+		assert(RenderContext::IsInitialized() && "render context isn't initialized!");
+
+		m_Window = window.GetNativeHandle();
 
 		::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -204,30 +206,6 @@ namespace ultraviolet
 			m_GBuffer->AddToImGui();
 	}
 
-	void Renderer::CreateContext(const NativeWindow& window)
-	{
-		m_Window = window.GetNativeHandle();
-		m_GLContext = ::SDL_GL_CreateContext(m_Window);
-
-		if (!m_GLContext)
-		{
-			Logger::Log("failed to create an opengl context!", Logger::Level::Critical);
-			exit(-1);
-		}
-
-		if (!::SDL_GL_MakeCurrent(m_Window, static_cast<::SDL_GLContext>(m_GLContext)))
-		{
-			Logger::Log("failed to make the context current!", Logger::Level::Critical);
-			exit(-1);
-		}
-
-		if (!::gladLoadGLLoader((GLADloadproc)::SDL_GL_GetProcAddress))
-		{
-			Logger::Log("failed to initialize opengl!", Logger::Level::Critical);
-			exit(-1);
-		}
-	}
-
 	void Renderer::CreateGBuffer()
 	{
 		TextureSettings textureSettings{
@@ -313,7 +291,7 @@ namespace ultraviolet
 			::ImGuiConfigFlags_ViewportsEnable |
 			::ImGuiConfigFlags_NavEnableKeyboard;
 
-		::ImGui_ImplSDL3_InitForOpenGL(m_Window, m_GLContext);
+		::ImGui_ImplSDL3_InitForOpenGL(m_Window, RenderContext::GetContext());
 		::ImGui_ImplOpenGL3_Init();
 	}
 

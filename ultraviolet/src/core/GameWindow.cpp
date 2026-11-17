@@ -5,13 +5,14 @@
 #include "GameWindow.h"
 #include "../physics/PhysicsSystem.h"
 #include "../utils/Logger.h"
+#include "../renderer/RenderContext.h"
 
 namespace ultraviolet
 {
 	GameWindow::GameWindow(const NativeWindowSettings& nativeWindowSettings) :
 		NativeWindow{ nativeWindowSettings }
 	{
-
+		RenderContext::Initialize(*this);
 	}
 
 	void GameWindow::Run()
