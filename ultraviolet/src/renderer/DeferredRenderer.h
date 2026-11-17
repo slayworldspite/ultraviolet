@@ -16,7 +16,7 @@ namespace ultraviolet
 	{
 	public:
 		DeferredRenderer(const NativeWindow& window);
-		~DeferredRenderer();
+		virtual ~DeferredRenderer() = default;
 
 		virtual void BeginFrame() const override;
 		virtual void EndFrame() const override;
