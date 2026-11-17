@@ -11,6 +11,9 @@ namespace
 		glm::vec4 Direction;
 		float Intensity;
 		int Enabled;
+
+	private:
+		uint8_t m_Pad[8];
 	};
 }
 
