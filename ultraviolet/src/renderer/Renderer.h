@@ -53,7 +53,6 @@ namespace ultraviolet
 		void InitializePostProcessingShader();
 		void InitializeImGui() const;
 		void Draw(const DrawItem& drawItem) const;
-		void DrawElements(size_t indexCount) const;
 		void PresentFrame() const;
 		void BindBackbuffer() const;
 	};
