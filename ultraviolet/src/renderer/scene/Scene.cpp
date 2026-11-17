@@ -4,8 +4,6 @@
 #include "../model/ModelLoader.h"
 #include "../../physics/EntityLoader.h"
 
-#define MAX_POINT_LIGHT_COUNT 16
-
 namespace ultraviolet
 {
 	Scene::Scene() :
@@ -15,7 +13,8 @@ namespace ultraviolet
 		PointLights{},
 		m_AmbientLightUniformBuffer{ &AmbientLight, sizeof(AmbientLight), 1 },
 		m_DirectionalLightUniformBuffer{ &DirectionalLight, DirectionalLight::GetSizeOfData(), 2 },
-		m_PointLightsUniformBuffer{ PointLights.data(), PointLight::GetSizeOfData() * MAX_POINT_LIGHT_COUNT + sizeof(int), 3 }
+		m_PointLightsShaderStorageBuffer{ nullptr, PointLight::GetSizeOfData() * PointLights.size(), 0 },
+		m_LastPointLightSize{ PointLights.size() }
 	{
 
 	}
@@ -44,20 +43,6 @@ namespace ultraviolet
 
 			Entities.push_back(std::move(*entity));
 		}
-	}
-
-	void Scene::AddPointLight(const PointLightDescription& description)
-	{
-		PointLight light{};
-		light.ID = description.ID;
-		light.Position = description.Position;
-		light.Color = description.Color;
-		light.Intensity = description.Intensity;
-		light.LinearAttenuation = description.LinearAttenuation;
-		light.QuadraticAttenuation = description.QuadraticAttenuation;
-		light.Enabled = description.Enabled;
-
-		PointLights.push_back(std::move(light));
 	}
 
 	Model* Scene::GetModel(std::string_view id)
@@ -98,11 +83,15 @@ namespace ultraviolet
 		AmbientLight.Apply(m_AmbientLightUniformBuffer);
 		DirectionalLight.Apply(m_DirectionalLightUniformBuffer);
 		
-		for (size_t i{}; i < PointLights.size(); i++)
-			PointLights[i].Apply(m_PointLightsUniformBuffer, i);
+		if (PointLights.size() != m_LastPointLightSize)
+		{
+			m_PointLightsShaderStorageBuffer = std::move(ShaderStorageBuffer{ nullptr, PointLight::GetSizeOfData() * PointLights.size(), 0 });
+			
+			m_LastPointLightSize = PointLights.size();
+		}
 
-		int maxPointLightIndex = static_cast<int>(PointLights.size());
-		m_PointLightsUniformBuffer.SetData(&maxPointLightIndex, sizeof(int), PointLight::GetSizeOfData() * MAX_POINT_LIGHT_COUNT);
+		for (size_t i{}; i < PointLights.size(); i++)
+			PointLights[i].Apply(m_PointLightsShaderStorageBuffer, i);
 
 		for (Entity& entity : Entities)
 			entity.Update();

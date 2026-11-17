@@ -8,9 +8,9 @@
 #include "../lights/DirectionalLight.h"
 #include "../lights/PointLight.h"
 #include "../camera/ProjectionCamera.h"
+#include "../objects/ShaderStorageBuffer.h"
 #include "descriptions/ModelDescription.h"
 #include "descriptions/EntityDescription.h"
-#include "descriptions/PointLightDescription.h"
 
 namespace ultraviolet
 {
@@ -29,7 +29,6 @@ namespace ultraviolet
 
 		void AddModel(const ModelDescription& description);
 		void AddEntity(const EntityDescription& description);
-		void AddPointLight(const PointLightDescription& description);
 		Model* GetModel(std::string_view id);
 		Entity* GetEntity(std::string_view id);
 		PointLight* GetPointLight(std::string_view id);
@@ -41,6 +40,7 @@ namespace ultraviolet
 	private:
 		UniformBuffer m_AmbientLightUniformBuffer;
 		UniformBuffer m_DirectionalLightUniformBuffer;
-		UniformBuffer m_PointLightsUniformBuffer;
+		ShaderStorageBuffer m_PointLightsShaderStorageBuffer;
+		size_t m_LastPointLightSize;
 	};
 }
