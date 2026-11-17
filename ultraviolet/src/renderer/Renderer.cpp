@@ -139,6 +139,8 @@ namespace ultraviolet
 
 	void Renderer::Execute()
 	{
+		ZoneScoped;
+
 		m_RenderQueue.Sort();
 		const std::vector<DrawItem>& drawItems{ m_RenderQueue.Get() };
 
@@ -317,6 +319,8 @@ namespace ultraviolet
 
 	void Renderer::Draw(const DrawItem& drawItem) const
 	{
+		ZoneScoped;
+
 		if (std::shared_ptr<Material> material{ drawItem.Mesh->Material })
 		{
 			material->Apply();
@@ -333,6 +337,8 @@ namespace ultraviolet
 
 	void Renderer::PresentFrame() const
 	{
+		ZoneScoped;
+
 		if (m_WireframeMode)
 			::glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
