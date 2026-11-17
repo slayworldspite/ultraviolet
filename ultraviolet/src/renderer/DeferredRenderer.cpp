@@ -52,7 +52,7 @@ namespace ultraviolet
 		SetViewport(windowSize.first, windowSize.second);
 
 		CreateGBuffer();
-		CreateScreenQuad();
+		m_ScreenQuad = std::make_unique<Mesh>(CreateScreenQuad());
 		
 		InitializeRenderPasses();
 		InitializePostProcessingShader();
@@ -183,7 +183,7 @@ namespace ultraviolet
 		SetViewport(width, height);
 	
 		CreateGBuffer();
-		CreateScreenQuad();
+		m_ScreenQuad = std::make_unique<Mesh>(CreateScreenQuad());
 		InitializeRenderPasses();
 	}
 
@@ -238,36 +238,6 @@ namespace ultraviolet
 		::glDrawBuffers(static_cast<GLsizei>(attachments.size()), attachments.data());
 	}
 
-	void DeferredRenderer::CreateScreenQuad()
-	{
-		std::vector<Vertex> vertices{};
-		vertices.reserve(4);
-
-		vertices.push_back(Vertex{
-			.Position{ -1, -1, 0 },
-			.TextureCoordinates{ 0, 0 }
-		});
-
-		vertices.push_back(Vertex{
-			.Position{ 1, -1, 0 },
-			.TextureCoordinates { 1, 0 }
-		});
-
-		vertices.push_back(Vertex{
-			.Position{ -1, 1, 0 },
-			.TextureCoordinates { 0, 1 }
-		});
-
-		vertices.push_back(Vertex{
-			.Position{ 1, 1, 0 },
-			.TextureCoordinates { 1, 1 }
-		});
-
-		std::vector<uint32_t> indices{ 0, 1, 2, 1, 3, 2 };
-
-		m_ScreenQuad = std::make_unique<Mesh>("screen_quad", vertices, indices);
-	}
-
 	void DeferredRenderer::InitializeRenderPasses()
 	{
 		m_DeferredPass = std::make_unique<DeferredPass>(m_ViewportWidth, m_ViewportHeight);
@@ -309,7 +279,7 @@ namespace ultraviolet
 		{
 			drawItem.Mesh->Bind();
 
-			::glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(drawItem.Mesh->GetIndexCount()), GL_UNSIGNED_INT, nullptr);
+			DrawElements(drawItem.Mesh->GetIndexCount());
 		}
 	}
 
@@ -355,11 +325,6 @@ namespace ultraviolet
 		m_DeferredPass->Output.Buffers[0].Bind();
 		m_ScreenQuad->Bind();
 
-		::glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(m_ScreenQuad->GetIndexCount()), GL_UNSIGNED_INT, nullptr);
-	}
-
-	void DeferredRenderer::BindBackbuffer() const
-	{
-		::glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		DrawElements(m_ScreenQuad->GetIndexCount());
 	}
 }

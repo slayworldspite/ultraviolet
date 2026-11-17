@@ -49,12 +49,10 @@ namespace ultraviolet
 
 	private:
 		void CreateGBuffer();
-		void CreateScreenQuad();
 		void InitializeRenderPasses();
 		void InitializePostProcessingShader();
 		void InitializeImGui() const;
 		void Draw(const DrawItem& drawItem) const;
 		void PresentFrame() const;
-		void BindBackbuffer() const;
 	};
 }
