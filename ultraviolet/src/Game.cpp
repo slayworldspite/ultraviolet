@@ -1,6 +1,3 @@
-#include <chrono>
-#include <thread>
-
 #include <imgui/imgui.h>
 #include <imgui/implot.h>
 #include <glm/gtc/type_ptr.hpp>
@@ -48,8 +45,6 @@ namespace ultraviolet
 		m_SplashScreenRenderer.BeginFrame();
 		m_SplashScreenRenderer.Execute();
 		m_SplashScreenRenderer.EndFrame();
-
-		std::this_thread::sleep_for(std::chrono::seconds(1));
 
 		SetRelativeMouseMode(true);
 
