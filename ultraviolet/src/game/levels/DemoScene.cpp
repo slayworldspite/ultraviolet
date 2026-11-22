@@ -14,12 +14,12 @@ namespace ultraviolet
 	void DemoScene::Load(Scene& scene)
 	{
 		scene.AmbientLight.Color = glm::vec3{ 1.0f };
-		scene.AmbientLight.Intensity = 0.0f;
+		scene.AmbientLight.Intensity = 0.1f;
 		
 		scene.DirectionalLight.Color = glm::vec3{ 1.0f };
 		scene.DirectionalLight.Pitch = -65.0f;
 		scene.DirectionalLight.Yaw = -125.0f;
-		scene.DirectionalLight.Enabled = false;
+		scene.DirectionalLight.Enabled = true;
 
 		scene.Camera.Position.z -= 2.0f;
 		scene.Camera.Position.y += 2.0f;
@@ -43,33 +43,6 @@ namespace ultraviolet
 		for (const EntityDescription& entity : entities)
 		{
 			scene.AddEntity(entity);
-		}
-
-		std::random_device device{};
-		std::mt19937 generator{};
-		std::uniform_real_distribution distribution{ 0.0f, 1.0f };
-
-		int count{ 3 };
-
-		for (int z{ -count }; z <= count; z++)
-		{
-			for (int x{ -count }; x <= count; x++)
-			{
-				float r{ distribution(generator) };
-				float g{ distribution(generator) };
-				float b{ distribution(generator) };
-
-				glm::vec3 color{ r, g, b };
-
-				scene.PointLights.push_back(
-					PointLight{
-						.ID{ std::format("{}, {}, {}", x, 2, z) },
-						.Position{ x * 5.0f, 2.0f, z * 5.0f },
-						.Color{ color },
-						.Intensity{ 0.01f }
-					}
-				);
-			}
 		}
 	}
 }
