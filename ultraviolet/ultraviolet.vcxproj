@@ -220,6 +220,7 @@
     <ClInclude Include="src\physics\PhysicsBodyType.h" />
     <ClInclude Include="src\renderer\camera\ProjectionCamera.h" />
     <ClInclude Include="src\renderer\IRenderer.h" />
+    <ClInclude Include="src\renderer\lights\LightingData.h" />
     <ClInclude Include="src\renderer\objects\ShaderStorageBuffer.h" />
     <ClInclude Include="src\renderer\passes\DeferredPass.h" />
     <ClInclude Include="src\renderer\DrawItem.h" />

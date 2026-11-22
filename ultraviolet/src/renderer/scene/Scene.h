@@ -7,6 +7,7 @@
 #include "../lights/AmbientLight.h"
 #include "../lights/DirectionalLight.h"
 #include "../lights/PointLight.h"
+#include "../lights/LightingData.h"
 #include "../camera/ProjectionCamera.h"
 #include "../objects/ShaderStorageBuffer.h"
 #include "descriptions/ModelDescription.h"
@@ -32,15 +33,10 @@ namespace ultraviolet
 		Model* GetModel(std::string_view id);
 		Entity* GetEntity(std::string_view id);
 		PointLight* GetPointLight(std::string_view id);
+		LightingData GetLightingData() const;
 		void Update();
 		void Clear();
 
 		void AddToImGui();
-
-	private:
-		UniformBuffer m_AmbientLightUniformBuffer;
-		UniformBuffer m_DirectionalLightUniformBuffer;
-		ShaderStorageBuffer m_PointLightsShaderStorageBuffer;
-		size_t m_LastPointLightSize;
 	};
 }

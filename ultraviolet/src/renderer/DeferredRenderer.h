@@ -5,10 +5,12 @@
 #include "IRenderer.h"
 #include "../core/NativeWindow.h"
 #include "scene/Scene.h"
-#include "camera/ProjectionCamera.h"
 #include "objects/Framebuffer.h"
 #include "RenderQueue.h"
 #include "passes/DeferredPass.h"
+#include "lights/LightingData.h"
+#include "objects/UniformBuffer.h"
+#include "objects/ShaderStorageBuffer.h"
 
 namespace ultraviolet
 {
@@ -25,6 +27,7 @@ namespace ultraviolet
 		void Submit(const Model& model);
 		void Submit(const Entity& entity);
 		void Submit(const Scene& scene);
+		void Submit(const LightingData& data);
 		virtual void Execute() override;
 
 		void SetViewport(int width, int height);
@@ -39,6 +42,10 @@ namespace ultraviolet
 		std::unique_ptr<Mesh> m_ScreenQuad;
 		std::unique_ptr<DeferredPass> m_DeferredPass;
 		std::unique_ptr<Shader> m_PostProcessingShader;
+		UniformBuffer m_AmbientLightBuffer;
+		UniformBuffer m_DirectionalLightBuffer;
+		ShaderStorageBuffer m_PointLightBuffer;
+		size_t m_LastPointLightCount;
 		RenderQueue m_RenderQueue;
 		bool m_WireframeMode;
 		float m_Gamma;

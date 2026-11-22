@@ -13,9 +13,6 @@ namespace ultraviolet
 		float Intensity{ 1.0f };
 		bool Enabled{ true };
 
-		void Apply(const ShaderStorageBuffer& shaderStorageBuffer, size_t index) const;
 		void AddToImGui();
-
-		static size_t GetSizeOfData();
 	};
 }

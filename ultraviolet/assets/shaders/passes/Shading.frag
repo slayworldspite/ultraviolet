@@ -25,12 +25,12 @@
 		bool Enabled;
 	};
 
-	layout (std140, binding = 1) uniform AmbientLightData
+	layout (std140, binding = 0) uniform AmbientLightData
 	{
 		AmbientLight ub_AmbientLight;
 	};
 
-	layout (std140, binding = 2) uniform DirectionalLightData
+	layout (std140, binding = 1) uniform DirectionalLightData
 	{
 		DirectionalLight ub_DirectionalLight;
 	};

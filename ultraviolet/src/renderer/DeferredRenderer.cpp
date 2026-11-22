@@ -16,11 +16,39 @@
 #include "../utils/Logger.h"
 #include "RenderContext.h"
 
+#define AMBIENT_LIGHT_BINDING 0
+#define DIRECTIONAL_LIGHT_BINDING 1
+#define POINT_LIGHT_BINDING 0
+
 namespace
 {
 	struct DepthMapData
 	{
 		glm::mat4 LightSpaceMatrix;
+	};
+
+	struct AmbientLightData
+	{
+		glm::vec3 Color;
+		float Intensity;
+	};
+
+	struct DirectionalLightData
+	{
+		glm::vec4 Color;
+		glm::vec4 Direction;
+		float Intensity;
+		int Enabled;
+		uint8_t _pad[8];
+	};
+
+	struct PointLightData
+	{
+		glm::vec4 Color;
+		glm::vec4 Position;
+		float Intensity;
+		float Radius;
+		int Enabled;
 	};
 }
 
@@ -28,6 +56,10 @@ namespace ultraviolet
 {
 	DeferredRenderer::DeferredRenderer(const NativeWindow& window) :
 		IRenderer{ window },
+		m_AmbientLightBuffer{ nullptr, sizeof(AmbientLightData), AMBIENT_LIGHT_BINDING },
+		m_DirectionalLightBuffer{ nullptr, sizeof(DirectionalLightData), DIRECTIONAL_LIGHT_BINDING },
+		m_PointLightBuffer{ nullptr, sizeof(PointLightData), POINT_LIGHT_BINDING },
+		m_LastPointLightCount{ 0 },
 		m_RenderQueue{},
 		m_WireframeMode{ false },
 		m_Gamma{ 2.2f },
@@ -136,6 +168,64 @@ namespace ultraviolet
 
 		for (const Entity& entity : scene.Entities)
 			Submit(entity);
+
+		Submit(scene.GetLightingData());
+	}
+
+	void DeferredRenderer::Submit(const LightingData& data)
+	{
+		// ambient
+		AmbientLightData ambientLightData{
+			.Color = data.AmbientLight.Color,
+			.Intensity = data.AmbientLight.Intensity
+		};
+
+		m_AmbientLightBuffer = UniformBuffer{ &ambientLightData, sizeof(AmbientLightData), AMBIENT_LIGHT_BINDING };
+
+		// directional
+		glm::vec3 direction{};
+
+		float yaw{ glm::radians(data.DirectionalLight.Yaw) };
+		float pitch{ glm::radians(data.DirectionalLight.Pitch) };
+
+		direction.x = cos(yaw) * cos(pitch);
+		direction.y = sin(pitch);
+		direction.z = sin(yaw) * cos(pitch);
+
+		DirectionalLightData directionalLightData{
+			.Color{ glm::vec4{ data.DirectionalLight.Color, 0.0f } },
+			.Direction{ glm::vec4{ direction, 0.0f } },
+			.Intensity{ data.DirectionalLight.Intensity },
+			.Enabled{ data.DirectionalLight.Enabled }
+		};
+
+		m_DirectionalLightBuffer.SetData(&directionalLightData, sizeof(DirectionalLightData));
+
+		// point
+		if (data.PointLights.size() != m_LastPointLightCount)
+		{
+			m_PointLightBuffer = ShaderStorageBuffer{ nullptr, data.PointLights.size() * sizeof(PointLightData), POINT_LIGHT_BINDING};
+
+			m_LastPointLightCount = data.PointLights.size();
+		}
+
+		std::vector<PointLightData> pointLightDatas{};
+		pointLightDatas.reserve(data.PointLights.size());
+
+		for (const PointLight& pointLight : data.PointLights)
+		{
+			PointLightData pointLightData{
+				.Color = glm::vec4{ pointLight.Color, 0.0f },
+				.Position = glm::vec4{ pointLight.Position, 0.0f },
+				.Intensity = pointLight.Intensity,
+				.Radius = pointLight.Intensity / 0.001f,
+				.Enabled = pointLight.Enabled
+			};
+
+			pointLightDatas.push_back(pointLightData);
+		}
+
+		m_PointLightBuffer.SetData(pointLightDatas.data(), pointLightDatas.size() * sizeof(PointLightData));
 	}
 
 	void DeferredRenderer::Execute()
@@ -310,6 +400,8 @@ namespace ultraviolet
 
 			deferredPassInfo.ColorAttachments.push_back(target);
 		}
+
+		m_DeferredPass->Shader.Set("u_PointLightCount", static_cast<int>(m_LastPointLightCount));
 
 		m_DeferredPass->Execute(deferredPassInfo);
 

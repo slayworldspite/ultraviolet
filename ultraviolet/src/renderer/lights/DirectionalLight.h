@@ -12,9 +12,6 @@ namespace ultraviolet
 		float Pitch;
 		bool Enabled{ true };
 
-		void Apply(const UniformBuffer& uniformBuffer) const;
 		void AddToImGui();
-
-		static size_t GetSizeOfData();
 	};
 }

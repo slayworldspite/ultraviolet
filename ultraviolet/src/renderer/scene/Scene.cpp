@@ -10,11 +10,7 @@ namespace ultraviolet
 		Models{},
 		AmbientLight{},
 		DirectionalLight{},
-		PointLights{},
-		m_AmbientLightUniformBuffer{ &AmbientLight, sizeof(AmbientLight), 1 },
-		m_DirectionalLightUniformBuffer{ &DirectionalLight, DirectionalLight::GetSizeOfData(), 2 },
-		m_PointLightsShaderStorageBuffer{ nullptr, PointLight::GetSizeOfData() * PointLights.size(), 0 },
-		m_LastPointLightSize{ PointLights.size() }
+		PointLights{}
 	{
 
 	}
@@ -78,21 +74,17 @@ namespace ultraviolet
 		return nullptr;
 	}
 
+	LightingData Scene::GetLightingData() const
+	{
+		return LightingData{
+			.AmbientLight = AmbientLight,
+			.DirectionalLight = DirectionalLight,
+			.PointLights = PointLights
+		};
+	}
+
 	void Scene::Update()
 	{
-		AmbientLight.Apply(m_AmbientLightUniformBuffer);
-		DirectionalLight.Apply(m_DirectionalLightUniformBuffer);
-		
-		if (PointLights.size() != m_LastPointLightSize)
-		{
-			m_PointLightsShaderStorageBuffer = std::move(ShaderStorageBuffer{ nullptr, PointLight::GetSizeOfData() * PointLights.size(), 0 });
-			
-			m_LastPointLightSize = PointLights.size();
-		}
-
-		for (size_t i{}; i < PointLights.size(); i++)
-			PointLights[i].Apply(m_PointLightsShaderStorageBuffer, i);
-
 		for (Entity& entity : Entities)
 			entity.Update();
 	}
