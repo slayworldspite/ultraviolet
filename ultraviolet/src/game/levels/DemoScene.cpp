@@ -35,8 +35,8 @@ namespace ultraviolet
 		entities.push_back(EntityDescription{
 			.ID = "ground",
 			.Type = PhysicsBodyType::StaticMesh,
-			.ModelPath = assets / "scenes/demoscene/map.obj",
-			.CollisionModelPath = assets / "scenes/demoscene/map.obj",
+			.ModelPath = assets / "scenes/demoscene/mh.obj",
+			.CollisionModelPath = assets / "scenes/demoscene/mh.obj",
 			.Material = material
 		});
 
