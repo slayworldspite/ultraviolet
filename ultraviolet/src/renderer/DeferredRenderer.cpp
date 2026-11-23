@@ -108,7 +108,7 @@ namespace ultraviolet
 		::ImGui::DestroyContext();
 	}
 
-	void DeferredRenderer::BeginFrame() const
+	void DeferredRenderer::BeginFrame()
 	{
 		ZoneScoped;
 
@@ -130,7 +130,7 @@ namespace ultraviolet
 		::ImGui::NewFrame();
 	}
 
-	void DeferredRenderer::EndFrame() const
+	void DeferredRenderer::EndFrame()
 	{
 		ZoneScoped;
 

@@ -11,8 +11,8 @@ namespace ultraviolet
 		SplashScreenRenderer(const NativeWindow& window, const std::filesystem::path& splashScreenPath);
 		virtual ~SplashScreenRenderer() = default;
 
-		virtual void BeginFrame() const override;
-		virtual void EndFrame() const override;
+		virtual void BeginFrame() override;
+		virtual void EndFrame() override;
 		virtual void Execute() override;
 
 	private:

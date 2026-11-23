@@ -16,12 +16,12 @@ namespace ultraviolet
 
 	}
 
-	void SplashScreenRenderer::BeginFrame() const
+	void SplashScreenRenderer::BeginFrame()
 	{
 		::glClear(GL_COLOR_BUFFER_BIT);
 	}
 
-	void SplashScreenRenderer::EndFrame() const
+	void SplashScreenRenderer::EndFrame()
 	{
 		SwapWindow();
 	}

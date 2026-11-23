@@ -21,8 +21,8 @@ namespace ultraviolet
 		DeferredRenderer(const NativeWindow& window);
 		virtual ~DeferredRenderer() override;
 
-		virtual void BeginFrame() const override;
-		virtual void EndFrame() const override;
+		virtual void BeginFrame() override;
+		virtual void EndFrame() override;
 
 		void Submit(const Mesh& mesh, const glm::mat4& transform = glm::zero<glm::mat4>());
 		void Submit(const Model& model);

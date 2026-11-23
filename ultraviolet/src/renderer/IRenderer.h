@@ -11,8 +11,8 @@ namespace ultraviolet
 		IRenderer(const NativeWindow& window);
 		virtual ~IRenderer() = default;
 
-		virtual void BeginFrame() const = 0;
-		virtual void EndFrame() const = 0;
+		virtual void BeginFrame() = 0;
+		virtual void EndFrame() = 0;
 		virtual void Execute() = 0;
 
 	protected:
