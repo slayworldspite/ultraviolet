@@ -78,8 +78,6 @@ namespace ultraviolet
 		ZoneScoped;
 		m_Renderer.BeginFrame();
 
-		m_Scene.Camera.Apply(GetWindowSize());
-
 		m_Renderer.Submit(m_Scene);
 		m_Renderer.Execute();
 

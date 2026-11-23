@@ -9,6 +9,7 @@
 #include "RenderQueue.h"
 #include "passes/DeferredPass.h"
 #include "lights/LightingData.h"
+#include "camera/ProjectionCamera.h"
 #include "objects/UniformBuffer.h"
 #include "objects/ShaderStorageBuffer.h"
 
@@ -28,6 +29,7 @@ namespace ultraviolet
 		void Submit(const Entity& entity);
 		void Submit(const Scene& scene);
 		void Submit(const LightingData& data);
+		void Submit(const ProjectionCamera& camera);
 		virtual void Execute() override;
 
 		void SetViewport(int width, int height);
@@ -45,6 +47,7 @@ namespace ultraviolet
 		UniformBuffer m_AmbientLightBuffer;
 		UniformBuffer m_DirectionalLightBuffer;
 		ShaderStorageBuffer m_PointLightBuffer;
+		UniformBuffer m_CameraBuffer;
 		size_t m_LastPointLightCount;
 		RenderQueue m_RenderQueue;
 		bool m_WireframeMode;

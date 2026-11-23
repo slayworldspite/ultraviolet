@@ -19,6 +19,7 @@
 #define AMBIENT_LIGHT_BINDING 0
 #define DIRECTIONAL_LIGHT_BINDING 1
 #define POINT_LIGHT_BINDING 0
+#define CAMERA_DATA_BINDING 2
 
 namespace
 {
@@ -47,8 +48,15 @@ namespace
 		glm::vec4 Color;
 		glm::vec4 Position;
 		float Intensity;
-		float Radius;
+		float Radius;   
 		int Enabled;
+	};
+
+	struct CameraData
+	{
+		glm::mat4 Projection;
+		glm::mat4 View;
+		glm::vec3 Position;
 	};
 }
 
@@ -59,6 +67,7 @@ namespace ultraviolet
 		m_AmbientLightBuffer{ nullptr, sizeof(AmbientLightData), AMBIENT_LIGHT_BINDING },
 		m_DirectionalLightBuffer{ nullptr, sizeof(DirectionalLightData), DIRECTIONAL_LIGHT_BINDING },
 		m_PointLightBuffer{ nullptr, sizeof(PointLightData), POINT_LIGHT_BINDING },
+		m_CameraBuffer{ nullptr, sizeof(CameraData), CAMERA_DATA_BINDING },
 		m_LastPointLightCount{ 0 },
 		m_RenderQueue{},
 		m_WireframeMode{ false },
@@ -170,6 +179,7 @@ namespace ultraviolet
 			Submit(entity);
 
 		Submit(scene.GetLightingData());
+		Submit(scene.Camera);
 	}
 
 	void DeferredRenderer::Submit(const LightingData& data)
@@ -226,6 +236,31 @@ namespace ultraviolet
 		}
 
 		m_PointLightBuffer.SetData(pointLightDatas.data(), pointLightDatas.size() * sizeof(PointLightData));
+	}
+
+	void DeferredRenderer::Submit(const ProjectionCamera& camera)
+	{
+		glm::mat4 roll{ glm::rotate(glm::mat4{ 1.0f }, glm::radians(-camera.Roll), camera.GetFront()) };
+
+		CameraData data{
+			.Projection{
+				glm::perspective(
+					glm::radians(camera.FOV),
+					static_cast<float>(m_ViewportWidth) / static_cast<float>(m_ViewportHeight),
+					0.1f,
+					100.0f
+				)
+			},
+			.View{
+				glm::lookAt(
+					camera.Position,
+					camera.Position + camera.GetFront(),
+					camera.GetWorldUp() * glm::mat3{ roll })
+			},
+			.Position{ camera.Position }
+		};
+
+		m_CameraBuffer.SetData(&data, sizeof(CameraData));
 	}
 
 	void DeferredRenderer::Execute()

@@ -20,7 +20,6 @@ namespace ultraviolet
 		ProjectionCamera();
 
 		void Update();
-		void Apply(std::pair<int, int> size);
 		glm::vec3 GetFront() const;
 		glm::vec3 GetForward() const;
 		glm::vec3 GetRight() const;
@@ -29,7 +28,6 @@ namespace ultraviolet
 		void AddToImGui(const std::string& id);
 
 	private:
-		std::unique_ptr<UniformBuffer> m_UniformBuffer;
 		const glm::vec3 c_WorldUp{ 0.0f, 1.0f, 0.0f };
 		glm::vec3 m_Front;
 	};
