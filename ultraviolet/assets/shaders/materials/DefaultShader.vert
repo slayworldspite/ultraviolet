@@ -5,7 +5,7 @@ layout (location = 1) in vec3 a_Normal;
 layout (location = 2) in vec2 a_TextureCoordinates;
 layout (location = 3) in vec3 a_Tangent;
 
-layout (std140, binding = 0) uniform CameraData
+layout (std140, binding = 2) uniform CameraData
 {
 	mat4 ub_Projection;
 	mat4 ub_View;

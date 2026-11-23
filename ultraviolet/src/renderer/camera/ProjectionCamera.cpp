@@ -30,7 +30,7 @@ namespace ultraviolet
 
 		CameraData data{};
 
-		m_UniformBuffer = std::make_unique<UniformBuffer>(&data, sizeof(data), 0);
+		m_UniformBuffer = std::make_unique<UniformBuffer>(&data, sizeof(data), 2);
 	}
 
 	void ProjectionCamera::Update()
