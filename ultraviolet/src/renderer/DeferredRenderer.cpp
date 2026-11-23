@@ -180,7 +180,7 @@ namespace ultraviolet
 			.Intensity = data.AmbientLight.Intensity
 		};
 
-		m_AmbientLightBuffer = UniformBuffer{ &ambientLightData, sizeof(AmbientLightData), AMBIENT_LIGHT_BINDING };
+		m_AmbientLightBuffer.SetData(&ambientLightData, sizeof(AmbientLightData));
 
 		// directional
 		glm::vec3 direction{};
