@@ -6,7 +6,8 @@ namespace ultraviolet
 {
 	IRenderPass::IRenderPass(const TextureSettings& textureSettings, const std::filesystem::path& vertexShaderPath, const std::filesystem::path& fragmentShaderPath) :
 		Output{ textureSettings, FramebufferAttachment::Color },
-		Shader{ vertexShaderPath, fragmentShaderPath }
+		Shader{ vertexShaderPath, fragmentShaderPath },
+		m_ScreenQuad{ Mesh::CreateScreenQuad() }
 	{
 		std::vector<Vertex> vertices{};
 		vertices.reserve(4);

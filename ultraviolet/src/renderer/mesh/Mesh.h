@@ -27,6 +27,8 @@ namespace ultraviolet
 		size_t GetIndexCount() const;
 		void AddToImGui(const std::string& id);
 
+		static Mesh CreateScreenQuad();
+
 	private:
 		VertexBuffer m_VertexBuffer;
 		ElementBuffer m_ElementBuffer;

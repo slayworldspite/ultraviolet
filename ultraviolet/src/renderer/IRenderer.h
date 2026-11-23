@@ -20,7 +20,6 @@ namespace ultraviolet
 		void DrawElements(size_t indexCount) const;
 		void SwapWindow() const;
 		::SDL_Window* GetNativeHandle();
-		static Mesh CreateScreenQuad();
 
 	private:
 		::SDL_Window* m_Window;

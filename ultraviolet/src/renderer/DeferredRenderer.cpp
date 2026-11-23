@@ -64,6 +64,7 @@ namespace ultraviolet
 {
 	DeferredRenderer::DeferredRenderer(const NativeWindow& window) :
 		IRenderer{ window },
+		m_ScreenQuad{ Mesh::CreateScreenQuad() },
 		m_AmbientLightBuffer{ nullptr, sizeof(AmbientLightData), AMBIENT_LIGHT_BINDING },
 		m_DirectionalLightBuffer{ nullptr, sizeof(DirectionalLightData), DIRECTIONAL_LIGHT_BINDING },
 		m_PointLightBuffer{ nullptr, sizeof(PointLightData), POINT_LIGHT_BINDING },

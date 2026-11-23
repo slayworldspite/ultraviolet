@@ -6,7 +6,7 @@ namespace ultraviolet
 {
 	SplashScreenRenderer::SplashScreenRenderer(const NativeWindow& window, const std::filesystem::path& splashScreenPath) :
 		IRenderer{ window },
-		m_ScreenQuad{ CreateScreenQuad() },
+		m_ScreenQuad{ Mesh::CreateScreenQuad() },
 		m_SplashScreen{ splashScreenPath, TextureType::SplashScreen },
 		m_Shader{
 			"assets/shaders/splashscreen/SplashScreen.vert",
