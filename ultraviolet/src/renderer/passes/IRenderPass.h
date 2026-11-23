@@ -15,6 +15,12 @@ namespace ultraviolet
 
 	public:
 		IRenderPass(const TextureSettings& textureSettings, const std::filesystem::path& vertexShaderPath, const std::filesystem::path& fragmentShaderPath);
+		
+		IRenderPass(const IRenderPass&) = delete;
+		IRenderPass& operator=(const IRenderPass&) = delete;
+		IRenderPass(IRenderPass&& other) noexcept;
+		IRenderPass& operator=(IRenderPass&& other) noexcept;
+		
 		virtual ~IRenderPass() = default;
 
 		virtual void Execute(const RenderPassInfo& info) const = 0;
@@ -23,6 +29,6 @@ namespace ultraviolet
 		void Draw() const;
 
 	private:
-		std::unique_ptr<Mesh> m_Quad;
+		Mesh m_ScreenQuad;
 	};
 }

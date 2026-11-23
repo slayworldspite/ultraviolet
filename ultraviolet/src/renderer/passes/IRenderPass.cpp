@@ -9,38 +9,33 @@ namespace ultraviolet
 		Shader{ vertexShaderPath, fragmentShaderPath },
 		m_ScreenQuad{ Mesh::CreateScreenQuad() }
 	{
-		std::vector<Vertex> vertices{};
-		vertices.reserve(4);
 
-		vertices.push_back(Vertex{
-			.Position{ -1, -1, 0 },
-			.TextureCoordinates{ 0, 0 }
-			});
+	}
 
-		vertices.push_back(Vertex{
-			.Position{ 1, -1, 0 },
-			.TextureCoordinates { 1, 0 }
-			});
+	IRenderPass::IRenderPass(IRenderPass&& other) noexcept :
+		Output{ std::move(other.Output) },
+		Shader{ std::move(other.Shader) },
+		m_ScreenQuad{ std::move(other.m_ScreenQuad) }
+	{
 
-		vertices.push_back(Vertex{
-			.Position{ -1, 1, 0 },
-			.TextureCoordinates { 0, 1 }
-			});
+	}
 
-		vertices.push_back(Vertex{
-			.Position{ 1, 1, 0 },
-			.TextureCoordinates { 1, 1 }
-			});
+	IRenderPass& IRenderPass::operator=(IRenderPass&& other) noexcept
+	{
+		if (this == &other)
+			return *this;
 
-		std::vector<uint32_t> indices{ 0, 1, 2, 1, 3, 2 };
+		Output = std::move(other.Output);
+		Shader = std::move(other.Shader);
+		m_ScreenQuad = std::move(other.m_ScreenQuad);
 
-		m_Quad = std::make_unique<Mesh>("quad", vertices, indices);
+		return *this;
 	}
 
 	void IRenderPass::Draw() const
 	{
-		m_Quad->Bind();
+		m_ScreenQuad.Bind();
 
-		::glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(m_Quad->GetIndexCount()), GL_UNSIGNED_INT, nullptr);
+		::glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(m_ScreenQuad.GetIndexCount()), GL_UNSIGNED_INT, nullptr);
 	}
 }
