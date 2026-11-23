@@ -40,10 +40,11 @@ namespace ultraviolet
 		void AddToImGui();
 
 	private:
-		std::unique_ptr<Framebuffer> m_GBuffer;
-		std::unique_ptr<Mesh> m_ScreenQuad;
-		std::unique_ptr<DeferredPass> m_DeferredPass;
-		std::unique_ptr<Shader> m_PostProcessingShader;
+		TextureSettings m_GBufferSettings;
+		Framebuffer m_GBuffer;
+		Mesh m_ScreenQuad;
+		DeferredPass m_DeferredPass;
+		Shader m_PostProcessingShader;
 		UniformBuffer m_AmbientLightBuffer;
 		UniformBuffer m_DirectionalLightBuffer;
 		ShaderStorageBuffer m_PointLightBuffer;
@@ -57,11 +58,10 @@ namespace ultraviolet
 		int m_ViewportHeight;
 
 	private:
-		void CreateGBuffer();
-		void InitializeRenderPasses();
-		void InitializePostProcessingShader();
+		void AddDepthBuffer();
+		void AttachGBuffer();
 		void InitializeImGui();
 		void Draw(const DrawItem& drawItem) const;
-		void PresentFrame() const;
+		void PresentFrame();
 	};
 }
