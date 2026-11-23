@@ -95,5 +95,9 @@
 			vec3 lightDirection = normalize(ub_PointLights[i].Position.xyz - position);
 			
 			Output.rgb += max(dot(normal, lightDirection), 0.0) * diffuse * ub_PointLights[i].Color.rgb * ub_PointLights[i].Intensity * (1.0 / (dist * dist));
+		
+			vec3 halfwayDirection = normalize(lightDirection + viewDirection);
+			float specularStrength = pow(max(dot(normal, halfwayDirection), 0.0), shininess) * specular;
+			Output.rgb += specularStrength * ub_PointLights[i].Color.rgb * 0.25 * ub_PointLights[i].Intensity * (1.0 / (dist * dist));
 		}
 	}
