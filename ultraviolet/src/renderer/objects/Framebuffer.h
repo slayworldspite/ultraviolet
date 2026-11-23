@@ -16,6 +16,11 @@ namespace ultraviolet
 		Framebuffer(const TextureSettings& textureSettings, size_t textureCount);
 		Framebuffer(const std::vector<TextureSettings>& textureSettings);
 
+		Framebuffer(const Framebuffer&) = delete;
+		Framebuffer& operator=(const Framebuffer&) = delete;
+		Framebuffer(Framebuffer&& other) noexcept;
+		Framebuffer& operator=(Framebuffer&& other) noexcept;
+
 		virtual ~Framebuffer() override;
 
 		void AddBuffer(const TextureSettings& textureSettings, FramebufferAttachment attachment);

@@ -46,6 +46,27 @@ namespace ultraviolet
 		}
 	}
 
+	Framebuffer::Framebuffer(Framebuffer&& other) noexcept
+	{
+		m_ID = other.m_ID;
+		Buffers = std::move(other.Buffers);
+
+		other.m_ID = 0;
+	}
+
+	Framebuffer& Framebuffer::operator=(Framebuffer&& other) noexcept
+	{
+		if (this == &other)
+			return *this;
+
+		m_ID = other.m_ID;
+		Buffers = std::move(other.Buffers);
+
+		other.m_ID = 0;
+
+		return *this;
+	}
+
 	Framebuffer::~Framebuffer()
 	{
 		for (size_t i{}; i < Buffers.size(); i++)
