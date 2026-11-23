@@ -28,7 +28,7 @@ namespace ultraviolet
 		static const std::filesystem::path assets{ "assets" };
 		static const std::filesystem::path textures{ assets / "textures" };
 
-		std::shared_ptr<ColorMaterial> material{ std::make_shared<ColorMaterial>(glm::vec3{ 0.35f, 0.60f, 1.0f }, 32) };
+		std::shared_ptr<ColorMaterial> material{ std::make_shared<ColorMaterial>(glm::vec3{ 1.0f, 1.0f, 1.0f }, 32) };
 
 		std::vector<EntityDescription> entities{};
 		
