@@ -21,8 +21,7 @@ namespace ultraviolet
 		scene.DirectionalLight.Yaw = -125.0f;
 		scene.DirectionalLight.Enabled = true;
 
-		scene.Camera.Position.z -= 2.0f;
-		scene.Camera.Position.y += 2.0f;
+		scene.Camera.Position = { 3.0f, 2.0f, -20.0f };
 		scene.Camera.Yaw = 90.0f;
 
 		static const std::filesystem::path assets{ "assets" };
